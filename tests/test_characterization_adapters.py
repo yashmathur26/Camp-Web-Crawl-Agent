@@ -21,6 +21,7 @@ def test_adapter_webtrac_session_count_and_register_urls():
     assert len(sessions) == LOCKS["webtrac_session_count"] == 20
     found = sorted({s["register_url"] for s in sessions})
     assert found == LOCKS["webtrac_register_urls"]
+    assert all(s.get("info_url") == s["register_url"] for s in sessions)
 
 
 def test_adapter_myrec_session_count_and_program_ids():
@@ -31,6 +32,7 @@ def test_adapter_myrec_session_count_and_program_ids():
     assert len(sessions) == LOCKS["myrec_session_count"] == 89
     pids = {s["register_url"].split("ProgramID=")[-1].split("#")[0].split("&")[0] for s in sessions}
     assert sorted(pids) == LOCKS["myrec_program_ids"]
+    assert all(s.get("info_url") == s["register_url"] for s in sessions)
 
 
 def test_adapter_community_ed_from_crawl_path_fixture():

@@ -51,6 +51,7 @@ GUIDE_HOSTS = {
 SESSION_CSV_COLUMNS = [
     "name",
     "register_url",
+    "info_url",
     "platform",
     "dates",
     "ages",

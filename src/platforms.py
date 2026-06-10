@@ -38,6 +38,8 @@ def make_session(
     name: str,
     register_url: str,
     *,
+    info_url: str = "",
+    details_text: str = "",
     platform: str = "",
     dates: str = "",
     ages: str = "",
@@ -49,10 +51,13 @@ def make_session(
 
     kind: "session" = a specific registrable camp; "portal" = a registration
     entry point we couldn't break into per-session links (Firecrawl/JS needed).
+    info_url: per-camp detail page (distinct from register_url when known).
     """
     return {
         "name": (name or "").strip(),
         "register_url": normalize_url(register_url) or register_url,
+        "info_url": normalize_url(info_url) if info_url else "",
+        "details_text": (details_text or "").strip(),
         "platform": platform,
         "dates": dates.strip(),
         "ages": ages.strip(),
@@ -854,6 +859,7 @@ async def adapter_webtrac(url: str, links: list[dict], page_text: str) -> list[d
         make_session(
             r["name"],
             r["register_url"],
+            info_url=r["register_url"],
             platform=WEBTRAC,
             dates=r.get("dates", ""),
             source_url=r.get("source", url),
@@ -901,7 +907,13 @@ async def adapter_myrec(url: str, links: list[dict], page_text: str) -> list[dic
         found.update(program_links(ll))
 
     return [
-        make_session(v["name"], v["url"], platform=MYREC, source_url=url)
+        make_session(
+            v["name"],
+            v["url"],
+            info_url=v["url"],
+            platform=MYREC,
+            source_url=url,
+        )
         for v in found.values()
     ]
 

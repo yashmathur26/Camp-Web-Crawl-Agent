@@ -17,7 +17,8 @@ def test_enumerate_provider_webtrac_seed():
     url, _, _ = load_platform_fixture("webtrac")
     with patch_offline_fetch():
         result = asyncio.run(enumerate_provider(url, town_hint="Lexington"))
-    assert len(result["sessions"]) == LOCKS["enumerate_webtrac_session_count"] == 20
+    # Re-measured 2026-06-10: 40 after Specialty Camps fixture added (matches Lexington baseline).
+    assert len(result["sessions"]) == LOCKS["enumerate_webtrac_session_count"] == 40
     assert result["platform"] == "webtrac"
 
 

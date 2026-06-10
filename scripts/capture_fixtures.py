@@ -25,6 +25,10 @@ FIXTURE_TARGETS: dict[str, str] = {
 WEBTRAC_CATALOG_URL = (
     "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?module=AR&type=CAMP"
 )
+WEBTRAC_SPECIALTY_CATALOG_URL = (
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html"
+    "?module=AR&category=Specialty+Camps&display=detail"
+)
 
 
 def _fixture_slug(url: str, *, label: str = "") -> str:
@@ -39,6 +43,8 @@ def _fixture_slug(url: str, *, label: str = "") -> str:
         return f"{host}.iteminfo"
     if "program_details" in low:
         return f"{host}.program_detail"
+    if "search.html" in low and "specialty" in low.replace(" ", ""):
+        return f"{host}.catalog_specialty"
     if "search.html" in low and "type=camp" in low.replace(" ", ""):
         return f"{host}.catalog"
     return host
@@ -78,6 +84,7 @@ async def capture_all(root: Path) -> None:
     for platform, url in FIXTURE_TARGETS.items():
         await _capture_one(platform, url, root)
     await _capture_one("webtrac", WEBTRAC_CATALOG_URL, root, label="catalog")
+    await _capture_one("webtrac", WEBTRAC_SPECIALTY_CATALOG_URL, root, label="catalog_specialty")
 
     catalog_meta = root / "webtrac" / "majwhaydenweb.myvscloud.com.catalog.meta.json"
     if catalog_meta.exists():

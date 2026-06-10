@@ -34,6 +34,10 @@ logger = logging.getLogger(__name__)
 # --------------------------------------------------------------------------- #
 # Session shape
 # --------------------------------------------------------------------------- #
+# info_url == register_url is only valid for single-page platforms (WebTrac
+# iteminfo, MyRec program_details). The navigator (Phase 3) MUST set info_url
+# to the detail page and register_url to the distinct checkout — never default
+# them equal.
 def make_session(
     name: str,
     register_url: str,

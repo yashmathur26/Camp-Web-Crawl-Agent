@@ -22,12 +22,12 @@ until the one above it is green. Reference `IMPLEMENTATION_PLAN.md` for the desi
 
 ## P1 — Three-node schema
 
-- [ ] **P1.1** Add `info_url: str = ""` and `details_text: str = ""` to `make_session`
-  in `src/platforms.py`.
-- [ ] **P1.2** Add `info_url` to `SESSION_CSV_COLUMNS` and any writer that lists columns
-  (`session_quality.py`, deliverables).
-- [ ] **P1.3** Set `info_url` in adapters that already know the detail page (WebTrac item,
-  MyRec program_details); leave "" elsewhere.
+- [x] **P1.1** Add `info_url: str = ""` and `details_text: str = ""` to `make_session`
+  in `src/platforms.py`. (`details_text` defaults ""; both fields on every session dict.)
+- [x] **P1.2** Add `info_url` to `SESSION_CSV_COLUMNS` and any writer that lists columns
+  (`session_quality.py`, deliverables). (`info_url` after `register_url`; writers use `SESSION_CSV_COLUMNS`.)
+- [x] **P1.3** Set `info_url` in adapters that already know the detail page (WebTrac item,
+  MyRec program_details); leave "" elsewhere. (`info_url=register_url` for WebTrac/MyRec; `""` for all other adapters.)
   - DoD: baseline run reproduces identical camps + a new empty `info_url` column;
     P0 tests still green.
 

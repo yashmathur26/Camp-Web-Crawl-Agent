@@ -23,7 +23,9 @@ Violating them is how the valuable parts get broken. Read before editing.
 
 4. **Three-node reality.** A camp has up to three URLs of interest: `info_url` (details),
    `register_url` (cart/checkout), and `source_url`. Never collapse info and register back
-   into one field.
+   into one field. `info_url == register_url` is only valid for single-page platforms
+   (WebTrac iteminfo, MyRec program_details). The navigator (Phase 3) MUST set `info_url`
+   to the detail page and `register_url` to the distinct checkout — never default them equal.
 
 5. **Verify where you fetch.** Registrability is decided by `verify_registrable` at the
    moment the register page is in hand — not asserted from a URL pattern, and not deferred

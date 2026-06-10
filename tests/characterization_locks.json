@@ -1,5 +1,5 @@
 {
-  "webtrac_session_count": 20,
+  "webtrac_session_count": 40,
   "webtrac_register_urls": [
     "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801372&Module=AR",
     "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801398&Module=AR",
@@ -20,7 +20,27 @@
     "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943793&Module=AR",
     "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943823&Module=AR",
     "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943855&Module=AR",
-    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&Module=AR"
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013539&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013566&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013649&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013678&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013777&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014256&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014337&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014439&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014861&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014942&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014969&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014996&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015111&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015264&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015318&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015478&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015484&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015647&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015745&Module=AR",
+    "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51056381&Module=AR"
   ],
   "myrec_session_count": 89,
   "myrec_program_ids": [
@@ -115,7 +135,7 @@
     "31020"
   ],
   "community_ed_session_count": 0,
-  "enumerate_webtrac_session_count": 20,
+  "enumerate_webtrac_session_count": 40,
   "enumerate_generic_session_count": 1,
   "signals": {
     "webtrac_iteminfo": "parent_ready",

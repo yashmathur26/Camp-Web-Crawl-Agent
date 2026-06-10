@@ -22,14 +22,14 @@ before refactoring around them.
 
 ---
 
-## Phase 1 — Three-node schema
+## Phase 1 — Three-node schema ✓
 
 **Why:** every later step depends on being able to represent info_url separately from
 register_url. Cheapest unblock.
 
-- Add `info_url` (and optionally `details_text`) to `make_session` and `SESSION_CSV_COLUMNS`.
-- Backfill existing adapters to set `info_url` where they already know it; default to "".
-- Update deliverables/quality writers to read the new column (no behavior change yet).
+- [x] Add `info_url` (and optionally `details_text`) to `make_session` and `SESSION_CSV_COLUMNS`.
+- [x] Backfill existing adapters to set `info_url` where they already know it; default to "".
+- [x] Update deliverables/quality writers to read the new column (no behavior change yet).
 
 **Exit:** schema carries three URLs; existing run produces identical camps plus an empty
 `info_url`; nothing downstream breaks.

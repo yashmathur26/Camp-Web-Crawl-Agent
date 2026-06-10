@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from src.deliverables import SESSION_CSV_ORGANIZED
 from src.platforms import COMMUNITY_ED, MYREC, WEBTRAC, detect_platform, make_session
 from src.sessions import SESSION_CSV_COLUMNS
 from tests.fixture_helpers import load_platform_fixture
@@ -12,6 +13,7 @@ def test_make_session_info_url_defaults_and_csv_column_order():
     assert s["info_url"] == ""
     assert s["details_text"] == ""
     assert SESSION_CSV_COLUMNS.index("info_url") == SESSION_CSV_COLUMNS.index("register_url") + 1
+    assert SESSION_CSV_ORGANIZED.index("info_url") == SESSION_CSV_ORGANIZED.index("register_url") + 1
 
 
 def test_detect_webtrac_jwhayden_seed():

@@ -1,4 +1,24 @@
-"""Lock structured adapter output against real captured HTML fixtures."""
+"""Lock structured adapter output against real captured HTML fixtures.
+
+Fixture lock reconciliation (Phase 1 close-out, 2026-06-10)
+------------------------------------------------------------
+MyRec (lock: 89 program_details URLs)
+  The listing fixture (lexrecma.myrec.com.meta.json) is the full year-round
+  activities.aspx catalog: adult fitness (Tai Chi, Pilates, Senior Bingo),
+  senior trips/lunches, spring leagues, donations, and youth summer camps.
+  Inspected link texts: ~47 adult/senior, ~28 youth/summer, ~14 other.
+  Live Lexington baseline keeps 24 MyRec sessions after enumerate_provider's
+  youth/summer focus filter — all 24 baseline PIDs are a subset of this 89.
+  # BASELINE: whole-catalog count, NOT summer-only; expected to drop to ~24
+  after youth/summer filtering in a later phase — not a regression.
+
+WebTrac (lock: 40 iteminfo URLs)
+  adapter_webtrac unions up to 5 camp catalogs. The jwhayden.org seed links
+  two: module=AR&type=CAMP (20 sessions) and category=Specialty+Camps (20 more).
+  Re-captured tests/fixtures/webtrac/majwhaydenweb.myvscloud.com.catalog_specialty
+  on 2026-06-10; offline fetch routes specialty vs main catalog separately.
+  Count matches data/_baseline/lexington jwhayden.org (40 sessions).
+"""
 
 from __future__ import annotations
 
@@ -14,21 +34,23 @@ LOCKS = json.loads((Path(__file__).parent / "characterization_locks.json").read_
 
 
 def test_adapter_webtrac_session_count_and_register_urls():
-    """Regression: WebTrac must keep yielding 20 sessions from saved Hayden catalog HTML."""
+    """Regression: WebTrac unions main + Specialty Camps catalogs (40 sessions offline)."""
     url, html, links = load_platform_fixture("webtrac")
     with patch_offline_fetch():
         sessions = asyncio.run(adapter_webtrac(url, links, html))
-    assert len(sessions) == LOCKS["webtrac_session_count"] == 20
+    # Re-measured 2026-06-10: 20 (type=CAMP) + 20 (Specialty Camps) = 40; matches Lexington baseline.
+    assert len(sessions) == LOCKS["webtrac_session_count"] == 40
     found = sorted({s["register_url"] for s in sessions})
     assert found == LOCKS["webtrac_register_urls"]
     assert all(s.get("info_url") == s["register_url"] for s in sessions)
 
 
 def test_adapter_myrec_session_count_and_program_ids():
-    """Regression: MyRec must keep yielding 89 programs from saved LexRec listing HTML."""
+    """Regression: MyRec yields every program_details link on the saved listing HTML."""
     url, html, links = load_platform_fixture("myrec")
     with patch_offline_fetch():
         sessions = asyncio.run(adapter_myrec(url, links, html))
+    # BASELINE: whole-catalog count, NOT summer-only; expected to drop to ~24 after youth/summer filtering.
     assert len(sessions) == LOCKS["myrec_session_count"] == 89
     pids = {s["register_url"].split("ProgramID=")[-1].split("#")[0].split("&")[0] for s in sessions}
     assert sorted(pids) == LOCKS["myrec_program_ids"]

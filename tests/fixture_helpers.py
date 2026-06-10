@@ -16,6 +16,7 @@ SEED_FIXTURE: dict[str, str] = {
 }
 
 WEBTRAC_CATALOG_SLUG = "majwhaydenweb.myvscloud.com.catalog"
+WEBTRAC_SPECIALTY_CATALOG_SLUG = "majwhaydenweb.myvscloud.com.catalog_specialty"
 WEBTRAC_ITEMINFO_SLUG = "majwhaydenweb.myvscloud.com.iteminfo"
 MYREC_PROGRAM_SLUG = "lexrecma.myrec.com.program_detail"
 
@@ -49,6 +50,8 @@ def _resolve_fixture(url: str) -> tuple[str, str, list[dict]]:
     low = url.lower()
     if "iteminfo" in low and "myvscloud" in low:
         return load_fixture("webtrac", WEBTRAC_ITEMINFO_SLUG)
+    if "specialty" in low.replace(" ", "") or "category=specialty" in low.replace(" ", ""):
+        return load_fixture("webtrac", WEBTRAC_SPECIALTY_CATALOG_SLUG)
     if "search.html" in low and ("type=camp" in low.replace(" ", "") or "module=ar" in low):
         return load_fixture("webtrac", WEBTRAC_CATALOG_SLUG)
     if "myvscloud" in low or "webtrac" in low:

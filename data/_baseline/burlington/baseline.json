@@ -1,0 +1,163 @@
+{
+  "town": "Burlington",
+  "captured_at": "2026-06-10T21:17:14.425637+00:00",
+  "provider_count": 14,
+  "total_sessions": 46,
+  "providers": [
+    {
+      "host": "childdevelopmentinfo.com",
+      "seed_url": "https://childdevelopmentinfo.com/child-activities/summer-camp-guide-for-parents",
+      "platform": "agent_nav",
+      "session_count": 1,
+      "register_urls": [
+        "https://girlswhocode.com/summer-immersion-programs"
+      ]
+    },
+    {
+      "host": "pathwaystoscience.org",
+      "seed_url": "https://pathwaystoscience.org/programs.aspx?adv=adv&c=either&dd=&f=&ft=&p=either&r=&s=&sa=either&submit=y&u=K8Students_K-8+Students",
+      "platform": "llm",
+      "session_count": 4,
+      "register_urls": [
+        "https://pathwaystoscience.org/programhub.aspx?sort=HSC-ArtProblemSolvingFound-Pathway7grd",
+        "https://pathwaystoscience.org/programs.aspx?adv=adv",
+        "https://pathwaystoscience.org/programhub.aspx?sort=SUM-MountStHelensInst-GeoCamp",
+        "https://pathwaystoscience.org/programhub.aspx?sort=GK12-NSBE-SEEK"
+      ]
+    },
+    {
+      "host": "jccns.org",
+      "seed_url": "https://jccns.org/summer-camp",
+      "platform": "agent_nav",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "metrowestymca.org",
+      "seed_url": "https://metrowestymca.org/camp",
+      "platform": "ymca+agent_nav",
+      "session_count": 10,
+      "register_urls": [
+        "https://metrowestymca.org/locations/outdoor-center",
+        "https://metrowestymca.org/y-steam-camp",
+        "https://metrowestymca.org/camp-ocp",
+        "https://metrowestymca.org/camp-clearbrook",
+        "https://metrowestymca.org/ninja-sports-camp",
+        "https://metrowestymca.org/locations/framingham-branch",
+        "https://metrowestymca.org/locations/early-learning-center",
+        "https://metrowestymca.org/camp",
+        "https://metrowestymca.org/programs/sports-activities",
+        "https://metrowestymca.org/programs/youth-teen-leadership"
+      ]
+    },
+    {
+      "host": "mmjccm.org",
+      "seed_url": "https://mmjccm.org/event/day-camp-the-jcc",
+      "platform": "daxko",
+      "session_count": 9,
+      "register_urls": [
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=f5bd3639-4fd7-11f1-99e6-00505692171b",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=0b8c78a5-4fd8-11f1-99e2-0050569286b7",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=37cdde45-4fd8-11f1-99e2-0050569286b7",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=7f02f17f-4fd8-11f1-99e4-005056921697",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=5246ddc0-4fd8-11f1-99e9-00505692a808",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=94d44dbd-4fd8-11f1-99e6-00505692171b",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=d855059a-4fd6-11f1-99e2-0050569286b7",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=066eb4f2-4fd7-11f1-99e2-0050569286b7",
+        "https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=2831c152-4fd7-11f1-99e6-00505692171b"
+      ]
+    },
+    {
+      "host": "my.lifetime.life",
+      "seed_url": "https://my.lifetime.life/clubs/ma/metrowest-boston/programs/kids/camps/summer-camps.html",
+      "platform": "agent_nav",
+      "session_count": 4,
+      "register_urls": [
+        "https://my.lifetime.life/clubs/ma/metrowest-boston/kids.html",
+        "https://my.lifetime.life/clubs/ma/metrowest-boston/classes/class-details.html?eventId=ZXhlcnA6MjQ4Ym9vazczMzMzODoyMDI2LTA2LTA3",
+        "https://my.lifetime.life/clubs/ma/metrowest-boston/classes/class-details.html?eventId=ZXhlcnA6MjQ4Ym9vazczMjM4NjoyMDI2LTA2LTA3",
+        "https://my.lifetime.life/clubs/ma/metrowest-boston/classes/class-details.html?eventId=ZXhlcnA6MjQ4Ym9vazczMzM5NDoyMDI2LTA2LTA3"
+      ]
+    },
+    {
+      "host": "worcesterjcc.org",
+      "seed_url": "https://worcesterjcc.org/summer-camps",
+      "platform": "campdoc+agent_nav",
+      "session_count": 3,
+      "register_urls": [
+        "https://worcesterjcc.org/preschool-summer-camp",
+        "https://worcesterjcc.org/day-camp",
+        "https://worcesterjcc.org/youth-teen-sports"
+      ]
+    },
+    {
+      "host": "calleva.org",
+      "seed_url": "https://calleva.org/tips-for-success-ultimate-parents-guide-to-summer-camp",
+      "platform": "woocommerce",
+      "session_count": 3,
+      "register_urls": [
+        "https://calleva.org/camp/camp-overnights",
+        "https://calleva.org/camp/camp-scholarships",
+        "https://calleva.org/camp/camp-gear"
+      ]
+    },
+    {
+      "host": "campchampions.com",
+      "seed_url": "https://campchampions.com/prospective-families/why-overnight-camp/camp-is-tech-free",
+      "platform": "agent_nav",
+      "session_count": 1,
+      "register_urls": [
+        "https://campchampions.com/prospective-families/why-overnight-camp/camp-is-parent-free"
+      ]
+    },
+    {
+      "host": "campmiddlesex.com",
+      "seed_url": "https://campmiddlesex.com/",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "easternusa.salvationarmy.org",
+      "seed_url": "https://easternusa.salvationarmy.org/massachusetts/boston/camp-summerprograms",
+      "platform": "agent_nav",
+      "session_count": 1,
+      "register_urls": [
+        "https://campwonderland.org/"
+      ]
+    },
+    {
+      "host": "salvationarmyusa.org",
+      "seed_url": "https://salvationarmyusa.org/youth-services/summer-camps",
+      "platform": "agent_nav",
+      "session_count": 3,
+      "register_urls": [
+        "https://journals.plos.org/plosone/article?id=10.1371%2Fjournal.pone.0108548",
+        "https://salvationarmyusa.org/kroc-center",
+        "https://salvationarmyusa.org/about-us"
+      ]
+    },
+    {
+      "host": "salvationarmy.org",
+      "seed_url": "https://salvationarmy.org/children-and-you-people",
+      "platform": "agent_nav",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "wsymca.org",
+      "seed_url": "https://wsymca.org/camps",
+      "platform": "ymca+agent_nav",
+      "session_count": 7,
+      "register_urls": [
+        "https://wsymca.org/camp-chickami",
+        "https://wsymca.org/camp-frank-day",
+        "https://wsymca.org/camp-pikati",
+        "https://wsymca.org/camps/camp-wells",
+        "https://facebook.com/campchickami",
+        "https://wsymca.org/kids-corner",
+        "https://wsymca.org/active-older-adults"
+      ]
+    }
+  ]
+}

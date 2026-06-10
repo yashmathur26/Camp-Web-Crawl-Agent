@@ -4,7 +4,9 @@ __pycache__/
 *.py[cod]
 *$py.class
 .Python
-data/
+data/*
+!data/_baseline/
+!data/_baseline/**
 logs/
 cache/
 *.egg-info/

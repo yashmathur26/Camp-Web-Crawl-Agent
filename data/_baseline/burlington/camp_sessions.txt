@@ -1,0 +1,203 @@
+BURLINGTON — CAMP SESSIONS (youth summer focus)
+Providers: 31   Total camps/sessions: 41
+======================================================================
+
+## COVERAGE SUMMARY
+Host                                     Platform          Kept  Dropped
+----------------------------------------------------------------------
+anyflip.com                              custom               0        0
+apple.com                                woocommerce+agent_nav     0        2
+bostonpublicschools.org                  agent_nav            0        0
+bringmetoburlington.com                  webtrac+agent_nav     0        0
+brooklinerec.com                         agent_nav            0        0
+calleva.campintouch.com                  campminder+agent_nav     0        2
+calleva.org                              woocommerce          3        3
+campchampions.com                        agent_nav            1        0
+campjewell.org                           campbrain+agent_nav     0        2
+campmiddlesex.com                        ultracamp+agent_nav     1        0
+ccca.org                                 agent_nav            0        0
+cedardale.campmanagement.com             agent_nav            0        0
+cedarland.net                            agent_nav            0        1
+childdevelopmentinfo.com                 agent_nav            1        0
+classy.org                               agent_nav            0        0
+girlswhocode.com                         custom               0        0
+gocamps.com                              agent_nav            0        0
+gracieshouse.com                         custom               0        0
+gsema.org                                agent_nav            0        0
+jccns.org                                agent_nav            4        0
+lifetimeacademy.edu                      agent_nav            0        2
+maps.app.goo.gl                          agent_nav            0        0
+metrowestymca.org                        ymca+agent_nav      11        2
+mmjccm.org                               daxko                9       15
+my.lifetime.life                         agent_nav            4        6
+njop.org                                 custom               0        0
+pathwaystoscience.org                    llm                  4        3
+register.brooklinerec.com                agent_nav            0        0
+smymca.org                               ymca+agent_nav       0        0
+worcesterjcc.org                         campdoc+agent_nav     3        0
+yelp.com                                 custom               0        0
+
+======================================================================
+
+
+## metrowestymca.org  [ymca+agent_nav]  (11)
+   source: https://metrowestymca.org/programs/education-care-camp
+   dropped (off-focus): 2
+   - Hopkinton Summer Day Camp  (portal)  [3-16]
+     https://metrowestymca.org/locations/outdoor-center
+   - Y STEAM Summer Program  (portal)  [1-6]
+     https://metrowestymca.org/y-steam-camp
+   - OCP Summer Program  (portal)  [1-8]
+     https://metrowestymca.org/camp-ocp
+   - Camp Clearbrook  (portal)  [1-6]
+     https://metrowestymca.org/camp-clearbrook
+   - Ninja Sports Camp  (portal)  [1-6]
+     https://metrowestymca.org/ninja-sports-camp
+   - Framingham Branch  (portal)  [4-preK]
+     https://metrowestymca.org/locations/framingham-branch
+   - Early Learning Center  (portal)  [4-preK]
+     https://metrowestymca.org/locations/early-learning-center
+   - Summer Camp  (portal)  [Check out our six camps and more than 30 programming options | grades K-5]
+     https://metrowestymca.org/camp
+   - Enrichment  (portal)  [varies by camp]
+     https://metrowestymca.org/programs/education-care-camp/enrichment
+   - Child Watch - Member Benefit  (portal)  [varies]
+     https://metrowestymca.org/programs/education-care-camp/child-watch
+   - Youth Equipment Fittings  (portal)  [Ages 10-15]
+     https://metrowestymca.org/programs/youth-teen-leadership
+
+## mmjccm.org  [daxko]  (9)
+   source: https://mmjccm.org/event/day-camp-the-jcc
+   dropped (off-focus): 15
+   - Tue, Jul 14, 5:30 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=f5bd3639-4fd7-11f1-99e6-00505692171b
+   - Tue, Jul 14, 7:30 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=0b8c78a5-4fd8-11f1-99e2-0050569286b7
+   - Wed, Jul 15, 5:30 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=37cdde45-4fd8-11f1-99e2-0050569286b7
+   - Wed, Jul 15, 7:30 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=7f02f17f-4fd8-11f1-99e4-005056921697
+   - Thu, Jul 16, 5:30 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=5246ddc0-4fd8-11f1-99e9-00505692a808
+   - Thu, Jul 16, 7:30 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=94d44dbd-4fd8-11f1-99e6-00505692171b
+   - Mon, Jul 6, 6 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=d855059a-4fd6-11f1-99e2-0050569286b7
+   - Tue, Jul 7, 6 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=066eb4f2-4fd7-11f1-99e2-0050569286b7
+   - Wed, Jul 8, 6 pm
+     https://operations.daxko.com/online/5384/ProgramsV2/Events.mvc/offering?guid=2831c152-4fd7-11f1-99e6-00505692171b
+
+## pathwaystoscience.org  [llm]  (4)
+   source: https://pathwaystoscience.org/programs.aspx?adv=adv&c=either&dd=&f=&ft=&p=either&r=&s=&sa=either&submit=y&u=K8Students_K-8+Students
+   dropped (off-focus): 3
+   - BEAM Pathway Program for 7th Graders  (portal)  [During your first summer with the BEAM Pathway Program, you will get to live in college dorms on a campus outside the city, surr ...read more | 7th Grade]
+     https://pathwaystoscience.org/programhub.aspx?sort=HSC-ArtProblemSolvingFound-Pathway7grd
+   - Bridge to Enter Advanced Math-for 7th Graders  (portal)  [7th Grade]
+     https://pathwaystoscience.org/programs.aspx?adv=adv
+   - GeoGirls Technology Camp at Mount St. Helens  (portal)  [During the course of the 5-day, 4-night geology and technology field-based camp, girls will tour Mount St. Helens, visit researchers in action, conduct a focused research proj ...read more | grades 6-12]
+     https://pathwaystoscience.org/programhub.aspx?sort=SUM-MountStHelensInst-GeoCamp
+   - Summer Engineering Experience for Kids (SEEK)  (portal)  [The National Society of Black Engineers (NSBE) created SEEK to address the underrepresentation of African Americans students in STEM fields, to ensure the Black middle class a ...read more | grades 6-12]
+     https://pathwaystoscience.org/programhub.aspx?sort=GK12-NSBE-SEEK
+
+## jccns.org  [agent_nav]  (4)
+   source: https://jccns.org/summer-camp
+   - KinderCamp  (portal)  [2 years, 9 months to entering Kindergarten]
+     https://jccns.org/summer-camp/kindercamp
+   - Camp Simchah  (portal)  [entering grades 1-7]
+     https://jccns.org/summer-camp/camp-simchah
+   - Simchah Specialty  (portal)  [entering grades 1-7]
+     https://jccns.org/summer-camp/camp-simchah-specialty
+   - Preschool Summer  (portal)  [3 years old]
+     https://jccns.org/summer-camp/preschool-summer
+
+## my.lifetime.life  [agent_nav]  (4)
+   source: https://my.lifetime.life/clubs/ma/metrowest-boston/programs/kids/camps/summer-camps.html
+   dropped (off-focus): 6
+   - Kids Choice Time  (portal)  [Monday through Thursday, school-age kids and tweens get Kids Choice Time | school-age kids and tweens]
+     https://my.lifetime.life/clubs/ma/metrowest-boston/kids.html
+   - Toddler Station Play: Arts & Crafts  (portal)  [Sunday 7, Monday 8, Tuesday 9, Wednesday 10, Thursday 11, Friday 12, Saturday 13 | 12 months - 2 years]
+     https://my.lifetime.life/clubs/ma/metrowest-boston/classes/class-details.html?eventId=ZXhlcnA6MjQ4Ym9vazczMzMzODoyMDI2LTA2LTA3
+   - Toddler Station Play: Create & Build  (portal)  [Monday 8, Tuesday 9, Wednesday 10, Thursday 11, Friday 12, Saturday 13 | 12 months - 2 years]
+     https://my.lifetime.life/clubs/ma/metrowest-boston/classes/class-details.html?eventId=ZXhlcnA6MjQ4Ym9vazczMjM4NjoyMDI2LTA2LTA3
+   - Toddler Station Play: Imaginative Play  (portal)  [Monday 8, Tuesday 9, Wednesday 10, Thursday 11, Friday 12, Saturday 13 | 12 months - 2 years]
+     https://my.lifetime.life/clubs/ma/metrowest-boston/classes/class-details.html?eventId=ZXhlcnA6MjQ4Ym9vazczMzM5NDoyMDI2LTA2LTA3
+
+## worcesterjcc.org  [campdoc+agent_nav]  (3)
+   source: https://worcesterjcc.org/summer-camps
+   - Preschool Summer Program  (portal)  [Weeks 1-4 | 3-5 years]
+     https://worcesterjcc.org/preschool-summer-camp
+   - Day Camp  (portal)  [Weeks 1-4 | 6-12 years]
+     https://worcesterjcc.org/day-camp
+   - Sports Camp  (portal)  [Weeks 1-4 | 6-12 years]
+     https://worcesterjcc.org/youth-teen-sports
+
+## calleva.org  [woocommerce]  (3)
+   source: https://calleva.org/tips-for-success-ultimate-parents-guide-to-summer-camp
+   dropped (off-focus): 3
+   - Camp Overnights
+     https://calleva.org/camp/camp-overnights
+   - Camp Scholarships and Financial Aid
+     https://calleva.org/camp/camp-scholarships
+   - Camp Gear for Sale
+     https://calleva.org/camp/camp-gear
+
+## childdevelopmentinfo.com  [agent_nav]  (1)
+   source: https://childdevelopmentinfo.com/child-activities/summer-camp-guide-for-parents
+   - Girls Who Code Summer Immersion Program  (portal)  [7-week program | 10th-11th-grade girls]
+     https://girlswhocode.com/summer-immersion-programs
+
+## campchampions.com  [agent_nav]  (1)
+   source: https://campchampions.com/prospective-families/why-overnight-camp/camp-is-tech-free
+   - Camp Is Tech Free Overnight  (portal)  [varies | grades K-12]
+     https://campchampions.com/prospective-families/why-overnight-camp/camp-is-parent-free
+
+## campmiddlesex.com  [ultracamp+agent_nav]  (1)
+   source: https://campmiddlesex.com/
+   - Day Camp  (portal)  [Ages 6–15, June 28 – August 13 | 6–15]
+     https://campmiddlesex.com/day-camp-transportation
+
+
+## 0 camps — needs JS/Firecrawl or blocked:
+   - cedarland.net  [agent_nav]  (1 dropped off-focus)
+     seed: https://cedarland.net/summer-camp
+   - cedardale.campmanagement.com  [agent_nav]
+     seed: https://cedardale.campmanagement.com/p/request_for_info_m.php
+   - apple.com  [woocommerce+agent_nav]  (2 dropped off-focus)
+     seed: https://apple.com/today/camp
+   - gocamps.com  [agent_nav]
+     seed: https://gocamps.com/
+   - ccca.org  [agent_nav]
+     seed: https://ccca.org
+   - girlswhocode.com  [custom]
+     seed: https://girlswhocode.com/summer-immersion-programs
+   - gsema.org  [agent_nav]
+     seed: https://gsema.org/en/activities-and-camp/summer-camp/day.html
+   - njop.org  [custom]
+     seed: https://njop.org/
+   - lifetimeacademy.edu  [agent_nav]  (2 dropped off-focus)
+     seed: https://lifetimeacademy.edu/
+   - smymca.org  [ymca+agent_nav]
+     seed: https://smymca.org/a-survival-guide-for-1st-time-summer-camp-parents
+   - gracieshouse.com  [custom]
+     seed: https://gracieshouse.com/camp-info
+   - bostonpublicschools.org  [agent_nav]
+     seed: https://bostonpublicschools.org/bps-departments/summer-stuff/the-best-summer-ever
+   - bringmetoburlington.com  [webtrac+agent_nav]
+     seed: https://bringmetoburlington.com/news/summer-parks-recs-fun-in-burlington
+   - anyflip.com  [custom]
+     seed: https://anyflip.com/kmvg/iwkz
+   - brooklinerec.com  [agent_nav]
+     seed: https://brooklinerec.com/156/Camp-Information
+   - register.brooklinerec.com  [agent_nav]
+     seed: https://register.brooklinerec.com/brookline/program_categories
+   - calleva.campintouch.com  [campminder+agent_nav]  (2 dropped off-focus)
+     seed: https://calleva.campintouch.com/v2/login/login.aspx
+   - maps.app.goo.gl  [agent_nav]
+     seed: https://maps.app.goo.gl/LoWWHMVL67o96APU6
+   - yelp.com  [custom]
+     seed: https://yelp.com/biz/camp-champions-marble-falls
+   - campjewell.org  [campbrain+agent_nav]  (2 dropped off-focus)
+     seed: https://campjewell.org/summer-camps
+   - classy.org  [agent_nav]
+     seed: https://classy.org/team/774538

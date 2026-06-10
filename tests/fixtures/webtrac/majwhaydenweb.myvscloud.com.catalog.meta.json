@@ -1,0 +1,594 @@
+{
+  "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?module=AR&type=CAMP",
+  "platform": "webtrac",
+  "fixture_slug": "majwhaydenweb.myvscloud.com.catalog",
+  "captured_at": "2026-06-10T20:56:34.727112+00:00",
+  "html_bytes": 1363,
+  "link_count": 146,
+  "links": [
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?module=AR&type=CAMP",
+      "text": "Skip to Search Criteria"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/splash.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "Home"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&display=detail&module=AR",
+      "text": "Activity Search"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&display=detail&module=PM",
+      "text": "Renew/New Membership"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/contactus.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "Contact Us"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/cart.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "CheckoutCart (0 Items)"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/login.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "My AccountSign In / Register"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?display=detail&module=PM",
+      "text": "Renew / New Membership"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=CAMP&module=AR",
+      "text": "Summer Camp"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=POOL&module=AR",
+      "text": "Aquatics"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=Lifeguard+Training&module=AR",
+      "text": "Lifeguard Training"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=BIRTH&module=AR",
+      "text": "Birthday Parties"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=DANCE&module=AR",
+      "text": "Dance"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&module=AR&primarycode=410300",
+      "text": "Dance Recital Fee"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&module=AR&primarycode=410331",
+      "text": "Dance Recital Tickets"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Dramatic+Arts&module=AR",
+      "text": "Dramatic Arts"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=GEN&module=AR",
+      "text": "Enrichment"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Cooking&module=AR",
+      "text": "Cooking"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Art&module=AR",
+      "text": "Art"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Pottery&module=AR",
+      "text": "Pottery"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=STEM&module=AR",
+      "text": "STEM"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=GYM&module=AR",
+      "text": "Gymnastics"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Ninja+CLasses&module=AR",
+      "text": "Ninja Classes"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=PE&module=AR",
+      "text": "Physical Education"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Yoga&module=AR",
+      "text": "Yoga"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Pickleball&module=AR",
+      "text": "Open Play Pickleball"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Type=skate&module=AR",
+      "text": "Skating"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&category=Club+Ice&display=Detail&module=AR",
+      "text": "Club Ice"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=General+Skate&module=AR",
+      "text": "General Skate"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?category=Stick+and+Puck&module=AR",
+      "text": "Adult Stick & Puck"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?Category=SchoolsOut&module=AR",
+      "text": "Schools Out Childcare and Programs"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?module=AR&primarycode=810120",
+      "text": "Click here for more info."
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801580&FromProgram=search&GlobalSalesArea_ARItemBeginDate=06%2F24%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=06%2F26%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR&mode=customdates&option=dates",
+      "text": "06/24/2026 -06/26/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801554&FromProgram=search&GlobalSalesArea_ARItemBeginDate=06%2F29%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F02%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801554&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801554&Module=AR&mode=customdates&option=dates",
+      "text": "06/29/2026 -07/02/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801554&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801554&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801372&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F06%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F10%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801372&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801372&Module=AR&mode=customdates&option=dates",
+      "text": "07/06/2026 -07/10/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801372&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801372&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801398&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F13%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F17%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801398&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801398&Module=AR&mode=customdates&option=dates",
+      "text": "07/13/2026 -07/17/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801398&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801398&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801424&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F20%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F24%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801424&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801424&Module=AR&mode=customdates&option=dates",
+      "text": "07/20/2026 -07/24/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801424&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801424&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801450&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F27%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F31%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801450&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801450&Module=AR&mode=customdates&option=dates",
+      "text": "07/27/2026 -07/31/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801450&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801450&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801476&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F03%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F07%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801476&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801476&Module=AR&mode=customdates&option=dates",
+      "text": "08/03/2026 -08/07/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801476&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801476&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801502&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F10%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F14%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801502&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801502&Module=AR&mode=customdates&option=dates",
+      "text": "08/10/2026 -08/14/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801502&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801502&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801528&Action=UpdateSelection&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F17%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F21%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "Add To Waitlist"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801528&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801528&Module=AR&mode=customdates&option=dates",
+      "text": "08/17/2026 -08/21/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801528&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801528&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801695&Action=UpdateSelection&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F24%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F28%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "Add To Waitlist"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801695&Module=AR",
+      "text": "Lower Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801695&Module=AR&mode=customdates&option=dates",
+      "text": "08/24/2026 -08/28/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801695&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801695&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943855&FromProgram=search&GlobalSalesArea_ARItemBeginDate=06%2F24%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=06%2F26%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943855&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943855&Module=AR&mode=customdates&option=dates",
+      "text": "06/24/2026 -06/26/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943855&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943855&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943823&FromProgram=search&GlobalSalesArea_ARItemBeginDate=06%2F29%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F02%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943823&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943823&Module=AR&mode=customdates&option=dates",
+      "text": "06/29/2026 -07/02/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943823&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943823&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943613&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F06%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F10%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943613&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943613&Module=AR&mode=customdates&option=dates",
+      "text": "07/06/2026 -07/10/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943613&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943613&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943643&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F13%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F17%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943643&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943643&Module=AR&mode=customdates&option=dates",
+      "text": "07/13/2026 -07/17/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943643&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943643&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943673&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F20%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F24%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943673&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943673&Module=AR&mode=customdates&option=dates",
+      "text": "07/20/2026 -07/24/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943673&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943673&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943703&FromProgram=search&GlobalSalesArea_ARItemBeginDate=07%2F27%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=07%2F31%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943703&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943703&Module=AR&mode=customdates&option=dates",
+      "text": "07/27/2026 -07/31/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943703&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943703&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943733&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F03%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F07%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943733&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943733&Module=AR&mode=customdates&option=dates",
+      "text": "08/03/2026 -08/07/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943733&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943733&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943763&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F10%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F14%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&action=UpdateSelection",
+      "text": "Add To Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943763&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943763&Module=AR&mode=customdates&option=dates",
+      "text": "08/10/2026 -08/14/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943763&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943763&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943793&Action=UpdateSelection&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F17%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F21%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "Add To Waitlist"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943793&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943793&Module=AR&mode=customdates&option=dates",
+      "text": "08/17/2026 -08/21/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943793&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943793&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50943937&Action=UpdateSelection&FromProgram=search&GlobalSalesArea_ARItemBeginDate=08%2F24%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=08%2F28%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z",
+      "text": "Add To Waitlist"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&Module=AR",
+      "text": "Upper Camp"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&Module=AR&mode=customdates&option=dates",
+      "text": "08/24/2026 -08/28/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&InterfaceParameter=WebTrac&Module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&Module=AR&option=enrollmentcounts",
+      "text": "Enrollment Count Details"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/splash.html?_csrf_token=kI6Q140Q0E022D252Z3A3T5K4I4C6O67165P4F52681H5P3O6E69016T3I636K196U4S4Z4Y02734Q5M65025O4K445Y0A6V4K6O4X006W5X6N5F726W5U57450Z5O5U4Z&type=browsers",
+      "text": "Supported Browsers"
+    },
+    {
+      "url": "https://www.jwhayden.org/activity-dates-and-registration",
+      "text": "View activity dates and registration information Opens in a new tab"
+    },
+    {
+      "url": "https://www.canva.com/design/DAG_FdhTeT8/PYR9on4aARtqbW3rSZ2Slw/view?utlId=h32aee14e9b",
+      "text": "Camp Events CalendarOpens in a new tab"
+    },
+    {
+      "url": "https://www.jwhayden.org",
+      "text": "Return to Main Site"
+    },
+    {
+      "url": "https://www.jwhayden.org/about",
+      "text": "About"
+    },
+    {
+      "url": "https://www.jwhayden.org/programs",
+      "text": "Programs"
+    },
+    {
+      "url": "https://www.jwhayden.org/membership",
+      "text": "Membership"
+    },
+    {
+      "url": "https://www.jwhayden.org/events",
+      "text": "Events"
+    },
+    {
+      "url": "https://www.jwhayden.org/facility-schedules",
+      "text": "Facility\u00a0Schedules"
+    },
+    {
+      "url": "https://visitor.r20.constantcontact.com/manage/optin?v=001Y9XAqyV8VF2c0qSo9zRKCvcg71vTOxRp7JZlDynSZcl9GnQCCQcoRYKs9tfrAfdZJBYE7f_NayecL9SjNcZzu6JZPyunfnJDRLpD8hNyqvhs_WUEK1HKbQuKwtJ7hCbWrQvaG02TeK3cJztWNMIZm71GdNCGUXSR",
+      "text": "Join Our Mailing List"
+    },
+    {
+      "url": "https://www.facebook.com/haydenrecreation/",
+      "text": "Visit Us on FacebookOpens in a new tab"
+    },
+    {
+      "url": "https://www.instagram.com/haydenrecreation/",
+      "text": "Visit Us on InstagramOpens in a new tab"
+    },
+    {
+      "url": "https://helptrac.vermontsystems.com/product-news/web-accessibility-at-vermont-systems",
+      "text": "Accessibility StatementOpens in a new tab"
+    },
+    {
+      "url": "https://www.vermontsystems.com",
+      "text": "Vermont Systems, Inc.Opens in a new tab"
+    }
+  ]
+}

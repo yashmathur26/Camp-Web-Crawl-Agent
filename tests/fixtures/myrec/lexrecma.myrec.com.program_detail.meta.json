@@ -1,0 +1,374 @@
+{
+  "url": "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30941",
+  "platform": "myrec",
+  "fixture_slug": "lexrecma.myrec.com.program_detail",
+  "captured_at": "2026-06-10T20:56:56.693500+00:00",
+  "html_bytes": 171,
+  "link_count": 91,
+  "links": [
+    {
+      "url": "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30941",
+      "text": "Skip to navigation"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/policies/default.aspx",
+      "text": "Terms of Use"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/policies/privacy.aspx",
+      "text": "Privacy Policy"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/default.aspx",
+      "text": "Recreation & Community Programs | Human Services Department"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/activities/default.aspx?type=activities",
+      "text": "Register"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/search/default.aspx",
+      "text": "Search Activities"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/activities/default.aspx?type=memberships",
+      "text": "Memberships"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/default.aspx",
+      "text": "Facilities"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/calendar/default.aspx",
+      "text": "Calendar"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/dept/default.aspx",
+      "text": "General Info"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/news/default.aspx",
+      "text": "News"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/meetings/default.aspx",
+      "text": "Meetings"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/gallery/default.aspx",
+      "text": "Gallery"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/team/default.aspx",
+      "text": "Team Info"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/contact/default.aspx",
+      "text": "Contact"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/help/default.aspx",
+      "text": "Help"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/tutorial/default.aspx",
+      "text": "How to Register"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/affiliated/default.aspx",
+      "text": "Affiliates"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/default.aspx",
+      "text": ""
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx",
+      "text": "Account Login"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/add_step_01.aspx",
+      "text": "Create Account"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/activities/default.aspx",
+      "text": "Register Now"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/datacart/default.aspx",
+      "text": "View Cart"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150942",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150942",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150949",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150949",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150958",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150958",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150959",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150959",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150960",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150960",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150961",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150961",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150962",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150962",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150943",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150943",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150950",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150950",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150963",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150963",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150964",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150964",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150965",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150965",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150966",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150966",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150967",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150967",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150944",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150944",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150951",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150951",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150968",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150968",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150969",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150969",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150970",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150970",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150971",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150971",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150972",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150972",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150946",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150946",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150952",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150952",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150973",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150973",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150974",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150974",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150975",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150975",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150976",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150976",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/household/login.aspx?ProgramID=30941&aID=150977",
+      "text": "Log In"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/facilities/details.aspx?ActivityID=150977",
+      "text": "Center Recreation Complex - Center 2 Softball Field"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/info/activities/activities.aspx",
+      "text": "View All Activities"
+    },
+    {
+      "url": "https://lexrecma.myrec.com/",
+      "text": "X"
+    },
+    {
+      "url": "http://www.myrec.com",
+      "text": "MyRec.com Recreation Software"
+    },
+    {
+      "url": "https://www.lexingtonma.gov/197/Room-Reservation-Fees",
+      "text": "Reservation Fees"
+    },
+    {
+      "url": "https://www.lexingtonma.gov/1239/Food-Policy",
+      "text": "Food Policy"
+    },
+    {
+      "url": "https://www.lexingtonma.gov/recreation",
+      "text": "Town Site"
+    },
+    {
+      "url": "https://www.canva.com/design/DAG_uyLHCJY/cS9o5ZrOhOejVcq8ZzSZxw/view?utlId=h5349cbde9e",
+      "text": "LexRec\u00a0Summer Day Camp Information Sheet"
+    },
+    {
+      "url": "https://www.addtoany.com/share",
+      "text": "Share"
+    },
+    {
+      "url": "https://www.facebook.com/lexrecreation/",
+      "text": "Facebook"
+    },
+    {
+      "url": "https://www.instagram.com/lexrecreation/",
+      "text": "Instagram"
+    },
+    {
+      "url": "https://lexingtonma.gov/317/Official-Town-Holidays-Other-Closing-Day",
+      "text": "Closed on Town Holidays"
+    },
+    {
+      "url": "https://www.addtoany.com",
+      "text": "AddToAny"
+    }
+  ]
+}

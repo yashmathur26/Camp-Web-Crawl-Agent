@@ -1,0 +1,86 @@
+{
+  "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR",
+  "platform": "webtrac",
+  "fixture_slug": "majwhaydenweb.myvscloud.com.iteminfo",
+  "captured_at": "2026-06-10T20:56:46.576383+00:00",
+  "html_bytes": 2412,
+  "link_count": 19,
+  "links": [
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR",
+      "text": "Skip to Main Content"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/splash.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D",
+      "text": "Home"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D&display=detail&module=AR",
+      "text": "Activity Search"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D&display=detail&module=PM",
+      "text": "Renew/New Membership"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/contactus.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D",
+      "text": "Contact Us"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/cart.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D",
+      "text": "CheckoutCart (0 Items)"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/login.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D",
+      "text": "My AccountSign In / Register"
+    },
+    {
+      "url": "https://web1.myvscloud.com/wbwsc/majwhaydenwt.wsc/search.html?module=AR&primarycode=810120",
+      "text": "Click here for more info."
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/search.html?ARFMIDList=50801580&Action=UpdateSelection&FromProgram=search&GlobalSalesArea_ARItemBeginDate=06%2F24%2F2026&GlobalSalesArea_ARItemBeginTime=32400&GlobalSalesArea_ARItemEndDate=06%2F26%2F2026&GlobalSalesArea_ARItemEndTime=55800&Module=AR&_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D",
+      "text": "Add to Selection List"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/wishlist.html?FMID=50801580&Module=AR&_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D",
+      "text": "Add to Wishlist"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?InterfaceParameter=WebTrac&fmid=50801580&module=AR",
+      "text": "Share"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR&mode=customdates&option=dates",
+      "text": "06/24/2026 -06/26/2026"
+    },
+    {
+      "url": "https://majwhaydenweb.myvscloud.com/webtrac/web/splash.html?_csrf_token=Ab0X180319122H441V2E2X486V4R5A6F1J5P4G4C4Q185P5Q55471Q5I4M5E671G5P5X6H456T5J4G6E4Y6B645T6G6F73724M5A676D5D4D6I6605696B506C1K5G605D&type=browsers",
+      "text": "Supported Browsers"
+    },
+    {
+      "url": "https://www.canva.com/design/DAG_FdhTeT8/PYR9on4aARtqbW3rSZ2Slw/view?utlId=h32aee14e9b",
+      "text": "Camp Events CalendarOpens in a new tab"
+    },
+    {
+      "url": "https://maps.google.com/maps?f=q&geocode=&hl=en&q=24+Lincoln+Street+Lexington+MA+02421&source=s_q",
+      "text": "Recreation FacilityOpens in a new tab"
+    },
+    {
+      "url": "https://www.facebook.com/haydenrecreation/",
+      "text": "Visit Us on FacebookOpens in a new tab"
+    },
+    {
+      "url": "https://www.instagram.com/haydenrecreation/",
+      "text": "Visit Us on InstagramOpens in a new tab"
+    },
+    {
+      "url": "https://helptrac.vermontsystems.com/product-news/web-accessibility-at-vermont-systems",
+      "text": "Accessibility StatementOpens in a new tab"
+    },
+    {
+      "url": "https://www.vermontsystems.com",
+      "text": "Vermont Systems, Inc.Opens in a new tab"
+    }
+  ]
+}

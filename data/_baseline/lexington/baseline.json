@@ -1,0 +1,243 @@
+{
+  "town": "Lexington",
+  "captured_at": "2026-06-10T21:46:20.325803+00:00",
+  "provider_count": 21,
+  "total_sessions": 78,
+  "providers": [
+    {
+      "host": "lexingtonma.gov",
+      "seed_url": "https://lexingtonma.gov/511/Recreation-Community-Programs",
+      "platform": "myrec+agent_nav",
+      "session_count": 1,
+      "register_urls": [
+        "https://lexingtonma.org"
+      ]
+    },
+    {
+      "host": "lexrecma.myrec.com",
+      "seed_url": "https://lexrecma.myrec.com/info/activities/activities.aspx",
+      "platform": "myrec",
+      "session_count": 24,
+      "register_urls": [
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30941",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30957",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30969",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30951",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=29959",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=29960",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30942",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30937",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=29974",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30955",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30945",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30954",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30949",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30990",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30948",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30952",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30946",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30950",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30040",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30032",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30978",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30457",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30030",
+        "https://lexrecma.myrec.com/info/activities/program_details.aspx?ProgramID=30156"
+      ]
+    },
+    {
+      "host": "jwhayden.org",
+      "seed_url": "https://www.jwhayden.org/summer-camp",
+      "platform": "webtrac",
+      "session_count": 40,
+      "register_urls": [
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801580&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801554&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801372&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801398&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801424&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801450&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801476&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801502&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801528&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50801695&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943855&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943823&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943613&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943643&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943673&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943703&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943733&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943763&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943793&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=50943937&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015318&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015478&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015264&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015484&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014996&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014969&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014861&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014942&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015111&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013777&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013539&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013566&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013649&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51013678&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014256&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014337&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51014439&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015647&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51015745&Module=AR",
+        "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=51056381&Module=AR"
+      ]
+    },
+    {
+      "host": "lexingtoncommunityed.org",
+      "seed_url": "https://lexingtoncommunityed.org/lexplorations/",
+      "platform": "community_ed+agent_nav",
+      "session_count": 2,
+      "register_urls": [
+        "https://lexingtoncommunityed.org/lexplorations/class/summer-fun-adventure-club-august-3-august-7",
+        "https://lexingtoncommunityed.org/lexplorations/class/a-swiftie-summer-august-3-august-7"
+      ]
+    },
+    {
+      "host": "lexfarm.org",
+      "seed_url": "https://lexfarm.org/education",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "thewaldorfschool.org",
+      "seed_url": "https://thewaldorfschool.org/summer",
+      "platform": "llm",
+      "session_count": 2,
+      "register_urls": [
+        "https://thewaldorfschool.org/waldorf100",
+        "https://thewaldorfschool.org/forest-school"
+      ]
+    },
+    {
+      "host": "summersedgedaycamp.com",
+      "seed_url": "https://summersedgedaycamp.com/",
+      "platform": "campbrain+agent_nav",
+      "session_count": 1,
+      "register_urls": [
+        "https://summersedgedaycamp.com/our-programs/all-day-camp"
+      ]
+    },
+    {
+      "host": "lca.edu",
+      "seed_url": "https://lca.edu/summer",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "munroecenter.org",
+      "seed_url": "https://munroecenter.org/summer-camp.html",
+      "platform": "agent_nav",
+      "session_count": 4,
+      "register_urls": [
+        "https://munroecenter.org/camp.html",
+        "https://munroecenter.org/munroe-center-stage.html",
+        "https://munroecenter.org/bikewayblockparty.html",
+        "https://munroecenter.org/horsesculpture.html"
+      ]
+    },
+    {
+      "host": "therobohub.com",
+      "seed_url": "https://therobohub.com/summer-camp-2026",
+      "platform": "sawyer",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "hancocknurseryschool.org",
+      "seed_url": "https://hancocknurseryschool.org/hns-summer",
+      "platform": "llm",
+      "session_count": 1,
+      "register_urls": [
+        "https://hancocknurseryschool.org/hns-highlights"
+      ]
+    },
+    {
+      "host": "lexingtonunited.org",
+      "seed_url": "https://lexingtonunited.org/spring-summer-vacation-clinics",
+      "platform": "agent_nav",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "vikingcamps.com",
+      "seed_url": "https://vikingcamps.com/locations/lexington",
+      "platform": "agent_nav",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "lexingtonplaycarecenter.org",
+      "seed_url": "https://lexingtonplaycarecenter.org/summer-camp",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "fuseprogram.com",
+      "seed_url": "https://fuseprogram.com/lexington-vacation-summer-program",
+      "platform": "sawyer",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "lexdebateinstitute.com",
+      "seed_url": "https://lexdebateinstitute.com/summer",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "goddardschool.com",
+      "seed_url": "https://goddardschool.com/schools/ma/lexington/lexington/our-school/special-programs/summer-camp",
+      "platform": "agent_nav",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "lexingtonsymphony.org",
+      "seed_url": "https://lexingtonsymphony.org/phoenixproject",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    },
+    {
+      "host": "massgeneral.org",
+      "seed_url": "https://massgeneral.org/children/aspire/apply",
+      "platform": "agent_nav",
+      "session_count": 1,
+      "register_urls": [
+        "https://massgeneral.org/children/aspire"
+      ]
+    },
+    {
+      "host": "massaudubon.org",
+      "seed_url": "https://massaudubon.org/places-to-explore/wildlife-sanctuaries/drumlin-farm",
+      "platform": "agent_nav",
+      "session_count": 2,
+      "register_urls": [
+        "https://massaudubon.org/programs/drumlin-farm/103413-dawn-song-summer-bird-walk",
+        "https://massaudubon.org/programs/drumlin-farm/103409-the-birds-next-door-meet-your-backyard-birds"
+      ]
+    },
+    {
+      "host": "ussportscamps.com",
+      "seed_url": "https://ussportscamps.com/basketball/massachusetts/lexington",
+      "platform": "custom",
+      "session_count": 0,
+      "register_urls": []
+    }
+  ]
+}

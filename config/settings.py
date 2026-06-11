@@ -102,6 +102,30 @@ SETTINGS = {
     "b5_nav_max_fetches": 25,
     # roadmap2 Phase 1 — never publish chrome/button/menu text as a camp name.
     "b5_name_integrity": True,
+    # roadmap2 Phase 2 — render JS/portal pages before reading them.
+    # Hosts that need Playwright networkidle for *all* fetch kinds (their content
+    # loads via JS after domcontentloaded). Substring match on the URL.
+    "b5_render_networkidle_hosts": (
+        "hisawyer",
+        "sawyer",
+        "active.com",
+        "activecommunities",
+        "enrollsy",
+        "myrec",
+        "sgasoftware",
+        "perfectmind",
+        "campbrain",
+        "daxko",
+        "jackrabbit",
+        "veracross",
+    ),
+    # A render returning fewer than this many chars on a JS host is "thin" —
+    # retry once with a settle before believing the page is empty.
+    "b5_render_thin_chars": 400,
+    "b5_render_settle_seconds": 1.2,
+    # Persist rendered page text to data/<town>/phase_b5/captured/ (capture-then-
+    # extract). Off by default; Phase 7 turns it on for the cutover run.
+    "b5_capture_pages": False,
     "b5_agent_navigation": True,
     "b5_agent_nav_link_cap": 60,
     "b5_agent_nav_max_catalog_fetches": 3,

@@ -73,15 +73,31 @@ def _run_config(**overrides) -> CrawlerRunConfig:
     return CrawlerRunConfig(**base)
 
 
+def _is_js_render_host(url: str) -> bool:
+    low = (url or "").lower()
+    hosts = tuple(SETTINGS.get("b5_render_networkidle_hosts", ())) + tuple(
+        SETTINGS.get("parent_verify_networkidle_hosts", ())
+    )
+    return any(h and h in low for h in hosts)
+
+
 def fetch_wait_until(url: str, *, kind: str = "") -> str:
-    """Choose Playwright wait_until: networkidle for JS registration portals."""
+    """Choose Playwright wait_until: networkidle for JS registration portals.
+
+    roadmap2 Phase 2: extend beyond register/portal kinds — JS-render hosts
+    (Sawyer/MyRec/active.com/Daxko/…) need networkidle for *every* kind, because
+    their camp catalog and detail content loads after domcontentloaded.
+    """
     if kind in ("register", "portal"):
         return "networkidle"
-    low = (url or "").lower()
-    for host in SETTINGS.get("parent_verify_networkidle_hosts", ()):
-        if host in low:
-            return "networkidle"
+    if _is_js_render_host(url):
+        return "networkidle"
     return "domcontentloaded"
+
+
+def is_thin_render(text: str) -> bool:
+    """True if a render returned suspiciously little content."""
+    return len((text or "").strip()) < int(SETTINGS.get("b5_render_thin_chars", 400))
 
 
 # Prunes low-signal boilerplate (nav menus, footers) so `result.markdown.fit_markdown`
@@ -168,6 +184,23 @@ def _clean_for_llm(text: str) -> str:
     text = re.sub(r"\s*[*|>#]+\s*", " ", text)
     text = re.sub(r"\s+", " ", text).strip()
     return text
+
+
+def _augment_with_structured(result, text: str) -> str:
+    """Prepend embedded schema.org JSON-LD program data (real names/dates/prices)
+    to the page text when present, so JS/portal pages whose visible DOM is chrome
+    still yield real program titles to downstream extraction (roadmap2 Phase 2)."""
+    raw_html = getattr(result, "html", "") or ""
+    if not raw_html:
+        return text
+    try:
+        from src.structured_extract import extract_jsonld_events, structured_summary
+
+        events = extract_jsonld_events(raw_html)
+    except Exception:  # noqa: BLE001 — never let structured parsing break a fetch
+        return text
+    summary = structured_summary(events)
+    return f"{summary}\n\n{text}" if summary else text
 
 
 def _page_text_from_result(result) -> str:
@@ -257,6 +290,24 @@ async def fetch_page_text_and_links(
                     result = await crawler.arun(url=url, config=run_config)
                     text = _page_text_from_result(result)
                     links = _extract_links_from_result(url, result)
+                    text = _augment_with_structured(result, text)
+                    # roadmap2 Phase 2: a JS host that came back thin probably
+                    # hadn't finished rendering. Retry once, forcing networkidle
+                    # plus a settle, before believing the page is empty.
+                    if is_thin_render(text) and _is_js_render_host(url) and wait != "networkidle":
+                        settle = float(SETTINGS.get("b5_render_settle_seconds", 1.2))
+                        retry_config = _run_config(
+                            wait_until="networkidle",
+                            delay_before_return_html=settle,
+                        )
+                        session_log.trace_fetch_start(url=url, caller=f"{caller}:settle-retry")
+                        result = await crawler.arun(url=url, config=retry_config)
+                        text2 = _augment_with_structured(
+                            result, _page_text_from_result(result)
+                        )
+                        links2 = _extract_links_from_result(url, result)
+                        if len(text2.strip()) > len(text.strip()):
+                            text, links = text2, links2
                     session_log.trace_fetch_done(
                         url=url, chars=len(text), link_count=len(links)
                     )

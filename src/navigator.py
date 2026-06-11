@@ -390,6 +390,10 @@ async def navigate_provider(
         )
         fetches += 1
         html_by_url[normalize_url(url)] = text
+        if town_hint and text.strip():
+            from src.capture import capture_page
+
+            capture_page(town_hint, url, text)
         return text, links
 
     while queue and fetches < fetch_cap:

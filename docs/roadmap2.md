@@ -235,3 +235,31 @@ Adding a vector index + retrieval layer is machinery that doesn't touch any root
 §2. **Defer** unless a real downstream need appears (e.g. a parent-facing "find me camps
 for ages 6–8 in July" query surface), at which point RAG over the §6.2 captured corpus is
 the natural place to add it — after the data is trustworthy, not before.
+
+---
+
+## 7. Implementation status (as built)
+
+Phases 0–6 are implemented behind flags and unit-tested; Phase 7 is the live
+cut-over gate (`scripts/p7_measure.py`).
+
+| Phase | What shipped | Key code | Flag (default) |
+|---|---|---|---|
+| 0 | Frozen bad run + machine-checkable junk audit | `src/junk_audit.py`, `data/_baseline_v2/`, `data/junk_audit.csv` | — |
+| 1 | Name integrity (chrome never published; `name_source`) | `make_session` | `b5_name_integrity` (on) |
+| 2 | Render: networkidle for JS hosts, thin-render settle/retry, JSON-LD, capture | `src/crawl.py`, `src/structured_extract.py`, `src/capture.py` | `b5_render_*`, `b5_capture_pages` (off) |
+| 3 | Evidence-based filter + fail-open instruct tie-breaker | `src/relevance.py`, `verify_youth_summer` | `ollama_focus_verify` (on), `b5_focus_verify_fail_open` (on) |
+| 4 | Anti-fabrication (`should_llm_extract`) + anti-drift (host-scoped register, off-topic fan-out) | `src/camp_validator.py`, `src/navigator.py` | — |
+| 5 | Validation gate + quarantine CSV + run summary | `validate_session`, `write_session_outputs` | `b5_validation_gate` (on) |
+| 6 | Fetch cache, cross-provider funnel dedupe, MyRec verdict policy | `src/fetch_cache.py`, `src/verdict_policy.py` | `b5_fetch_cache`, `b5_cross_provider_dedupe` (on), `b5_myrec_verdict` |
+| 7 | Cut-over measurement vs `data/_baseline_v2/` | `scripts/p7_measure.py` | gate: `b5_navigator_v2` |
+
+**Model routing:** navigation/extraction/tie-breaker run on `ollama_verify_model`
+(the instruct model); `ollama_fast_model` (1B) is reserved for the binary
+classifier. `resolve_model` no longer downgrades a bare base name to a smaller
+variant. Pulling Gemma-4-12B (§6.1) is an ops step: set `ollama_verify_model` to
+the pulled tag — `resolve_model` degrades gracefully if absent.
+
+**Cut-over (Phase 7):** `b5_navigator_v2` flips to default-on only after
+`scripts/p7_measure.py` confirms `junk_rate ≈ 0`, `fabricated = 0`, and
+`parent_ready` not down vs `data/_baseline_v2/`.

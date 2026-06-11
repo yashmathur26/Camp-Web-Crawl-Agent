@@ -53,8 +53,11 @@ SETTINGS = {
     "ollama_link_follow_timeout_s": 20,
     "program_focus": "youth_summer",
     "filter_to_focus": True,
-    # B.5 focus LLM tie-breaker off by default at harvest scale
-    "ollama_focus_verify": False,
+    # roadmap2 Phase 3: evidence-based filtering — recover real youth programs
+    # whose names lack "camp/summer" keywords via the instruct-model tie-breaker,
+    # failing OPEN (keep) on camp-context ambiguous rows when the model is down.
+    "ollama_focus_verify": True,
+    "b5_focus_verify_fail_open": True,
     "ollama_focus_verify_max_per_source": 45,
     "ollama_focus_verify_consecutive_drop_limit": 20,
     "ollama_focus_verify_timeout_s": 20,

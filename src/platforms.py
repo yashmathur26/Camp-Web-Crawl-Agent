@@ -1375,11 +1375,35 @@ def _apply_focus_llm_tiebreaker(
     if not ambiguous:
         return kept, dropped
 
+    fail_open = bool(SETTINGS.get("b5_focus_verify_fail_open", True))
+
+    def _camp_context(s: dict) -> bool:
+        # Recoverable on model failure only when the row carries independent
+        # evidence (age/date/price) or sits on a real registration platform —
+        # never a blind keep-everything.
+        from src.junk_audit import has_evidence
+        from src.registration import is_registration_platform_url
+
+        return has_evidence(s) or is_registration_platform_url(s.get("register_url", ""))
+
     if not is_available():
         from src import session_log
 
         session_log.llm_unavailable()
-        return kept, dropped
+        if not fail_open:
+            return kept, dropped
+        # Fail OPEN: recover camp-context ambiguous drops the model can't judge.
+        recovered, still = [], []
+        for s in dropped:
+            if (
+                is_ambiguous(s.get("_focus_reason", ""))
+                and not is_hard_drop(s.get("_focus_reason", ""))
+                and _camp_context(s)
+            ):
+                recovered.append({**s, "_focus_reason": "llm-unavailable:fail-open"})
+            else:
+                still.append(s)
+        return kept + recovered, still
 
     from src import session_log
 
@@ -1419,7 +1443,11 @@ def _apply_focus_llm_tiebreaker(
             )
         except OllamaError as exc:
             logger.warning("focus tie-breaker failed for %s: %s", name, exc)
-            still_dropped.append(s)
+            if fail_open and _camp_context(s):
+                consecutive_drops = 0
+                recovered.append({**s, "_focus_reason": "llm-error:fail-open"})
+            else:
+                still_dropped.append(s)
             continue
         if keep:
             consecutive_drops = 0

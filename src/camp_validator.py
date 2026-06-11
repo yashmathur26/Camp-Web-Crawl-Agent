@@ -16,7 +16,7 @@ from config.prompts import (
 )
 from config.settings import SETTINGS
 from src import harvest_log
-from src.llm import OllamaError, chat, is_available
+from src.llm import OllamaError, chat, chat_with_repair, is_available
 from src.registration import is_camp_catalog_url, is_registration_platform_url
 from src.urls import normalize_url
 
@@ -250,8 +250,15 @@ def verify_youth_summer(
         },
         ensure_ascii=False,
     )
-    model = SETTINGS.get("ollama_filter_model") or SETTINGS["ollama_model"]
-    response = chat(
+    # roadmap2 §6.1: route the keep/drop judgment to the instruct model
+    # (ollama_verify_model), not the 1B fast model that invented data. Repair +
+    # retry on bad JSON.
+    model = (
+        SETTINGS.get("ollama_verify_model")
+        or SETTINGS.get("ollama_filter_model")
+        or SETTINGS["ollama_model"]
+    )
+    response = chat_with_repair(
         YOUTH_SUMMER_TIEBREAK_SYSTEM,
         user,
         model=model,

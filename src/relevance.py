@@ -90,6 +90,7 @@ def classify_session(
     *,
     ages: str = "",
     dates: str = "",
+    price: str = "",
     text: str = "",
     register_url: str = "",
     platform: str = "",
@@ -97,7 +98,10 @@ def classify_session(
 ) -> tuple[bool, str]:
     """Return (keep, reason). reason is a short tag for auditing."""
     blob = " ".join(x for x in (name, ages, dates, text) if x).strip()
-    if not blob:
+    # roadmap2 Phase 3: a row can still carry hard evidence (age/date/price) even
+    # when its name is empty (needs_name) or keyword-free.
+    has_evidence = bool((ages or "").strip() or (dates or "").strip() or (price or "").strip())
+    if not blob and not has_evidence:
         return False, "empty"
 
     if focus != "youth_summer":
@@ -131,6 +135,14 @@ def classify_session(
     if camp_type or youth or summer:
         return True, "youth-summer"
 
+    # roadmap2 Phase 3: judge the thing, not just the label. A row sitting on a
+    # real registration platform AND carrying age/date/price evidence is a
+    # registrable program regardless of whether its name contains "camp".
+    from src.registration import is_registration_platform_url
+
+    if has_evidence and is_registration_platform_url(register_url):
+        return True, "registrable-evidence"
+
     return False, "no-signal"
 
 
@@ -142,6 +154,7 @@ def filter_sessions(sessions: list[dict], focus: str = "youth_summer") -> tuple[
             s.get("name", ""),
             ages=s.get("ages", ""),
             dates=s.get("dates", ""),
+            price=s.get("price", ""),
             text=s.get("text", ""),
             register_url=s.get("register_url", ""),
             platform=s.get("platform", ""),

@@ -217,17 +217,20 @@ def _classify_role_llm(
     return fallback
 
 
-def _extract_name_from_page(url: str, html: str, links: list[dict]) -> str:
+def _extract_name_from_page(url: str, html: str, links: list[dict]) -> tuple[str, str]:
+    """Return (name, name_source). Source is provenance for the validation gate:
+    "title" (page H1), "link_text" (self-link anchor), or "slug" (URL tail)."""
     m = _TITLE_RE.search(html)
     if m:
-        return m.group(1).strip()
+        return m.group(1).strip(), "title"
     for link in links:
         if normalize_url(link.get("url", "")) == normalize_url(url):
             text = (link.get("text") or "").strip()
             if text and len(text) > 2:
-                return text
+                return text, "link_text"
     slug = urlparse(url).path.rstrip("/").split("/")[-1]
-    return slug.replace("-", " ").replace("_", " ").title() if slug else "Camp program"
+    name = slug.replace("-", " ").replace("_", " ").title() if slug else "Camp program"
+    return name, "slug"
 
 
 async def extract_one_camp(
@@ -240,7 +243,7 @@ async def extract_one_camp(
     """Build a session dict from a detail page (rules first, LLM if thin)."""
     from src.platforms import make_session
 
-    name = _extract_name_from_page(url, html, links)
+    name, name_source = _extract_name_from_page(url, html, links)
     reg = find_register_link(url, links)
     ages = ""
     dates = ""
@@ -263,7 +266,9 @@ async def extract_one_camp(
         )
         if raw:
             c = raw[0]
-            name = c.get("name") or name
+            if c.get("name"):
+                name = c["name"]
+                name_source = "llm"
             ages = c.get("ages") or ages
             dates = c.get("dates") or dates
             regs = c.get("register_urls") or []
@@ -279,6 +284,7 @@ async def extract_one_camp(
         platform="navigator",
         source_url=url,
         kind="session" if reg else "portal",
+        name_source=name_source,
     )
 
 
@@ -468,23 +474,27 @@ async def navigate_provider(
                 rec["register_url"] = u
                 sessions.append(await _verify_session(rec, u, text))
             elif is_registration_platform_url(u):
+                portal_name, portal_src = _extract_name_from_page(u, text, links)
                 portal = make_session(
-                    _extract_name_from_page(u, text, links),
+                    portal_name,
                     u,
                     info_url=node.parent_url or "",
                     platform=plat or "navigator",
                     source_url=seed_url,
                     kind="portal",
+                    name_source=portal_src,
                 )
                 sessions.append(await _verify_session(portal, u, text))
             else:
                 sig = verify_registrable(u, text)
+                reg_name, reg_src = _extract_name_from_page(u, text, links)
                 rec = make_session(
-                    _extract_name_from_page(u, text, links),
+                    reg_name,
                     u,
                     info_url=node.parent_url or "",
                     platform="navigator",
                     source_url=seed_url,
+                    name_source=reg_src,
                 )
                 if sig.auto_verdict:
                     rec = attach_inline_verification(rec, u, text)

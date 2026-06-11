@@ -100,6 +100,8 @@ SETTINGS = {
     "b5_navigator_v2": False,
     "b5_nav_max_depth": 3,
     "b5_nav_max_fetches": 25,
+    # roadmap2 Phase 1 — never publish chrome/button/menu text as a camp name.
+    "b5_name_integrity": True,
     "b5_agent_navigation": True,
     "b5_agent_nav_link_cap": 60,
     "b5_agent_nav_max_catalog_fetches": 3,

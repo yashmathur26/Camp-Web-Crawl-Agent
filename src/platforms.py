@@ -26,6 +26,7 @@ import logging
 import re
 from urllib.parse import parse_qs, urljoin, urlparse
 
+from src.junk_audit import is_unusable_name
 from src.urls import normalize_url
 
 logger = logging.getLogger(__name__)
@@ -50,15 +51,35 @@ def make_session(
     price: str = "",
     source_url: str = "",
     kind: str = "session",
+    name_source: str = "",
 ) -> dict:
     """Uniform record every adapter returns.
 
     kind: "session" = a specific registrable camp; "portal" = a registration
     entry point we couldn't break into per-session links (Firecrawl/JS needed).
     info_url: per-camp detail page (distinct from register_url when known).
+    name_source: provenance of the name (e.g. "adapter", "link_text", "title",
+    "llm", "slug") — recorded so the validation gate and audits can reason about
+    where a name came from.
+
+    Phase 1 (name integrity): a chrome/button/menu/filename string is never
+    published as a name. Such a row keeps flowing with name="" and
+    name_status="needs_name" (raw text preserved in raw_name for debugging), so
+    a later phase can recover a real name or quarantine the row — but the chrome
+    string itself never reaches the deliverable CSV.
     """
+    from config.settings import SETTINGS
+
+    raw_name = (name or "").strip()
+    if SETTINGS.get("b5_name_integrity", True) and is_unusable_name(raw_name):
+        clean_name = ""
+        name_status = "needs_name"
+    else:
+        clean_name = raw_name
+        name_status = "ok"
+
     return {
-        "name": (name or "").strip(),
+        "name": clean_name,
         "register_url": normalize_url(register_url) or register_url,
         "info_url": normalize_url(info_url) if info_url else "",
         "details_text": (details_text or "").strip(),
@@ -68,6 +89,9 @@ def make_session(
         "price": price.strip(),
         "source_url": source_url,
         "kind": kind,
+        "name_source": name_source,
+        "name_status": name_status,
+        "raw_name": raw_name if name_status == "needs_name" else "",
     }
 
 

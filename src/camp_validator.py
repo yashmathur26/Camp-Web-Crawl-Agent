@@ -24,6 +24,43 @@ logger = logging.getLogger(__name__)
 
 _VERDICT_CACHE_PATH = Path("cache/camp_verdicts.json")
 
+# roadmap2 Phase 4 — anti-fabrication. A login wall / empty shell / thin render
+# has no real program data; running LLM extraction on it invents ages and dates
+# (Hancock's fabricated camps came from a 92-char login page). Refuse, and let
+# the caller mark the page needs_js / login_wall instead.
+_LOGIN_WALL_RE = re.compile(
+    r"sign\s+in|log\s+in|\blogin\b|password|members?\s+only|"
+    r"create\s+an?\s+account|please\s+enable\s+javascript|loading\.\.\.",
+    re.I,
+)
+# Real program signal — a short page carrying these is a genuine (if terse)
+# camp page, not an empty JS shell, so extraction is allowed.
+_ENROLL_SIGNAL_RE = re.compile(
+    r"add\s+to\s+cart|register|enroll|sign\s+up|\$\s?\d|program\s+fee|tuition|"
+    r"ages?\s*\d|grades?\s*[k0-9]",
+    re.I,
+)
+
+
+def should_llm_extract(html: str, *, min_chars: int = 200) -> tuple[bool, str]:
+    """(ok, reason). ok=False means do NOT run LLM extraction on this page.
+
+    Blocks login walls and empty/JS shells (which fabricate data) but allows a
+    short page that carries real enrollment/program signal. reason is "" when ok,
+    else "empty" / "login_wall" / "needs_js"."""
+    text = (html or "").strip()
+    if not text:
+        return False, "empty"
+    if _LOGIN_WALL_RE.search(text) and len(text) < 1200:
+        return False, "login_wall"
+    if len(text) < min_chars:
+        # Short is fine only if it shows real program/enrollment signal;
+        # otherwise it's an unrendered shell — mark needs_js, don't fabricate.
+        if _ENROLL_SIGNAL_RE.search(text):
+            return True, ""
+        return False, "needs_js"
+    return True, ""
+
 # Obvious camp registration URLs — skip LLM to save time.
 # Do NOT match /class-category/ (use /class/(?!category)).
 _HIGH_CONFIDENCE_RE = re.compile(

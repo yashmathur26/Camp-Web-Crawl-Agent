@@ -37,6 +37,15 @@ _YOUTH_CAMP_PAGE_RE = re.compile(
     re.I,
 )
 _TITLE_RE = re.compile(r"^#\s+(.+)$", re.M)
+# roadmap2 Phase 4 — anti-drift. Same-host links that are clearly NOT youth
+# programs (research/medical/corporate/news) must not become catalog fan-out
+# targets, so the crawl stops wandering into Mass General psychiatry pages etc.
+_OFF_TOPIC_RE = re.compile(
+    r"/(?:research|clinical|psychiatry|imaging|radiology|oncology|cardiac|"
+    r"faculty|publications?|pubmed|patient|careers?|investor|press|newsroom|"
+    r"privacy|terms|annual-report|board-of|leadership|giving|donate)\b",
+    re.I,
+)
 
 
 class PageRole(enum.Enum):
@@ -82,6 +91,9 @@ def extract_camp_links(page_url: str, links: list[dict]) -> list[str]:
             continue
         if host != seed_host and not is_registration_platform_url(u):
             continue
+        # Anti-drift: skip same-host research/medical/corporate sections.
+        if _OFF_TOPIC_RE.search(urlparse(u).path) and not is_registration_platform_url(u):
+            continue
         if is_camp_catalog_url(u) and "program_details" not in u.lower():
             if "iteminfo" not in u.lower():
                 continue
@@ -95,12 +107,21 @@ def extract_camp_links(page_url: str, links: list[dict]) -> list[str]:
 
 
 def find_register_link(page_url: str, links: list[dict]) -> str:
-    """Best registration/checkout link on a detail page."""
+    """Best registration/checkout link on a detail page.
+
+    roadmap2 Phase 4: a register URL must stay on the provider's host or land on
+    a recognized registration host (allow-list) — an off-host research/news link
+    (e.g. ncbi.nlm.nih.gov) is never a camp checkout, no matter its link text.
+    """
+    from src.junk_audit import is_offhost_register
+
     best = ""
     best_score = 0
     for link in links:
         u = normalize_url(link.get("url", ""))
         if not u:
+            continue
+        if is_offhost_register(u, page_url):
             continue
         text = link.get("text") or ""
         combined = f"{u} {text}"
@@ -258,7 +279,14 @@ async def extract_one_camp(
     if m_date:
         dates = m_date.group(0).strip()
 
-    if not reg and len(html.strip()) < 200:
+    # roadmap2 Phase 4: only ask the LLM to extract from a *substantive* page.
+    # The old code did the opposite — it ran extraction precisely when the page
+    # was thin (<200 chars), which fabricated camps from login/empty shells.
+    from src.camp_validator import should_llm_extract
+
+    extract_status = ""
+    ok, why = should_llm_extract(html)
+    if not reg and ok:
         from src.camp_validator import extract_camp_sessions
 
         raw = extract_camp_sessions(
@@ -274,8 +302,11 @@ async def extract_one_camp(
             regs = c.get("register_urls") or []
             if regs:
                 reg = regs[0]
+    elif not reg and not ok:
+        # Thin/login/empty page — do not fabricate; mark for a render pass.
+        extract_status = why
 
-    return make_session(
+    session = make_session(
         name,
         reg or "",
         info_url=url,
@@ -286,6 +317,10 @@ async def extract_one_camp(
         kind="session" if reg else "portal",
         name_source=name_source,
     )
+    if extract_status:
+        session["extract_status"] = extract_status
+        session["parent_verdict"] = extract_status
+    return session
 
 
 def _dedupe_sessions(sessions: list[dict]) -> list[dict]:

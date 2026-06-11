@@ -1202,11 +1202,17 @@ async def adapter_campminder(url, links, page_text):
 async def adapter_llm(url: str, links: list[dict], page_text: str, town_hint: str = "") -> list[dict]:
     """Fallback for marketing-site builders: ask the local LLM to enumerate the
     camps described in the page prose, then match each to a link."""
-    from src.camp_validator import extract_camp_sessions
+    from src.camp_validator import extract_camp_sessions, should_llm_extract
     from src.enrollment_signals import attach_inline_verification, verify_registrable
     from src.registration import is_registration_platform_url
 
     from src import session_log
+
+    # roadmap2 Phase 4: never fabricate from a login/empty/thin page.
+    ok, why = should_llm_extract(page_text)
+    if not ok:
+        session_log.llm_extract_rejected(name="", reason=f"page not extractable ({why})")
+        return []
 
     raw = extract_camp_sessions(url, page_text=page_text, page_links=links, town_hint=town_hint)
     sessions = []

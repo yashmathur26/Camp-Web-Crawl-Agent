@@ -200,3 +200,33 @@ def audit_row(session: dict) -> list[str]:
 
 def is_junk(session: dict) -> bool:
     return bool(audit_row(session))
+
+
+# URL sections that are never a youth camp (anti-drift backstop at write time).
+_OFF_TOPIC_URL_RE = re.compile(
+    r"/(?:research|clinical|psychiatry|imaging|radiology|oncology|pubmed|"
+    r"faculty|publications?|careers?|investor|press|newsroom|patient)\b",
+    re.I,
+)
+
+
+def validate_session(session: dict) -> tuple[bool, list[str]]:
+    """roadmap2 Phase 5 gate: (ok, reasons). A session may be published only when
+    it has a real name, a registrable URL on an allowed host, at least one of
+    {age,date,price}, and is on-topic. Reasons are the machine-checkable tags.
+
+    This is the backstop — it mostly passes because Phases 1-4 cleaned the data;
+    anything still bad is quarantined rather than published."""
+    reasons = audit_row(session)
+    for key in ("register_url", "info_url", "source_url"):
+        u = session.get(key) or ""
+        if u and _OFF_TOPIC_URL_RE.search(urlparse(u).path):
+            reasons.append("off_topic")
+            break
+    return (not reasons, reasons)
+
+
+def is_fabrication_blocked(session: dict) -> bool:
+    """True when the pipeline refused to fabricate from a thin/login page
+    (Phase 4 marked it) — counted separately in the run summary."""
+    return (session.get("extract_status") or "") in ("needs_js", "login_wall", "empty")

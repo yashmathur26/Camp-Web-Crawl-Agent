@@ -53,6 +53,9 @@ SETTINGS = {
     "ollama_link_follow_timeout_s": 20,
     "program_focus": "youth_summer",
     "filter_to_focus": True,
+    # roadmap2 Phase 5 — validation gate: only rows passing validate_session
+    # reach the deliverable CSV; the rest go to camp_sessions_quarantine.csv.
+    "b5_validation_gate": True,
     # roadmap2 Phase 3: evidence-based filtering — recover real youth programs
     # whose names lack "camp/summer" keywords via the instruct-model tie-breaker,
     # failing OPEN (keep) on camp-context ambiguous rows when the model is down.

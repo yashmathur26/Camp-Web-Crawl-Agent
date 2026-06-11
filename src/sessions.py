@@ -323,15 +323,58 @@ def write_session_outputs(
     town_phase_dir(town, "phase_b5")
     csv_path = camp_sessions_csv(town)
     txt_path = csv_path.with_suffix(".txt")
+    quarantine_path = csv_path.with_name("camp_sessions_quarantine.csv")
+
+    # roadmap2 Phase 5: validation gate. Every published row must pass
+    # validate_session; failures go to the quarantine CSV with a reason, never
+    # the deliverable. Gated by b5_validation_gate (default on).
+    from config.settings import SETTINGS
+    from src.junk_audit import is_fabrication_blocked, validate_session
+
+    gate_on = bool(SETTINGS.get("b5_validation_gate", True))
 
     total = 0
+    quarantined: list[dict] = []
+    fabricated_blocked = 0
     with open(csv_path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=SESSION_CSV_COLUMNS)
         w.writeheader()
         for res in results:
             for s in res.get("sessions", []):
+                ok, reasons = (True, []) if not gate_on else validate_session(s)
+                if not ok:
+                    if is_fabrication_blocked(s):
+                        fabricated_blocked += 1
+                    quarantined.append({**s, "_quarantine_reason": ";".join(reasons)})
+                    continue
                 w.writerow({c: s.get(c, "") for c in SESSION_CSV_COLUMNS})
                 total += 1
+
+    if quarantined:
+        with open(quarantine_path, "w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(
+                f, fieldnames=[*SESSION_CSV_COLUMNS, "name_status", "extract_status", "_quarantine_reason"]
+            )
+            w.writeheader()
+            for s in quarantined:
+                w.writerow(
+                    {
+                        **{c: s.get(c, "") for c in SESSION_CSV_COLUMNS},
+                        "name_status": s.get("name_status", ""),
+                        "extract_status": s.get("extract_status", ""),
+                        "_quarantine_reason": s.get("_quarantine_reason", ""),
+                    }
+                )
+
+    try:
+        session_log.validation_gate_summary(
+            town=town,
+            published=total,
+            quarantined=len(quarantined),
+            fabricated_blocked=fabricated_blocked,
+        )
+    except Exception:  # noqa: BLE001 — logging must never break the write
+        pass
 
     lines = [
         f"{town.upper()} — CAMP SESSIONS (youth summer focus)",

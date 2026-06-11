@@ -639,6 +639,19 @@ def dedupe(*, before: int, after: int) -> None:
         _log.info("Removed %d duplicate link(s) (same URL listed more than once).", before - after)
 
 
+def validation_gate_summary(
+    *, town: str, published: int, quarantined: int, fabricated_blocked: int
+) -> None:
+    _log.info("")
+    _log.info(
+        "%s validation gate: %d published, %d quarantined (%d fabrication-blocked).",
+        town,
+        published,
+        quarantined,
+        fabricated_blocked,
+    )
+
+
 def focus_filter_start(*, before: int) -> None:
     _log.info("")
     _log.info(

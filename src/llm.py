@@ -42,9 +42,11 @@ def resolve_model(preferred: str | None) -> str:
     if model in installed:
         return model
     base = model.split(":")[0]
-    for name in installed:
-        if name.split(":")[0] == base:
-            return name
+    base_match = _pick_base_match(base, installed)
+    if base_match:
+        if base_match != model:
+            logger.info("Ollama model %s not installed; using %s", model, base_match)
+        return base_match
     for fallback in (
         SETTINGS.get("ollama_fast_model"),
         "llama3.2:1b",
@@ -59,13 +61,37 @@ def resolve_model(preferred: str | None) -> str:
                 logger.info("Ollama model %s unavailable; using %s", model, fallback)
             return fallback
         if fallback:
-            fb_base = fallback.split(":")[0]
-            for name in installed:
-                if name.split(":")[0] == fb_base:
-                    if name != model:
-                        logger.info("Ollama model %s unavailable; using %s", model, name)
-                    return name
+            fb_match = _pick_base_match(fallback.split(":")[0], installed)
+            if fb_match:
+                if fb_match != model:
+                    logger.info("Ollama model %s unavailable; using %s", model, fb_match)
+                return fb_match
     return model
+
+
+# Parameter-size tags we must never silently upgrade *to* when a bare base name
+# (e.g. "llama3.2") was requested — "llama3.2" means the default 3B instruct
+# model, not "llama3.2:1b".
+_SIZE_TAG_RE = re.compile(r":\d+(?:\.\d+)?b$", re.I)
+
+
+def _pick_base_match(base: str, installed: set[str]) -> str | None:
+    """Deterministically choose an installed model whose base name == *base*.
+
+    Set iteration order is hash-randomized per process, so the old
+    `for name in installed: ...` returned `llama3.2:1b` or `llama3.2:latest`
+    at random. Prefer `<base>:latest`, then any non-size-tagged variant, then
+    a stable sorted fallback — so navigation never downgrades to a smaller
+    param model by accident.
+    """
+    matches = sorted(n for n in installed if n.split(":")[0] == base)
+    if not matches:
+        return None
+    latest = f"{base}:latest"
+    if latest in matches:
+        return latest
+    non_size = [n for n in matches if not _SIZE_TAG_RE.search(n)]
+    return (non_size or matches)[0]
 
 
 def _extract_json(text: str) -> dict[str, Any]:

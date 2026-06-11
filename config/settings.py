@@ -56,6 +56,13 @@ SETTINGS = {
     # roadmap2 Phase 5 — validation gate: only rows passing validate_session
     # reach the deliverable CSV; the rest go to camp_sessions_quarantine.csv.
     "b5_validation_gate": True,
+    # roadmap2 Phase 6 — efficiency + verdict policy.
+    "b5_fetch_cache": True,          # process-level dedupe of identical fetches
+    "b5_cross_provider_dedupe": True,  # merge funnel duplicates across providers
+    # MyRec detail pages render their cart via JS we don't drive, so MyRec can't
+    # honestly reach parent_ready on the crawl path. Ship it as needs_js (a
+    # render/Firecrawl confirm pass can upgrade it later) rather than guessing.
+    "b5_myrec_verdict": "needs_js",
     # roadmap2 Phase 3: evidence-based filtering — recover real youth programs
     # whose names lack "camp/summer" keywords via the instruct-model tie-breaker,
     # failing OPEN (keep) on camp-context ambiguous rows when the model is down.

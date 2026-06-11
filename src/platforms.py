@@ -389,12 +389,19 @@ async def _fetch(
     kind: str = "",
 ) -> tuple[str, list[dict]]:
     from src.crawl import fetch_page_text_and_links
+    from src import fetch_cache
+
+    cached = fetch_cache.get(url, kind=kind)
+    if cached is not None:
+        return cached
 
     for attempt in range(tries):
         try:
-            return await fetch_page_text_and_links(
+            text, links = await fetch_page_text_and_links(
                 url, caller=caller, wait_until=wait_until, kind=kind
             )
+            fetch_cache.put(url, text, links, kind=kind)
+            return text, links
         except Exception as exc:  # noqa: BLE001
             if attempt == tries - 1:
                 logger.warning("fetch gave up on %s: %s", url, exc)

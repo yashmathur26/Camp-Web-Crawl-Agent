@@ -342,6 +342,7 @@ async def _verify_session(
 ) -> dict:
     from src import session_log
     from src.enrollment_signals import can_verify_inline
+    from src.verdict_policy import apply_verdict_policy
 
     row = {**session, "platform": session.get("platform") or "navigator"}
     if can_verify_inline(row, fetched_url) and html.strip():
@@ -351,7 +352,8 @@ async def _verify_session(
             verdict=row.get("parent_verdict", ""),
             name=row.get("name", ""),
         )
-    return row
+    # roadmap2 Phase 6: deterministic per-platform verdict policy (MyRec needs_js).
+    return apply_verdict_policy(row)
 
 
 async def _finish_adapter_sessions(

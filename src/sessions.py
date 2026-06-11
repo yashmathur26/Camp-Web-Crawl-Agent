@@ -22,6 +22,7 @@ from src.data_layout import (
 )
 from src.geo_filter import is_out_of_state_url
 from src.platforms import enumerate_provider
+from src.urls import normalize_url
 
 logger = logging.getLogger(__name__)
 
@@ -220,6 +221,9 @@ async def enumerate_town(
     log_file: Path | str | None = None,
 ) -> list[dict]:
     """Run platform-aware enumeration for every provider in a town."""
+    from src import fetch_cache
+
+    fetch_cache.reset()  # one run = one fresh cache
     provider_urls = urls or load_provider_urls(town, candidates_path)
     log_path = session_log.init(log_file)
     logger.info("Session enumeration log: %s", log_path)
@@ -297,6 +301,9 @@ async def enumerate_town(
     else:
         results = list(await asyncio.gather(*[run_one(u) for u in provider_urls]))
 
+    if SETTINGS.get("b5_cross_provider_dedupe", True):
+        results = _dedupe_across_providers(results)
+
     elapsed = time.monotonic() - t0
     total_sessions = sum(len(r.get("sessions", [])) for r in results)
     with_camps = sum(1 for r in results if r.get("sessions"))
@@ -310,6 +317,32 @@ async def enumerate_town(
         runtime_s=elapsed,
     )
     return results
+
+
+def _dedupe_across_providers(results: list[dict]) -> list[dict]:
+    """roadmap2 Phase 6: drop funnel duplicates across providers.
+
+    Two providers (lexingtonma.gov and lexrecma.myrec.com) often surface the
+    same registration catalog, so the same register_url appears under both. Keep
+    the first provider to claim each register_url; drop the duplicate from later
+    providers so the town's count isn't inflated by the same camp twice."""
+    seen_reg: set[str] = set()
+    out: list[dict] = []
+    removed = 0
+    for res in results:
+        kept_sessions = []
+        for s in res.get("sessions", []):
+            key = normalize_url(s.get("register_url") or s.get("info_url") or "")
+            if key and key in seen_reg:
+                removed += 1
+                continue
+            if key:
+                seen_reg.add(key)
+            kept_sessions.append(s)
+        out.append({**res, "sessions": kept_sessions})
+    if removed:
+        logger.info("Cross-provider dedupe removed %d funnel-duplicate session(s).", removed)
+    return out
 
 
 def write_session_outputs(

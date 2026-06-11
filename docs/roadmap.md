@@ -36,14 +36,14 @@ register_url. Cheapest unblock.
 
 ---
 
-## Phase 2 — Verification gate moves inline
+## Phase 2 — Verification gate moves inline ✓
 
 **Why:** "can a parent register" should be decided where the page is fetched, not a phase later.
 
-- Extract the deterministic check from Phase P (`enrollment_signals.py`) into a callable
+- [x] Extract the deterministic check from Phase P (`enrollment_signals.py`) into a callable
   `verify_registrable(url, html) -> EnrollmentSignals` usable mid-traversal.
-- Make fetches that target register/portal pages use `networkidle` (JS-rendered portals).
-- Phase P stays as a batch re-verify / audit, but the navigator now sets `parent_verdict`
+- [x] Make fetches that target register/portal pages use `networkidle` (JS-rendered portals).
+- [x] Phase P stays as a batch re-verify / audit, but the navigator now sets `parent_verdict`
   itself when it has the page in hand.
 
 **Exit:** a camp is only marked `parent_ready` after its register page was fetched and

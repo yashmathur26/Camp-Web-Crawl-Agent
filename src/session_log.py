@@ -353,6 +353,11 @@ def agent_nav_fetch_error(*, url: str, error: str) -> None:
     _log.info("  OPEN FAILED %s — %s", url, error[:160])
 
 
+def agent_nav_verified(*, url: str, verdict: str, name: str = "") -> None:
+    label = f" \"{name[:60]}\"" if name.strip() else ""
+    _log.info("  VERIFY%s → %s (%s)", label, verdict or "?", url)
+
+
 def agent_nav_failed(*, error: str) -> None:
     _log.info("  Agent navigation failed: %s", error[:200])
 

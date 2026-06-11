@@ -9,8 +9,8 @@ import logging
 from pathlib import Path
 from config.prompts import PARENT_VERIFY_FAST_SYSTEM, PARENT_VERIFY_SYSTEM
 from config.settings import SETTINGS
-from src.crawl import fetch_page_text
-from src.enrollment_signals import extract_enrollment_signals
+from src.crawl import fetch_page_text, fetch_wait_until
+from src.enrollment_signals import extract_enrollment_signals, verdict_from_signals
 from src.llm import OllamaError, chat, is_available
 from src.llm_pool import run_batch
 from src.data_layout import (
@@ -35,11 +35,11 @@ def _normalize_register_url(url: str) -> str:
 
 
 async def _fetch_verify_page(url: str) -> str:
-    """Fetch page text; JS-heavy hosts use longer timeout via standard fetch."""
+    """Fetch page text; JS-heavy hosts wait for networkidle."""
     if not url:
         return ""
     try:
-        return await fetch_page_text(url)
+        return await fetch_page_text(url, wait_until=fetch_wait_until(url, kind="register"))
     except Exception as exc:  # noqa: BLE001
         logger.warning("parent verify fetch failed %s: %s", url, exc)
         return ""
@@ -120,10 +120,8 @@ def _llm_verify_one(item: tuple) -> dict:
         return {"verdict": "unverified", "reason": str(exc), "confidence": 0.0}
 
 
-def _apply_fetch_verdict(signals, page_text: str) -> str | None:
-    if not page_text.strip():
-        return "fetch_failed"
-    return signals.auto_verdict
+def _already_verified(session: dict) -> bool:
+    return bool(session.get("parent_verdict"))
 
 
 async def verify_sessions(
@@ -155,8 +153,10 @@ async def verify_sessions(
         enriched.append(s)
 
     work = [s for s in enriched if s.get("quality_tier") != "rejected"]
+    pending = [s for s in work if not _already_verified(s)]
+
     url_to_sessions: dict[str, list[dict]] = {}
-    for s in work:
+    for s in pending:
         reg = s.get("register_url") or s.get("source_url", "")
         key = _normalize_register_url(reg)
         if key:
@@ -182,15 +182,15 @@ async def verify_sessions(
             page_text,
             session_name=sample.get("name", ""),
         )
-        auto = _apply_fetch_verdict(signals, page_text)
+        auto = verdict_from_signals(signals, page_text)
         entry = {
             "signals": signals,
             "page_text": page_text,
             "auto_verdict": auto,
             "llm": None,
         }
-        if auto:
-            entry["final_verdict"] = auto if auto != "fetch_failed" else "fetch_failed"
+        if auto and auto != "unverified":
+            entry["final_verdict"] = auto
             entry["reason"] = auto
         elif _needs_llm(sample, signals, verify_all=verify_all):
             llm_queue.append((sample, url, page_text, signals))
@@ -219,6 +219,9 @@ async def verify_sessions(
         if s.get("quality_tier") == "rejected":
             out.append(s)
             continue
+        if _already_verified(s):
+            out.append(s)
+            continue
         reg = _normalize_register_url(s.get("register_url") or s.get("source_url", ""))
         res = url_results.get(reg, {})
         signals = res.get("signals")
@@ -227,6 +230,7 @@ async def verify_sessions(
         row = {
             **s,
             "parent_verdict": verdict,
+            "parent_can_register": verdict == "parent_ready",
             "enrollment_signals": json.dumps(signals.to_dict() if signals else {}),
             "parent_verify_reason": reason,
         }

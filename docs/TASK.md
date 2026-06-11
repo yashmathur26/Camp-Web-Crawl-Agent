@@ -35,11 +35,11 @@ until the one above it is green. Reference `IMPLEMENTATION_PLAN.md` for the desi
 
 ## P2 — Inline verification gate
 
-- [ ] **P2.1** Refactor `enrollment_signals.py` so the core check is a pure function
+- [x] **P2.1** Refactor `enrollment_signals.py` so the core check is a pure function
   `verify_registrable(url: str, html: str) -> EnrollmentSignals` (no phase coupling).
-- [ ] **P2.2** Add a `networkidle` fetch option and use it for `register`/`portal` targets
+- [x] **P2.2** Add a `networkidle` fetch option and use it for `register`/`portal` targets
   in the navigator fetch path.
-- [ ] **P2.3** Let the navigator set `parent_verdict` / `parent_can_register` directly when
+- [x] **P2.3** Let the navigator set `parent_verdict` / `parent_can_register` directly when
   it has the register page in hand. Phase P becomes batch re-verify only.
   - DoD: a camp reaches `parent_ready` only after its register page was fetched and signals
     confirmed cart/price/CTA. Unit test with a fixture proves it.

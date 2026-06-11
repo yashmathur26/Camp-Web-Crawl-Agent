@@ -1,6 +1,6 @@
 """Tests for enrollment signal extraction."""
 
-from src.enrollment_signals import extract_enrollment_signals
+from src.enrollment_signals import extract_enrollment_signals, verify_registrable
 
 
 WEBTRAC_HTML = """
@@ -31,6 +31,7 @@ def test_webtrac_parent_ready():
     sig = extract_enrollment_signals(url, WEBTRAC_HTML, session_name="Day Camp")
     assert sig.auto_verdict == "parent_ready"
     assert sig.has_cart_cta
+    assert verify_registrable(url, WEBTRAC_HTML).auto_verdict == "parent_ready"
 
 
 def test_woo_parent_ready():

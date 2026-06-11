@@ -356,12 +356,21 @@ def detect_platform(url: str, links: list[dict], page_text: str = "") -> str:
 # --------------------------------------------------------------------------- #
 # Fetch + pagination helpers (Playwright via crawl.py, lazy import)
 # --------------------------------------------------------------------------- #
-async def _fetch(url: str, tries: int = 3, *, caller: str = "_fetch") -> tuple[str, list[dict]]:
+async def _fetch(
+    url: str,
+    tries: int = 3,
+    *,
+    caller: str = "_fetch",
+    wait_until: str | None = None,
+    kind: str = "",
+) -> tuple[str, list[dict]]:
     from src.crawl import fetch_page_text_and_links
 
     for attempt in range(tries):
         try:
-            return await fetch_page_text_and_links(url, caller=caller)
+            return await fetch_page_text_and_links(
+                url, caller=caller, wait_until=wait_until, kind=kind
+            )
         except Exception as exc:  # noqa: BLE001
             if attempt == tries - 1:
                 logger.warning("fetch gave up on %s: %s", url, exc)

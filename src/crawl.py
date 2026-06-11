@@ -73,6 +73,17 @@ def _run_config(**overrides) -> CrawlerRunConfig:
     return CrawlerRunConfig(**base)
 
 
+def fetch_wait_until(url: str, *, kind: str = "") -> str:
+    """Choose Playwright wait_until: networkidle for JS registration portals."""
+    if kind in ("register", "portal"):
+        return "networkidle"
+    low = (url or "").lower()
+    for host in SETTINGS.get("parent_verify_networkidle_hosts", ()):
+        if host in low:
+            return "networkidle"
+    return "domcontentloaded"
+
+
 # Prunes low-signal boilerplate (nav menus, footers) so `result.markdown.fit_markdown`
 # carries the actual page content the LLM should judge — not the site menu.
 _MARKDOWN_GENERATOR = DefaultMarkdownGenerator(
@@ -193,14 +204,15 @@ def _extract_links_from_result(base_url: str, result) -> list[dict]:
     return links
 
 
-async def fetch_page_text(url: str) -> str:
+async def fetch_page_text(url: str, *, wait_until: str | None = None) -> str:
     """Shallow fetch of visible page text for LLM validation."""
     if not _is_allowed(url):
         return ""
     domain = _registered_domain(url)
     sem = _host_semaphores[domain]
     browser_config = _browser_config()
-    run_config = _run_config()
+    wait = wait_until or fetch_wait_until(url)
+    run_config = _run_config(wait_until=wait)
     fetch_delay = float(
         SETTINGS.get("ollama_validate_fetch_delay_seconds")
         or SETTINGS.get("focused_delay_seconds", 1.5)
@@ -218,7 +230,11 @@ async def fetch_page_text(url: str) -> str:
 
 
 async def fetch_page_text_and_links(
-    url: str, *, caller: str = "fetch_page_text_and_links"
+    url: str,
+    *,
+    caller: str = "fetch_page_text_and_links",
+    wait_until: str | None = None,
+    kind: str = "",
 ) -> tuple[str, list[dict]]:
     """One shallow fetch returning (clean_text, links). Used to enumerate camp
     sessions on a page and match each to its registration link."""
@@ -231,7 +247,8 @@ async def fetch_page_text_and_links(
     domain = _registered_domain(url)
     sem = _host_semaphores[domain]
     browser_config = _browser_config()
-    run_config = _run_config()
+    wait = wait_until or fetch_wait_until(url, kind=kind)
+    run_config = _run_config(wait_until=wait)
     async with sem:
         await asyncio.sleep(SETTINGS["delay_seconds"])
         try:

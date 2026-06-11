@@ -8,6 +8,7 @@ from urllib.parse import urlparse
 
 from config.prompts import CAMP_NAVIGATOR_SYSTEM
 from config.settings import SETTINGS
+from src.enrollment_signals import attach_inline_verification, can_verify_inline
 from src.llm import OllamaError, chat
 from src.registration import crawl_link_score, is_registration_platform_url
 from src.urls import normalize_url
@@ -150,9 +151,22 @@ async def agent_navigate_provider(
     max_catalog = int(SETTINGS.get("b5_agent_nav_max_catalog_fetches", 3))
     max_register = int(SETTINGS.get("b5_agent_nav_max_register_fetches", 2))
 
-    async def _enumerate_url(target: str, *, kind: str) -> list[dict]:
+    def _maybe_verify(session: dict, fetched_url: str, html: str) -> dict:
+        row = {**session, "platform": session.get("platform") or "agent_nav"}
+        if can_verify_inline(row, fetched_url):
+            row = attach_inline_verification(row, fetched_url, html)
+            session_log.agent_nav_verified(
+                url=fetched_url,
+                verdict=row.get("parent_verdict", ""),
+                name=row.get("name", ""),
+            )
+        return row
+
+    async def _enumerate_url(target: str, *, kind: str) -> tuple[list[dict], str]:
         session_log.agent_nav_fetch(kind=kind, url=target)
-        text, page_links = await _fetch(target, caller=f"agent_nav:{kind}")
+        text, page_links = await _fetch(
+            target, caller=f"agent_nav:{kind}", kind=kind
+        )
         plat = detect_platform(target, page_links, text)
         found: list[dict] = []
         if plat in _ADAPTERS:
@@ -162,18 +176,19 @@ async def agent_navigate_provider(
             found = await adapter_veracross(target, page_links, text)
         if not found:
             found = await adapter_llm(target, page_links, text, town_hint=town_hint)
-        return found
+        return found, text
 
     for pick in picks.get("catalog_urls", [])[:max_catalog]:
         u = pick["url"]
         if u in seen_regs:
             continue
         try:
-            for s in await _enumerate_url(u, kind="catalog"):
+            found, html = await _enumerate_url(u, kind="catalog")
+            for s in found:
                 reg = s.get("register_url", "")
                 if reg and reg not in seen_regs:
                     seen_regs.add(reg)
-                    sessions.append({**s, "platform": s.get("platform") or "agent_nav"})
+                    sessions.append(_maybe_verify(s, u, html))
         except Exception as exc:  # noqa: BLE001
             logger.warning("agent catalog fetch failed %s: %s", u, exc)
             session_log.agent_nav_fetch_error(url=u, error=str(exc))
@@ -183,21 +198,23 @@ async def agent_navigate_provider(
         if u in seen_regs:
             continue
         try:
-            for s in await _enumerate_url(u, kind="register"):
+            found, html = await _enumerate_url(u, kind="register")
+            added = False
+            for s in found:
                 reg = s.get("register_url", "")
                 if reg and reg not in seen_regs:
                     seen_regs.add(reg)
-                    sessions.append({**s, "platform": s.get("platform") or "agent_nav"})
-            if not sessions and is_registration_platform_url(u):
-                sessions.append(
-                    make_session(
-                        pick.get("label") or "Camp registration",
-                        u,
-                        platform="agent_nav",
-                        source_url=seed_url,
-                        kind="portal",
-                    )
+                    sessions.append(_maybe_verify(s, u, html))
+                    added = True
+            if not added and is_registration_platform_url(u):
+                portal = make_session(
+                    pick.get("label") or "Camp registration",
+                    u,
+                    platform="agent_nav",
+                    source_url=seed_url,
+                    kind="portal",
                 )
+                sessions.append(_maybe_verify(portal, u, html))
                 seen_regs.add(u)
         except Exception as exc:  # noqa: BLE001
             logger.warning("agent register fetch failed %s: %s", u, exc)

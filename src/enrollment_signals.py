@@ -1,13 +1,15 @@
-"""Deterministic HTML signals for parent enrollment verification (Phase P)."""
+"""Deterministic HTML signals for parent enrollment verification."""
 
 from __future__ import annotations
 
+import json
 import re
 from dataclasses import asdict, dataclass, field
 from urllib.parse import parse_qs, urlparse
 
 from src.camp_validator import should_auto_drop
 from src.session_quality import HUB_PATH_RE
+from src.urls import normalize_url
 
 CART_CTA_RE = re.compile(
     r"add[- ]to[- ]cart|addtocart|enroll\s+now|register\s+now|"
@@ -105,17 +107,30 @@ def _is_platform_session_url(url: str) -> bool:
     return False
 
 
+def verify_registrable(url: str, html: str) -> EnrollmentSignals:
+    """Pure URL+HTML check for parent registrability (no session/phase context)."""
+    return _compute_enrollment_signals(url, html, extra_context="")
+
+
 def extract_enrollment_signals(
     url: str,
     html: str,
     *,
     session_name: str = "",
 ) -> EnrollmentSignals:
-    """Extract enrollment signals from page HTML and URL."""
+    """Phase P wrapper; session name informs youth/adult keyword checks."""
+    return _compute_enrollment_signals(url, html, extra_context=session_name)
+
+
+def _compute_enrollment_signals(
+    url: str,
+    html: str,
+    *,
+    extra_context: str = "",
+) -> EnrollmentSignals:
     text = html or ""
-    low_text = text.lower()
     low_url = (url or "").lower()
-    blob = f"{session_name} {text[:8000]}"
+    blob = f"{extra_context} {text[:8000]}".strip()
 
     sig = EnrollmentSignals(
         has_cart_cta=bool(CART_CTA_RE.search(text)),
@@ -129,7 +144,7 @@ def extract_enrollment_signals(
         sig.auto_verdict = "wrong_audience"
         return sig
 
-    if ADULT_BLOCKER_RE.search(blob) and not YOUTH_CAMP_RE.search(session_name):
+    if ADULT_BLOCKER_RE.search(blob) and not YOUTH_CAMP_RE.search(extra_context):
         sig.blockers.append("adult_ed")
         sig.auto_verdict = "wrong_audience"
         return sig
@@ -185,3 +200,50 @@ def extract_enrollment_signals(
         sig.auto_verdict = "brochure_only"
 
     return sig
+
+
+def verdict_from_signals(signals: EnrollmentSignals, html: str) -> str:
+    """Map signals + fetched HTML to a parent_verdict string."""
+    if not (html or "").strip():
+        return "fetch_failed"
+    if signals.auto_verdict:
+        return signals.auto_verdict
+    if signals.blockers:
+        return signals.blockers[0] if signals.blockers[0] in (
+            "brochure_only",
+            "wrong_audience",
+            "login_wall",
+        ) else "unverified"
+    return "unverified"
+
+
+def attach_inline_verification(
+    session: dict,
+    url: str,
+    html: str,
+    *,
+    session_name: str = "",
+) -> dict:
+    """Set parent_verdict on a session when the register page HTML is in hand."""
+    name = session_name or session.get("name", "")
+    signals = extract_enrollment_signals(url, html, session_name=name)
+    verdict = verdict_from_signals(signals, html)
+    reason = signals.auto_verdict or (
+        signals.blockers[0] if signals.blockers else "rules inconclusive"
+    )
+    return {
+        **session,
+        "parent_verdict": verdict,
+        "parent_can_register": verdict == "parent_ready",
+        "enrollment_signals": json.dumps(signals.to_dict()),
+        "parent_verify_reason": reason,
+    }
+
+
+def can_verify_inline(session: dict, fetched_url: str) -> bool:
+    """True when fetched_url is the register page for this session."""
+    reg = normalize_url(session.get("register_url") or "")
+    fetched = normalize_url(fetched_url)
+    if reg and fetched and reg == fetched:
+        return True
+    return session.get("kind") == "portal" and bool(fetched)

@@ -366,6 +366,50 @@ def agent_nav_done(*, session_count: int) -> None:
     _log.info("  Agent navigation done: %d camp link(s) found from chosen pages.", session_count)
 
 
+def nav_start(*, seed_url: str, max_depth: int, max_fetches: int) -> None:
+    _log.info("")
+    _log.info(
+        "NAVIGATOR v2 — bounded crawl from seed (depth≤%d, fetches≤%d)",
+        max_depth,
+        max_fetches,
+    )
+    _log.info("  seed: %s", seed_url)
+
+
+def nav_fetch(*, role: str, url: str) -> None:
+    _log.info("  OPEN [%s] %s", role.upper(), url)
+
+
+def nav_fetch_error(*, url: str, error: str) -> None:
+    _log.info("  OPEN FAILED %s — %s", url, error[:160])
+
+
+def nav_role(*, url: str, role: str, depth: int) -> None:
+    if _trace_enabled():
+        _log.info("  ROLE [%s] depth=%d %s", role.upper(), depth, url)
+
+
+def nav_fanout(*, catalog_url: str, detail_count: int) -> None:
+    _log.info("  FAN-OUT %d camp detail link(s) from catalog %s", detail_count, catalog_url)
+
+
+def nav_adapter_done(*, platform: str, count: int) -> None:
+    _log.info("  ADAPTER [%s] → %d verified session(s)", platform, count)
+
+
+def nav_verified(*, url: str, verdict: str, name: str = "") -> None:
+    label = f" \"{name[:60]}\"" if name.strip() else ""
+    _log.info("  VERIFY%s → %s (%s)", label, verdict or "?", url)
+
+
+def nav_done(*, session_count: int, fetches: int) -> None:
+    _log.info(
+        "  Navigator done: %d camp(s) after %d page fetch(es).",
+        session_count,
+        fetches,
+    )
+
+
 def discovery_skip(*, url: str, reason: str) -> None:
     if _trace_enabled():
         _log.info("    SKIP candidate %s — %s", url, reason)

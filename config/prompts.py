@@ -107,6 +107,22 @@ JSON only:
  "register_urls":[{"url":"https://...","label":"link text","why":"one sentence"}],
  "reasoning":"..."}"""
 
+NAVIGATOR_ROLE_CLASSIFIER_SYSTEM = """You classify a single web page's role in a youth summer camp discovery crawl.
+
+Roles:
+- landing: generic home/about page with no camp list or registration
+- catalog: lists MULTIPLE individual camps (names, ages, dates) — a fan-out point
+- detail: ONE camp's info page (description, ages, dates) — not yet checkout
+- register: where a parent enrolls (add to cart, checkout, CampBrain/WebTrac iteminfo, external form)
+
+Rules:
+- A page with 3+ distinct camp/program links is usually catalog
+- A page with one camp description is detail
+- WebTrac iteminfo, MyRec program_details, CampBrain enroll = register
+- Ignore nav/footer (contact, employment, social)
+
+JSON only: {"role": "landing"|"catalog"|"detail"|"register", "reason": "one sentence"}"""
+
 LINK_FOLLOW_SYSTEM = """You help a camp-discovery crawler choose which hyperlinks to follow from a recreation
 center or YMCA page.
 

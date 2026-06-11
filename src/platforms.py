@@ -1179,6 +1179,7 @@ async def adapter_llm(url: str, links: list[dict], page_text: str, town_hint: st
     """Fallback for marketing-site builders: ask the local LLM to enumerate the
     camps described in the page prose, then match each to a link."""
     from src.camp_validator import extract_camp_sessions
+    from src.enrollment_signals import attach_inline_verification, verify_registrable
     from src.registration import is_registration_platform_url
 
     from src import session_log
@@ -1192,13 +1193,34 @@ async def adapter_llm(url: str, links: list[dict], page_text: str, town_hint: st
         if not register_url:
             session_log.llm_extract_rejected(name=name, reason="no registration link matched")
             continue
-        if register_url.rstrip("/") == url.rstrip("/") and not is_registration_platform_url(
-            register_url
-        ):
-            session_log.llm_extract_rejected(
-                name=name,
-                reason="only link is the same marketing page (not a register/catalog URL)",
+        same_marketing_page = (
+            register_url.rstrip("/") == url.rstrip("/")
+            and not is_registration_platform_url(register_url)
+        )
+        if same_marketing_page:
+            # P4.2: an info page whose only "register" link is itself can still be a
+            # valid single-page enroll target. Verify it instead of rejecting outright:
+            # if the page carries an on-page register CTA (cart/price/parent_ready),
+            # keep it with info_url == register_url and the verdict from signals.
+            sig = verify_registrable(url, page_text)
+            if not (sig.has_cart_cta or sig.auto_verdict == "parent_ready"):
+                session_log.llm_extract_rejected(
+                    name=name,
+                    reason="only link is the same marketing page (no register CTA on page)",
+                )
+                continue
+            session_log.llm_extract_kept(name=name, register_url=url)
+            kept = make_session(
+                name,
+                url,
+                info_url=url,
+                platform="llm",
+                ages=c.get("ages", ""),
+                dates=c.get("dates", ""),
+                source_url=url,
+                kind="session",
             )
+            sessions.append(attach_inline_verification(kept, url, page_text, session_name=name))
             continue
         session_log.llm_extract_kept(name=name, register_url=register_url)
         sessions.append(
@@ -1412,12 +1434,60 @@ def _apply_focus_llm_tiebreaker(
 # --------------------------------------------------------------------------- #
 # Unified dispatcher
 # --------------------------------------------------------------------------- #
+async def _enumerate_provider_v2(url: str, *, town_hint: str = "") -> dict:
+    """Navigator v2 path: bounded recursive crawl behind b5_navigator_v2 flag."""
+    from config.settings import SETTINGS
+    from src import session_log
+    from src.navigator import navigate_provider
+    from src.relevance import is_ambiguous, is_hard_drop
+
+    session_log.trace("enumerate_provider", f"seed={url} [navigator_v2]")
+    sessions = await navigate_provider(url, town_hint=town_hint)
+    platform = "navigator_v2"
+
+    before_dedupe = len(sessions)
+    seen, deduped = set(), []
+    for s in sessions:
+        key = s.get("register_url") or s.get("info_url") or ""
+        if key and key not in seen:
+            seen.add(key)
+            deduped.append(s)
+    session_log.dedupe(before=before_dedupe, after=len(deduped))
+
+    dropped: list[dict] = []
+    if SETTINGS.get("filter_to_focus"):
+        from src.relevance import filter_sessions
+
+        session_log.focus_filter_start(before=len(deduped))
+        deduped, dropped = filter_sessions(deduped, SETTINGS.get("program_focus", "youth_summer"))
+        hard_drops = sum(1 for s in dropped if is_hard_drop(s.get("_focus_reason", "")))
+        ambiguous_drops = sum(1 for s in dropped if is_ambiguous(s.get("_focus_reason", "")))
+        for s in deduped:
+            session_log.focus_kept(name=s.get("name", ""), reason=s.get("_focus_reason", ""))
+        for s in dropped:
+            session_log.focus_dropped(name=s.get("name", ""), reason=s.get("_focus_reason", ""))
+        session_log.focus_summary(
+            kept=len(deduped),
+            dropped=len(dropped),
+            hard_drops=hard_drops,
+            ambiguous_drops=ambiguous_drops,
+        )
+        deduped, dropped = _apply_focus_llm_tiebreaker(deduped, dropped, town_hint=town_hint)
+
+    return {"url": url, "platform": platform, "sessions": deduped, "dropped": dropped}
+
+
 async def enumerate_provider(url: str, *, town_hint: str = "") -> dict:
     """Detect the platform behind `url` and enumerate its camps.
 
     Returns {url, platform, sessions: list[Session]}. Falls back to the LLM
     extractor when a structured/portal adapter finds nothing.
     """
+    from config.settings import SETTINGS as _ENUM_SETTINGS
+
+    if _ENUM_SETTINGS.get("b5_navigator_v2"):
+        return await _enumerate_provider_v2(url, town_hint=town_hint)
+
     from src import session_log
     from src.relevance import is_ambiguous, is_hard_drop
 

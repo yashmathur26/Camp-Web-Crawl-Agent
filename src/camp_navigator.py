@@ -4,16 +4,26 @@ from __future__ import annotations
 
 import json
 import logging
+import re
 from urllib.parse import urlparse
 
 from config.prompts import CAMP_NAVIGATOR_SYSTEM
 from config.settings import SETTINGS
 from src.enrollment_signals import attach_inline_verification, can_verify_inline
-from src.llm import OllamaError, chat
+from src.llm import OllamaError, chat_with_repair
 from src.registration import crawl_link_score, is_registration_platform_url
 from src.urls import normalize_url
 
 logger = logging.getLogger(__name__)
+
+# Cross-host links that look like an enroll destination (external Jotform/Google
+# Form/custom SaaS register pages). Used to keep them in the ranked set instead
+# of dropping them as off-host noise.
+_REGISTER_INTENT_RE = re.compile(
+    r"register|registration|enroll|sign[\s\-]?up|signup|/forms?/|jotform|"
+    r"formstack|wufoo|regfox|application|apply",
+    re.I,
+)
 
 
 def _rank_links_for_agent(seed_url: str, links: list[dict], cap: int) -> list[dict]:
@@ -31,8 +41,18 @@ def _rank_links_for_agent(seed_url: str, links: list[dict], cap: int) -> list[di
         score = crawl_link_score(u, text)
         if score < 0:
             continue
+        # P4.1: stop dropping every cross-host non-platform link. An external
+        # register target (Jotform/Google Form/custom SaaS) is exactly what we
+        # want to keep — down-weight it so the model still sees it. Generic
+        # off-host links (social, partners) still get pruned so they don't crowd
+        # the prompt.
         if host != seed_host and not is_registration_platform_url(u):
-            continue
+            if _REGISTER_INTENT_RE.search(f"{u} {text}"):
+                score = max(score - 15, 5)
+            else:
+                score -= 30
+                if score < 0:
+                    continue
         seen.add(u)
         scored.append((score, {"url": u, "text": text}))
 
@@ -72,9 +92,10 @@ def _pick_agent_urls(
         },
         ensure_ascii=False,
     )
+    # Navigation routes to the larger instruct model with JSON-repair + retry.
     model = SETTINGS.get("ollama_verify_model") or SETTINGS.get("ollama_model")
     try:
-        resp = chat(
+        resp = chat_with_repair(
             CAMP_NAVIGATOR_SYSTEM,
             user,
             model=model,
@@ -146,6 +167,11 @@ async def agent_navigate_provider(
 
     picks = _pick_agent_urls(seed_url, page_text, links, town_hint=town_hint)
     sessions: list[dict] = []
+    # P4.4: track fetched URLs and emitted register URLs separately. Previously a
+    # single `seen_regs` set conflated "catalog page I already fetched" with
+    # "register URL I already emitted", so a catalog URL was skipped (or fetched
+    # twice) based on the register set. Keep them apart.
+    fetched_urls: set[str] = set()
     seen_regs: set[str] = set()
 
     max_catalog = int(SETTINGS.get("b5_agent_nav_max_catalog_fetches", 3))
@@ -180,8 +206,9 @@ async def agent_navigate_provider(
 
     for pick in picks.get("catalog_urls", [])[:max_catalog]:
         u = pick["url"]
-        if u in seen_regs:
+        if u in fetched_urls:
             continue
+        fetched_urls.add(u)
         try:
             found, html = await _enumerate_url(u, kind="catalog")
             for s in found:
@@ -195,8 +222,9 @@ async def agent_navigate_provider(
 
     for pick in picks.get("register_urls", [])[:max_register]:
         u = pick["url"]
-        if u in seen_regs:
+        if u in fetched_urls or u in seen_regs:
             continue
+        fetched_urls.add(u)
         try:
             found, html = await _enumerate_url(u, kind="register")
             added = False

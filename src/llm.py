@@ -183,6 +183,54 @@ def chat(
         raise
 
 
+def chat_with_repair(
+    system: str,
+    user: str,
+    *,
+    model: str | None = None,
+    temperature: float = 0.2,
+    timeout: int = 120,
+    num_predict: int | None = None,
+    purpose: str = "",
+) -> dict[str, Any]:
+    """`chat()` hardened for navigation/extraction: one JSON-repair retry.
+
+    Rule 8 ("fail open on the model, not on the data"): when the model returns
+    unparseable JSON, retry once at temperature 0 with an explicit "valid JSON
+    only" nudge before giving up. Routes navigation to the larger instruct model
+    (`ollama_verify_model`) by default — the 1B fast model is reserved for the
+    binary classifier path elsewhere.
+    """
+    nav_model = model or SETTINGS.get("ollama_verify_model") or SETTINGS["ollama_model"]
+    try:
+        return chat(
+            system,
+            user,
+            model=nav_model,
+            temperature=temperature,
+            timeout=timeout,
+            num_predict=num_predict,
+            purpose=purpose,
+        )
+    except OllamaError as exc:
+        if "Could not parse JSON" not in str(exc):
+            raise
+        logger.warning("navigator LLM returned bad JSON (%s); retrying once", purpose or "chat")
+        repair_system = (
+            f"{system}\n\nIMPORTANT: Respond with a SINGLE valid JSON object and nothing "
+            "else — no markdown fences, no commentary, no trailing commas."
+        )
+        return chat(
+            repair_system,
+            user,
+            model=nav_model,
+            temperature=0.0,
+            timeout=timeout,
+            num_predict=num_predict,
+            purpose=f"{purpose}:repair" if purpose else "repair",
+        )
+
+
 def is_available() -> bool:
     base = SETTINGS["ollama_base_url"].rstrip("/")
     try:

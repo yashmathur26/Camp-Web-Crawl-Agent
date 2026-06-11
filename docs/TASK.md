@@ -48,19 +48,19 @@ until the one above it is green. Reference `IMPLEMENTATION_PLAN.md` for the desi
 
 ## P3 — Recursive navigator (core)
 
-- [ ] **P3.1** Create `src/navigator.py` with a `PageRole` enum
+- [x] **P3.1** Create `src/navigator.py` with a `PageRole` enum
   (`LANDING|CATALOG|DETAIL|REGISTER`) and a `NavNode` dataclass
   (`url, role, depth, parent_url`).
-- [ ] **P3.2** Implement `classify_role(url, html, links)` — rules first via existing
+- [x] **P3.2** Implement `classify_role(url, html, links)` — rules first via existing
   `crawl_link_score` / `is_registration_platform_url` / `is_camp_catalog_url`; LLM only
   when ambiguous.
-- [ ] **P3.3** Implement the bounded traversal loop: work queue, `max_depth=3`,
+- [x] **P3.3** Implement the bounded traversal loop: work queue, `max_depth=3`,
   `max_fetches_per_provider`, dedup on `normalize_url`. Catalog → enqueue each camp as
   DETAIL; detail → find register link, enqueue as REGISTER; register → verify + emit.
-- [ ] **P3.4** Make structured adapters fast-path shortcuts: on platform detection, call
+- [x] **P3.4** Make structured adapters fast-path shortcuts: on platform detection, call
   the adapter, wrap its results into `NavNode`s/sessions, run them through the SAME
   verification gate. Remove the parallel handling in `agent_navigate_provider`.
-- [ ] **P3.5** Wire `enumerate_provider` to call the navigator behind
+- [x] **P3.5** Wire `enumerate_provider` to call the navigator behind
   `SETTINGS["b5_navigator_v2"]` (default off). Old path stays callable.
   - DoD: with the flag on, a flat multi-camp marketing-site fixture yields one row per camp
     with populated `info_url` + `register_url` + verdict — not just 3.
@@ -69,14 +69,18 @@ until the one above it is green. Reference `IMPLEMENTATION_PLAN.md` for the desi
 
 ## P4 — Loosen goal-fighting rules
 
-- [ ] **P4.1** `_rank_links_for_agent`: stop `continue`-dropping cross-host non-platform
-  links; keep them with a lower score so the model still sees them.
-- [ ] **P4.2** `adapter_llm`: keep an info page that has an on-page register CTA (verify via
+- [x] **P4.1** `_rank_links_for_agent`: stop `continue`-dropping cross-host non-platform
+  links; keep them with a lower score so the model still sees them. (Register-intent
+  cross-host links — Jotform/Google Form/custom SaaS — are down-weighted and kept; generic
+  off-host noise still pruned.)
+- [x] **P4.2** `adapter_llm`: keep an info page that has an on-page register CTA (verify via
   `verify_registrable`) instead of rejecting "only link is the same marketing page."
-- [ ] **P4.3** Add JSON-repair + one retry to the navigator LLM call. Route navigation to
+  (`info_url == register_url`; verdict attached from signals.)
+- [x] **P4.3** Add JSON-repair + one retry to the navigator LLM call. Route navigation to
   the larger instruct model (`ollama_verify_model`); keep the 1B model only for the fast
-  binary classifier.
-- [ ] **P4.4** Fix the `seen_regs` dedup bug (catalog URLs and register URLs share one set).
+  binary classifier. (New `chat_with_repair` in `src/llm.py`; navigator + agent-nav route through it.)
+- [x] **P4.4** Fix the `seen_regs` dedup bug (catalog URLs and register URLs share one set).
+  (Separate `fetched_urls` guards double-fetch; `seen_regs` only tracks emitted register URLs.)
   - DoD: fixture with an external Jotform/Google-Form register link survives to verification;
     info-then-register site is kept; no double-fetch of the same catalog URL.
 

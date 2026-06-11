@@ -7,6 +7,9 @@ __pycache__/
 data/*
 !data/_baseline/
 !data/_baseline/**
+!data/_baseline_v2/
+!data/_baseline_v2/**
+!data/junk_audit.csv
 logs/
 cache/
 *.egg-info/

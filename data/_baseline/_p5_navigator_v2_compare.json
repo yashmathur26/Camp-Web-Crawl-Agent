@@ -1,0 +1,401 @@
+{
+  "towns": [
+    {
+      "town": "Lexington",
+      "baseline_total": 78,
+      "new_total": 77,
+      "parent_ready_total": 24,
+      "providers": [
+        {
+          "host": "lexingtonma.gov",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 1,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "lexrecma.myrec.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 24,
+          "new_sessions": 24,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "jwhayden.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 40,
+          "new_sessions": 40,
+          "parent_ready": 24,
+          "delta": 0
+        },
+        {
+          "host": "lexingtoncommunityed.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 2,
+          "new_sessions": 2,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "lexfarm.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "thewaldorfschool.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 2,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "summersedgedaycamp.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -1
+        },
+        {
+          "host": "lca.edu",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "munroecenter.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 4,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -4
+        },
+        {
+          "host": "therobohub.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "hancocknurseryschool.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 2,
+          "parent_ready": 0,
+          "delta": 1
+        },
+        {
+          "host": "lexingtonunited.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "vikingcamps.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "lexingtonplaycarecenter.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "fuseprogram.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "lexdebateinstitute.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 1,
+          "parent_ready": 0,
+          "delta": 1
+        },
+        {
+          "host": "goddardschool.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "lexingtonsymphony.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 3,
+          "parent_ready": 0,
+          "delta": 3
+        },
+        {
+          "host": "massgeneral.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 2,
+          "parent_ready": 0,
+          "delta": 1
+        },
+        {
+          "host": "massaudubon.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 2,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "ussportscamps.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 2,
+          "parent_ready": 0,
+          "delta": 2
+        }
+      ],
+      "regressions": [
+        {
+          "host": "thewaldorfschool.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 2,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "summersedgedaycamp.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -1
+        },
+        {
+          "host": "munroecenter.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 4,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -4
+        },
+        {
+          "host": "massaudubon.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 2,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -2
+        }
+      ]
+    },
+    {
+      "town": "Burlington",
+      "baseline_total": 46,
+      "new_total": 21,
+      "parent_ready_total": 0,
+      "providers": [
+        {
+          "host": "childdevelopmentinfo.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -1
+        },
+        {
+          "host": "pathwaystoscience.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 4,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -4
+        },
+        {
+          "host": "jccns.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "metrowestymca.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 10,
+          "new_sessions": 5,
+          "parent_ready": 0,
+          "delta": -5
+        },
+        {
+          "host": "mmjccm.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 9,
+          "new_sessions": 9,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "my.lifetime.life",
+          "platform": "navigator_v2",
+          "baseline_sessions": 4,
+          "new_sessions": 2,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "worcesterjcc.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 3,
+          "new_sessions": 1,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "calleva.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 3,
+          "new_sessions": 3,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "campchampions.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -1
+        },
+        {
+          "host": "campmiddlesex.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "easternusa.salvationarmy.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 1,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "salvationarmyusa.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 3,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -3
+        },
+        {
+          "host": "salvationarmy.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 0,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": 0
+        },
+        {
+          "host": "wsymca.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 7,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -7
+        }
+      ],
+      "regressions": [
+        {
+          "host": "childdevelopmentinfo.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -1
+        },
+        {
+          "host": "pathwaystoscience.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 4,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -4
+        },
+        {
+          "host": "metrowestymca.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 10,
+          "new_sessions": 5,
+          "parent_ready": 0,
+          "delta": -5
+        },
+        {
+          "host": "my.lifetime.life",
+          "platform": "navigator_v2",
+          "baseline_sessions": 4,
+          "new_sessions": 2,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "worcesterjcc.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 3,
+          "new_sessions": 1,
+          "parent_ready": 0,
+          "delta": -2
+        },
+        {
+          "host": "campchampions.com",
+          "platform": "navigator_v2",
+          "baseline_sessions": 1,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -1
+        },
+        {
+          "host": "salvationarmyusa.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 3,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -3
+        },
+        {
+          "host": "wsymca.org",
+          "platform": "navigator_v2",
+          "baseline_sessions": 7,
+          "new_sessions": 0,
+          "parent_ready": 0,
+          "delta": -7
+        }
+      ]
+    }
+  ],
+  "any_regression": true
+}

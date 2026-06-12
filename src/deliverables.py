@@ -3,13 +3,14 @@
 from __future__ import annotations
 
 import csv
+import re
 import shutil
 from collections import Counter, defaultdict
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from config.settings import STATE
+from config.settings import SETTINGS, STATE
 from src.camp_outputs import host_of
 from src.csv_mirror import write_csv_bundle
 from src.data_layout import (
@@ -17,6 +18,7 @@ from src.data_layout import (
     camp_sessions_csv,
     deliverables_dir,
     refresh_town_index,
+    town_phase_dir,
     town_slug,
 )
 from src.link_quality import drop_reason
@@ -45,11 +47,121 @@ CAMP_LINKS_COLUMNS = [
 SESSION_CSV_ORGANIZED = [
     "provider_host",
     *SESSION_CSV_COLUMNS,
+    "parent_verdict",
+    "label",
 ]
+
+REVIEW_QUEUE_COLUMNS = [*SESSION_CSV_ORGANIZED, "held_reason"]
 
 
 def _has(value: str) -> bool:
     return bool((value or "").strip())
+
+
+# --------------------------------------------------------------------------- #
+# Task 4.2 — publish gates
+# --------------------------------------------------------------------------- #
+_MONTHS = {
+    m.lower(): i
+    for i, m in enumerate(
+        ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"],
+        start=1,
+    )
+}
+_NAMED_DATE_RE = re.compile(
+    r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\.?\s+(\d{1,2})"
+    r"(?:\s*[-–]\s*(\d{1,2}))?(?:\s*,?\s*(\d{4}))?",
+    re.I,
+)
+_NUMERIC_DATE_RE = re.compile(r"\b(\d{1,2})/(\d{1,2})(?:/(\d{2,4}))?\b")
+_ISO_DATE_RE = re.compile(r"\b(\d{4})-(\d{2})-(\d{2})\b")
+
+AUDIENCE_KEYWORD_RE = re.compile(
+    r"(?i)(adult|senior|18\+|21\+|parent night|bird walk)"
+)
+
+
+def _safe_date(year: int, month: int, day: int) -> date | None:
+    try:
+        return date(year, month, day)
+    except ValueError:
+        return None
+
+
+def parse_date_range(text: str, season_year: int) -> tuple[date, date] | None:
+    """(min, max) of every date found in `text`; None when nothing parses.
+    Year-less dates assume the season year."""
+    found: list[date] = []
+    for m in _ISO_DATE_RE.finditer(text or ""):
+        d = _safe_date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
+        if d:
+            found.append(d)
+    for m in _NAMED_DATE_RE.finditer(text or ""):
+        year = int(m.group(4)) if m.group(4) else season_year
+        month = _MONTHS[m.group(1).lower()]
+        d = _safe_date(year, month, int(m.group(2)))
+        if d:
+            found.append(d)
+        if m.group(3):  # same-month day range, e.g. "July 7-11"
+            d2 = _safe_date(year, month, int(m.group(3)))
+            if d2:
+                found.append(d2)
+    for m in _NUMERIC_DATE_RE.finditer(text or ""):
+        mo, day = int(m.group(1)), int(m.group(2))
+        if not (1 <= mo <= 12):
+            continue
+        year = season_year
+        if m.group(3):
+            year = int(m.group(3))
+            if year < 100:
+                year += 2000
+        d = _safe_date(year, mo, day)
+        if d:
+            found.append(d)
+    if not found:
+        return None
+    return min(found), max(found)
+
+
+def _date_sanity_ok(row: dict, season_year: int) -> bool:
+    """Session rows need a parseable range intersecting May 1 – Sep 30 of the
+    season year. Program rows are exempt (checked by caller)."""
+    rng = parse_date_range(row.get("dates", ""), season_year)
+    if rng is None:
+        return False
+    season_start, season_end = date(season_year, 5, 1), date(season_year, 9, 30)
+    start, end = rng
+    return start <= season_end and end >= season_start
+
+
+def apply_publish_gates(rows: list[dict]) -> tuple[list[dict], list[dict]]:
+    """Split rows into (published, held). Held rows carry held_reason and a
+    label column is set on published brochure_only rows. Nothing is deleted."""
+    require_verify = bool(SETTINGS.get("publish_require_verify", True))
+    allowed = set(SETTINGS.get("publish_allowed_verdicts", ["parent_ready", "brochure_only"]))
+    season_year = int(SETTINGS.get("season_year", 2026))
+
+    published: list[dict] = []
+    held: list[dict] = []
+    for row in rows:
+        verdict = (row.get("parent_verdict") or "").strip()
+        granularity = (row.get("granularity") or "session").strip() or "session"
+
+        if require_verify and verdict not in allowed:
+            held.append(
+                {**row, "held_reason": f"verdict:{verdict}" if verdict else "unverified"}
+            )
+            continue
+        if granularity == "session" and not _date_sanity_ok(row, season_year):
+            held.append({**row, "held_reason": "date_sanity"})
+            continue
+        if AUDIENCE_KEYWORD_RE.search(row.get("name", "")) and verdict != "parent_ready":
+            held.append({**row, "held_reason": "audience_keyword"})
+            continue
+        published.append(
+            {**row, "label": "brochure_only" if verdict == "brochure_only" else ""}
+        )
+    return published, held
 
 
 def write_deliverables(
@@ -74,6 +186,7 @@ def write_deliverables(
                 {
                     "provider_host": h,
                     **{c: s.get(c, "") for c in SESSION_CSV_COLUMNS},
+                    "parent_verdict": s.get("parent_verdict", ""),
                 }
             )
     session_rows.sort(
@@ -84,13 +197,25 @@ def write_deliverables(
         )
     )
 
+    # Task 4.2: only verified rows reach the parent-facing catalog; the rest are
+    # held (never deleted) in phase_p/review_queue.csv with a held_reason.
+    published_rows, held_rows = apply_publish_gates(session_rows)
+    review_queue_csv = town_phase_dir(town, "phase_p") / "review_queue.csv"
+    write_csv_bundle(
+        review_queue_csv,
+        held_rows,
+        REVIEW_QUEUE_COLUMNS,
+        title=f"{town} — rows held back from the parent catalog",
+        description="Held by publish gates (verdict/date/audience), not deleted.",
+    )
+
     sessions_csv = out_dir / "camp_sessions_organized.csv"
     write_csv_bundle(
         sessions_csv,
-        session_rows,
+        published_rows,
         SESSION_CSV_ORGANIZED,
         title=f"{town} — organized camp sessions (deliverable)",
-        description="All sessions sorted by provider and camp name.",
+        description="Verified sessions sorted by provider and camp name.",
     )
 
     # --- Camp links clean CSV ---
@@ -130,7 +255,7 @@ def write_deliverables(
     # --- In-depth catalog TXT ---
     catalog_path = out_dir / "CAMPS_CATALOG.txt"
     catalog_path.write_text(
-        _build_catalog_txt(town, session_rows, clean_links, enumeration_results, tier_counts),
+        _build_catalog_txt(town, published_rows, clean_links, enumeration_results, tier_counts),
         encoding="utf-8",
     )
 

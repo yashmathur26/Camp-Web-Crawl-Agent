@@ -164,6 +164,11 @@ SETTINGS = {
     "parent_verify_fetch_timeout_ms": 15000,
     "parent_verify_networkidle_hosts": ("myvscloud", "daxko"),
     "parent_verify_confidence_threshold": 0.75,
+    # Task 4.2 publish gates — only verified rows reach the parent deliverable;
+    # everything else is HELD in phase_p/review_queue.csv, never deleted.
+    "publish_require_verify": True,
+    "publish_allowed_verdicts": ["parent_ready", "brochure_only"],
+    "season_year": 2026,
     # Phase C agentic gap fill
     "gap_rounds_default": 2,
     "gap_max_searches_per_round": 100,

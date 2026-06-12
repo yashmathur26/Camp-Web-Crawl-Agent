@@ -117,3 +117,21 @@ def test_manifest_dedup_and_tags(tmp_path, monkeypatch):
     assert "Lexington" in rows[0]["towns_served"]
     ho.write_manifest()
     assert (tmp_path / "m.csv").exists()
+
+
+def test_demand_ranker_orders_holes(tmp_path, monkeypatch):
+    """Operator request: searches attack high-demand holes first."""
+    import src.demand_ranker as dr
+
+    monkeypatch.setattr(dr, "_CACHE_PATH", tmp_path / "d.json")
+    holes = [
+        {"hole_id": "missing_category_curling", "category": "curling", "priority": 3},
+        {"hole_id": "missing_category_swim", "category": "swim", "priority": 3},
+        {"hole_id": "missing_category_quidditch", "category": "quidditch", "priority": 3},
+        {"hole_id": "missing_category_lacrosse", "category": "lacrosse", "priority": 3},
+    ]
+    ranked = dr.rank_holes(holes, use_llm=False)     # deterministic prior
+    assert ranked[0]["category"] == "swim"           # core beats all
+    assert ranked[1]["category"] == "lacrosse"       # mainstream beats niche
+    assert {ranked[2]["category"], ranked[3]["category"]} == {"curling", "quidditch"}
+    assert all("demand" in h for h in ranked)

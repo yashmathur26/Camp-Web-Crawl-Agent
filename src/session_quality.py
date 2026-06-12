@@ -18,7 +18,7 @@ from src.data_layout import (
     town_phase_dir,
 )
 from src.geo_filter import is_national_camp_index, is_out_of_state_url
-from src.registration import is_registration_platform_url
+from src.registration import is_registration_platform_url, registration_url_priority
 from src.sessions import SESSION_CSV_COLUMNS
 
 PARENT_VERIFY_COLUMNS = [
@@ -74,6 +74,13 @@ def classify_session_tier(session: dict) -> tuple[str, str]:
 
     if JUNK_REGISTER_RE.search(reg):
         return "rejected", "junk register URL (PDF/hub/index)"
+
+    # Task 1.3: provider-level program rows are exempt from date-based checks and
+    # never rejected for thin metadata — geo/junk rejections above still apply.
+    if (session.get("granularity") or "") == "program":
+        if registration_url_priority(reg) > 0:
+            return "registrable", "provider program row with platform register URL"
+        return "needs_trail", "provider-level program row"
 
     if platform == "llm" and not is_registration_platform_url(reg) and not _has_platform_id(reg):
         if reg.rstrip("/") == source.rstrip("/"):

@@ -124,6 +124,15 @@ def _already_verified(session: dict) -> bool:
     return bool(session.get("parent_verdict"))
 
 
+def _floor_program_verdict(session: dict, verdict: str) -> str:
+    """Task 1.3: provider-level program rows are verified like any row, but a
+    missing cart/price must not demote them below brochure_only — the row only
+    claims "this provider runs a summer program", not "you can enroll here"."""
+    if (session.get("granularity") or "") == "program" and verdict == "unverified":
+        return "brochure_only"
+    return verdict
+
+
 async def verify_sessions(
     sessions: list[dict],
     *,
@@ -225,7 +234,7 @@ async def verify_sessions(
         reg = _normalize_register_url(s.get("register_url") or s.get("source_url", ""))
         res = url_results.get(reg, {})
         signals = res.get("signals")
-        verdict = res.get("final_verdict", "unverified")
+        verdict = _floor_program_verdict(s, res.get("final_verdict", "unverified"))
         reason = res.get("reason", "")
         row = {
             **s,

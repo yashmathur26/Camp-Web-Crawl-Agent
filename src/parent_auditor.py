@@ -149,8 +149,11 @@ def _rule_based_holes(
                 }
             )
 
-    holes.sort(key=lambda h: h.get("priority", 5))
-    return holes
+    # Operator request: Gemma demand ranking — searches go to what parents
+    # want most (swim >> curling), not alphabetical/static order.
+    from src.demand_ranker import rank_holes
+
+    return rank_holes(holes)
 
 
 def _llm_refine_holes(town: str, sessions: list[dict], rule_holes: list[dict]) -> list[dict]:

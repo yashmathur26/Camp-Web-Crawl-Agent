@@ -20,7 +20,7 @@ SHARED_DIR = Path("data/shared")
 COUNTY_CSV = SHARED_DIR / "coverage_county.csv"
 
 MATRIX_COLUMNS = [
-    "category", "tier", "parent_ready_count", "brochure_only_count",
+    "category", "tier", "demand", "parent_ready_count", "brochure_only_count",
     "status", "example_provider",
 ]
 
@@ -46,6 +46,9 @@ def build_matrix(
     exhausted = exhausted or set()
     shared_coverage = shared_coverage or {}
 
+    from src.demand_ranker import demand_scores
+
+    demand = demand_scores(use_llm=use_llm)
     rows: list[dict] = []
     for cat in GAP_CATEGORIES:
         r, b = cov_ready.get(cat, []), cov_broch.get(cat, [])
@@ -68,6 +71,7 @@ def build_matrix(
             {
                 "category": cat,
                 "tier": "core" if cat in CORE_CATEGORIES else "long_tail",
+                "demand": demand.get(cat, 3),
                 "parent_ready_count": len(r),
                 "brochure_only_count": len(b),
                 "status": status,

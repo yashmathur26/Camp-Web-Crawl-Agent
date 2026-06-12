@@ -271,7 +271,12 @@ def _build_catalog_txt(
                 ]
             )
             for i, s in enumerate(group, 1):
-                lines.append(f"    [{i}] {s.get('name', 'Unnamed')}")
+                marker = (
+                    "  [PROVIDER PAGE]"
+                    if (s.get("granularity") or "") == "program"
+                    else ""
+                )
+                lines.append(f"    [{i}] {s.get('name', 'Unnamed')}{marker}")
                 if _has(s.get("dates")):
                     lines.append(f"        Dates .... {s['dates']}")
                 if _has(s.get("ages")):
@@ -356,6 +361,9 @@ def _build_quality_report(
     with_price = sum(1 for s in sessions if _has(s.get("price")))
     with_reg = tier_counts.get("registrable", 0)
     portals = sum(1 for s in sessions if s.get("kind") == "portal")
+    program_fallback_rows = sum(
+        1 for s in sessions if (s.get("granularity") or "") == "program"
+    )
 
     plat_counts = Counter(s.get("platform", "?") for s in sessions)
     providers_with = len({s.get("provider_host") for s in sessions})
@@ -423,6 +431,8 @@ def _build_quality_report(
             f"│  With price .................. {with_price:>5}  ({100*with_price/n_sess if n_sess else 0:>5.1f}%)                   │",
             f"│  Portal/listing pages ........ {portals:>5}                              │",
             "└───────────────────────────────────────────────────────────────────────┘",
+            "",
+            f"  program_fallback_rows: {program_fallback_rows}",
             "",
             "┌─ PROVIDER COVERAGE ───────────────────────────────────────────────────┐",
             f"│  Providers checked ........... {providers_checked:>5}                              │",

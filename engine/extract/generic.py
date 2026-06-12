@@ -23,6 +23,17 @@ _EVENT_TYPES = {"event", "childrensevent", "course", "educationevent", "camp"}
 # Ported crawl_link_score essence: follow-worthy paths on a camp site.
 _FOLLOW_RE = re.compile(r"camp|summer|program|clinic|register|enroll|class", re.I)
 _SKIP_RE = re.compile(r"about|contact|faq|donate|news|blog|gallery|privacy|login|account", re.I)
+# Sections that never lead to youth summer camps (ported junk-path knowledge +
+# the YMCA/JCC/LifeTime feedback round): fitness floors, weight loss, adult
+# wellness, after-school/childcare, membership. Absolute skips for follow AND
+# record scoping — even when the path also says "program" or "class".
+_NONCAMP_SECTION_RE = re.compile(
+    r"fitness|health-?wellness|weight-?loss|weightloss|wellness|after-?school|"
+    r"enrichment|child-?care|child-?watch|membership|personal-?train|massage|"
+    r"aquatics|group-?exercise|find-a?-?program|adult|education-care",
+    re.I,
+)
+_CAMP_PATH_RE = re.compile(r"camp|summer", re.I)
 _DATES_RE = re.compile(
     r"(?:june|july|august)\s*\d{1,2}(?:[a-z]{2})?(?:\s*[-–]\s*(?:[a-z]+\s*)?\d{1,2}(?:[a-z]{2})?)?"
     r"|\b[678]/\d{1,2}\s*[-–]\s*[678]?/?\d{1,2}\b", re.I)
@@ -60,8 +71,11 @@ def score_follow_links(seed_url: str, links: list[dict]) -> list[str]:
             continue
         if urlparse(u).netloc.lower().replace("www.", "") != host:
             continue
+        path = urlparse(u).path
         # Score path+text only — the domain itself often contains "camp".
-        blob = f"{urlparse(u).path} {l.get('text', '')}"
+        blob = f"{path} {l.get('text', '')}"
+        if _NONCAMP_SECTION_RE.search(path):
+            continue  # fitness/afterschool/etc. — never camps (absolute)
         if _SKIP_RE.search(blob) and not _FOLLOW_RE.search(blob):
             continue
         if not _FOLLOW_RE.search(blob):
@@ -69,6 +83,48 @@ def score_follow_links(seed_url: str, links: list[dict]) -> list[str]:
         seen.add(u)
         scored.append(u)
     return scored[: int(ENGINE["generic_max_follows"])]
+
+
+def scope_to_camp_pages(records: list[dict]) -> list[dict]:
+    """Camp-page priority (YMCA/JCC feedback): multi-program orgs list camps on
+    /camp(s)|/summer* pages and everything else (fitness, enrichment,
+    after-school) elsewhere. If any record came from a camp-path page, keep
+    ONLY those; always drop records from known non-camp sections."""
+    def path_of(r):
+        return urlparse(r.get("info_url", "")).path
+
+    records = [r for r in records if not _NONCAMP_SECTION_RE.search(path_of(r))]
+    campy = [r for r in records if _CAMP_PATH_RE.search(path_of(r))]
+    return campy if campy else records
+
+
+def demote_activity_menus(records: list[dict]) -> list[dict]:
+    """Drop activity-AREA menus mistaken for programs (Camp Middlesex finding):
+    a large batch of records from ONE page whose names are 1-2 generic tokens
+    with uniform/copied evidence is the camp's activity list (Archery, Gaga,
+    Soccer...), not its programs — the real camps are the dated, multi-word
+    records from the provider's program pages. Structural rule, not keywords."""
+    from collections import Counter, defaultdict
+
+    by_page = defaultdict(list)
+    for r in records:
+        by_page[r.get("info_url", "")].append(r)
+
+    keep: list[dict] = []
+    for page, rows in by_page.items():
+        short = [r for r in rows if len(r["name"].split()) <= 2]
+        if len(rows) >= 8 and len(short) / len(rows) >= 0.7:
+            ages = Counter((r.get("ages") or "").strip() for r in rows)
+            uniform = ages.most_common(1)[0][1] / len(rows) >= 0.7
+            dated = [r for r in rows if (r.get("dates") or "").strip()]
+            if uniform and len(dated) <= 2:
+                # activity menu: keep only rows with real distinct evidence
+                keep.extend(r for r in rows
+                            if (r.get("dates") or "").strip()
+                            or len(r["name"].split()) >= 3)
+                continue
+        keep.extend(rows)
+    return keep
 
 
 class GenericExtractor(Extractor):
@@ -135,6 +191,9 @@ class GenericExtractor(Extractor):
                         suggested_action="check page structure; consider a vendor adapter"),
                 fetch_log=fetch.log,
             )
+
+        records = scope_to_camp_pages(records)
+        records = demote_activity_menus(records)
 
         seen: set[str] = set()
         sessions = []

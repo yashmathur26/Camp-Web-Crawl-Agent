@@ -1,0 +1,23 @@
+{
+  "town": "burlington",
+  "timestamp": "20260612T124059",
+  "label": "final_compare_burl",
+  "gt_programs": 17,
+  "gt_sessions": 2,
+  "published_rows": 81,
+  "program_recall": 0.5882,
+  "session_recall": 0.0,
+  "precision": 0.1358,
+  "info_url_validity": null,
+  "matched_programs": 10,
+  "matched_sessions": 0,
+  "unmatched_gt_programs": [
+    "jccns.org: Camp Simchah",
+    "jccns.org: KinderCamp",
+    "metrowestymca.org: Teen Leadership Camps",
+    "worcesterjcc.org: Day Camp",
+    "worcesterjcc.org: Preschool Summer Program",
+    "worcesterjcc.org: Sports Camp",
+    "wsymca.org: Leaders-In-Training (LITs)"
+  ]
+}

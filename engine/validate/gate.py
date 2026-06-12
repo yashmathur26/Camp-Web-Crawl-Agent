@@ -115,6 +115,21 @@ _ADULT_EVIDENCE_RE = re.compile(
     r"men'?s\s+league|women'?s\s+league|fundraiser|donation)\b",
     re.I,
 )
+# Adult fitness-class language (ported from the old pipeline's _ADULT_FITNESS_RE
+# after the "Active Agers" leak): blocks only with ZERO youth signals, since
+# kids' yoga/dance camps exist. Requires >=2 distinct markers to avoid a single
+# incidental word ("dance") sinking a real camp.
+_ADULT_FITNESS_RE = re.compile(
+    r"\b(yoga|pilates|zumba|aerobics|cardio(?:vascular)?|strength|crossfit|"
+    r"boot\s*camp|pickleball|personal\s+train\w+|group\s+fitness|"
+    r"muscle\s+conditioning|bone\s+health|tai\s+chi)\b",
+    re.I,
+)
+
+
+def _adult_fitness_page(info_text: str, youth_blob: str) -> bool:
+    hits = set(m.group(1).lower() for m in _ADULT_FITNESS_RE.finditer(info_text[:4000]))
+    return len(hits) >= 2 and not _YOUTH_AGE_RE.search(youth_blob)
 
 # --- check 5: geo (focused port of is_out_of_state_url) -----------------------
 
@@ -163,6 +178,7 @@ def gate_program(
     *,
     fetched_text: dict[str, str],
     provider_id: str = "",
+    include_review: bool = False,
 ) -> GateResult:
     """Gate every session of a program. `fetched_text` maps url → rendered text
     fetched THIS RUN (the run cache view) — the info-url invariant reads only
@@ -245,12 +261,21 @@ def gate_program(
         ) and not _YOUTH_AGE_RE.search(evidence_blob + " " + info_text[:4000])
         if _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
             page_adult and not field_evidence and not program.camp_scoped
+        ) or (
+            not program.camp_scoped
+            and _adult_fitness_page(info_text, evidence_blob + " " + info_text[:4000])
         ):
-            result.gaps.append(
-                Gap(provider_id=pid, reason="needs_review",
-                    evidence=f"{name}: adult/membership evidence",
-                    suggested_action="exclude unless youth context confirmed")
-            )
+            if include_review:
+                sess.verdict = "needs_review"
+                sess.evidence = {"review_reason": "adult/membership evidence",
+                                 "dates": sess.dates, "ages": sess.ages, "price": sess.price}
+                result.published.append(sess)
+            else:
+                result.gaps.append(
+                    Gap(provider_id=pid, reason="needs_review",
+                        evidence=f"{name}: adult/membership evidence",
+                        suggested_action="exclude unless youth context confirmed")
+                )
             continue
         has_evidence = (
             program.camp_scoped
@@ -259,11 +284,17 @@ def gate_program(
             or bool(_YOUTH_AGE_RE.search(info_text[:4000]))
         )
         if not has_evidence:
-            result.gaps.append(
-                Gap(provider_id=pid, reason="needs_review",
-                    evidence=f"{name}: no summer/youth/camp-scope evidence",
-                    suggested_action="verify program is a youth summer offering")
-            )
+            if include_review:
+                sess.verdict = "needs_review"
+                sess.evidence = {"review_reason": "no summer/youth/camp-scope evidence",
+                                 "dates": sess.dates, "ages": sess.ages, "price": sess.price}
+                result.published.append(sess)
+            else:
+                result.gaps.append(
+                    Gap(provider_id=pid, reason="needs_review",
+                        evidence=f"{name}: no summer/youth/camp-scope evidence",
+                        suggested_action="verify program is a youth summer offering")
+                )
             continue
 
         # 4. Register verification — upgrade only, never a blocker.

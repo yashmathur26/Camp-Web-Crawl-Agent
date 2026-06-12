@@ -101,7 +101,8 @@ def _deserialize_result(blob: dict) -> tuple[list[Program], list[Gap], float]:
 # --------------------------------------------------------------------------- #
 
 async def run_town(
-    town: str, *, out_root: Path | str = "data", fresh: bool = False
+    town: str, *, out_root: Path | str = "data", fresh: bool = False,
+    include_review: bool = False,
 ) -> dict[str, int]:
     registry = load_town(town)
     out_dir = Path(out_root) / town.lower() / "engine"
@@ -147,7 +148,8 @@ async def run_town(
             gaps: list[Gap] = [gap] if gap else []
             for program in programs_raw:
                 result = gate_program(
-                    program, fetched_text=fetched_text, provider_id=provider.provider_id
+                    program, fetched_text=fetched_text, provider_id=provider.provider_id,
+                    include_review=include_review,
                 )
                 if result.published:
                     kept = Program(
@@ -183,8 +185,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--out-root", default="data")
     ap.add_argument("--fresh", action="store_true",
                     help="ignore the checkpoint and rerun every provider")
+    ap.add_argument("--review", action="store_true",
+                    help="publish evidence/audience rejects as needs_review for human markup")
     args = ap.parse_args(argv)
-    counts = asyncio.run(run_town(args.town, out_root=args.out_root, fresh=args.fresh))
+    counts = asyncio.run(run_town(args.town, out_root=args.out_root, fresh=args.fresh,
+                                  include_review=args.review))
     print("rows:", counts)
     return 0
 

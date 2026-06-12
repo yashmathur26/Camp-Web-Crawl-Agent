@@ -56,10 +56,10 @@ def main() -> int:
             for s in sorted(sessions_by_program.get(prog.program_id, []),
                             key=lambda s: (s.dates, s.name)):
                 meta = " | ".join(x for x in (s.dates, s.ages, s.price) if x)
-                tag = " ✓register-verified" if s.verdict == "parent_ready" else ""
+                tag = (" ✓register-verified" if s.verdict == "parent_ready"
+                       else "  ⚠ NEEDS REVIEW — is this a camp?" if s.verdict == "needs_review" else "")
                 extra = f" — {meta}" if meta else ""
-                if meta or tag or s.info_url != prog.info_url:
-                    lines.append(f"      - {s.name}{extra}{tag}")
+                lines.append(f"      - {s.name}{extra}{tag}")
 
     gaps = data["gaps"]
     if gaps:

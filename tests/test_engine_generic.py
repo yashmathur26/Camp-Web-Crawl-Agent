@@ -93,3 +93,55 @@ def test_jsonld_and_follow_scoring():
              {"url": "https://camp.org/brochure.pdf", "text": "Camp PDF"}]
     follows = score_follow_links("https://camp.org/", links)
     assert follows == ["https://camp.org/summer-camp"]
+
+
+def test_activity_menu_demoted():
+    """Camp Middlesex finding: activity areas on one page are not programs."""
+    from engine.extract.generic import demote_activity_menus
+
+    menu = [{"name": n, "info_url": "https://camp.org/program-areas",
+             "ages": "ages 8", "dates": "", "price": ""}
+            for n in ["Archery", "Gaga", "Soccer", "Swimming", "Ceramics",
+                      "Dance", "Nature", "Riflery", "Boating", "Cooking"]]
+    real = [{"name": "Junior Camp", "info_url": "https://camp.org/about-us/program",
+             "ages": "Ages 8-12", "dates": "June 28 - July 10", "price": ""},
+            {"name": "Teen Camp", "info_url": "https://camp.org/about-us/program",
+             "ages": "Ages 13-15", "dates": "June 28 - July 10", "price": ""}]
+    out = demote_activity_menus(menu + real)
+    names = {r["name"] for r in out}
+    assert "Junior Camp" in names and "Teen Camp" in names
+    assert "Archery" not in names and "Gaga" not in names
+
+
+def test_gate_adult_fitness_class_rejected():
+    """'Active Agers' finding: adult fitness-class pages don't publish."""
+    from engine.model import Program, Session
+    from engine.validate.gate import gate_program
+
+    text = ("Active Agers with Carolyn Gregoire. In this class we will have fun "
+            "while increasing our strength, bone health, balance, flexibility, and "
+            "cardiovascular fitness. Muscle conditioning, Yoga and Pilates postures. "
+            "Personal trainer for over 12 years. June sessions. " * 6)
+    sess = Session(name="Active Agers", info_url="https://x/p", dates="June 9")
+    prog = Program(name="Active Agers", provider_id="p", info_url="https://x/p")
+    prog.sessions = [sess]
+    res = gate_program(prog, fetched_text={"https://x/p": text})
+    assert not res.published
+
+
+def test_camp_page_priority_scoping():
+    """YMCA/JCC/LifeTime feedback: keep camp-page records, drop fitness/
+    after-school/enrichment sections."""
+    from engine.extract.generic import scope_to_camp_pages
+
+    recs = [
+        {"name": "Camp Chickami", "info_url": "https://y.org/camps", "ages": "", "dates": ""},
+        {"name": "LIT Sessions", "info_url": "https://y.org/camp-pikati", "ages": "grades 6-9", "dates": "June 22-26"},
+        {"name": "Kettlebell Foundations", "info_url": "https://y.org/fitness-programs", "ages": "age 18", "dates": ""},
+        {"name": "Crafty Kids", "info_url": "https://y.org/programs/education-care-camp/enrichment", "ages": "4-9", "dates": ""},
+        {"name": "Wells Family Camp", "info_url": "https://y.org/find-program", "ages": "", "dates": ""},
+        {"name": "Summer at the J", "info_url": "https://j.org/summer-camp", "ages": "", "dates": "June 22"},
+        {"name": "Spinning Core", "info_url": "https://j.org/health-wellness/fitness-class-descriptions", "ages": "", "dates": ""},
+    ]
+    names = {r["name"] for r in scope_to_camp_pages(recs)}
+    assert names == {"Camp Chickami", "LIT Sessions", "Summer at the J"}

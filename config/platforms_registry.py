@@ -47,7 +47,7 @@ PLATFORM_SIGNATURES: dict[str, dict] = {
     },
     "sawyer": {
         "label": "Sawyer (hisawyer)",
-        "tier": "portal",
+        "tier": "structured",
         "host_substrings": ("hisawyer.com",),
         "html_patterns": (r"hisawyer\.com",),
     },

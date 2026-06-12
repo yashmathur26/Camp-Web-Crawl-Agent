@@ -350,6 +350,10 @@ def detect_platform(url: str, links: list[dict], page_text: str = "") -> str:
         if any(any(s in h for h in haystacks) for s in subs):
             return platform
 
+    # Sawyer embeds (script/widget) only show in raw/rendered HTML text.
+    if "hisawyer" in (page_text or "").lower():
+        return SAWYER
+
     # Embedded WebTrac/Daxko/Veracross in marketing HTML
     for embed in _extract_embedded_platform_urls(page_text, links):
         if "myvscloud" in embed.lower() or "webtrac" in embed.lower():
@@ -988,48 +992,184 @@ def _portal_links(url: str, links: list[dict], host_subs: tuple[str, ...], platf
     return hits
 
 
-async def adapter_sawyer(url, links, page_text):
-    """Sawyer/hisawyer: try to parse activity links from the schedule page."""
-    portal_hits = _portal_links(url, links, ("hisawyer.com",), SAWYER)
-    if not portal_hits:
-        return portal_hits
+# --------------------------------------------------------------------------- #
+# Sawyer (Task 2.1): seed page -> embed/slug discovery -> schedules page parse
+# --------------------------------------------------------------------------- #
+_SAWYER_SLUG_DENY = frozenset(
+    {"marketplace", "embed", "widget", "explore", "for-business", "uploads", "online-classes"}
+)
+_SAWYER_EMBED_TOKEN_RE = re.compile(r"hisawyer\.com/(?:widget|embed)/([\w-]+)", re.I)
+_SAWYER_DATA_ATTR_RE = re.compile(r'data-sawyer[\w-]*="([\w-]+)"', re.I)
+_SAWYER_SLUG_URL_RE = re.compile(
+    r"https?://(?:www\.)?hisawyer\.com/([\w-]+)/(?:schedules|activity-set)", re.I
+)
+_SAWYER_CARD_SPLIT_RE = re.compile(r'data-test-id="scheduled-activity-list-item-(\d+)"')
+_SAWYER_DATE_RANGE_RE = re.compile(
+    r"[A-Z][a-z]{2,8}\.?\s+\d{1,2},?\s+\d{4}(?:\s*[-–]\s*[A-Z][a-z]{2,8}\.?\s+\d{1,2},?\s+\d{4})?"
+)
+_SAWYER_AGES_RE = re.compile(r"<p[^>]*>([^<]*\d[^<]*(?:yrs?|years?|mos?|months?)[^<]*)</p>", re.I)
+_SAWYER_PRICE_RE = re.compile(r"\$[\d,]+(?:\.\d{2})?(?:[^<]{0,30})?")
 
+
+def _sawyer_slug_candidates(seed_html: str, links: list[dict]) -> tuple[list[str], list[str]]:
+    """(slugs, embed_tokens) discovered on the provider page/links."""
+    blobs = [seed_html or ""] + [l.get("url", "") for l in links]
+    slugs: list[str] = []
+    tokens: list[str] = []
+    for blob in blobs:
+        for m in _SAWYER_SLUG_URL_RE.finditer(blob):
+            slug = m.group(1).lower()
+            if slug not in _SAWYER_SLUG_DENY:
+                slugs.append(slug)
+        for m in _SAWYER_EMBED_TOKEN_RE.finditer(blob):
+            tokens.append(m.group(1))
+        for m in _SAWYER_DATA_ATTR_RE.finditer(blob):
+            slugs.append(m.group(1).lower())
+    return list(dict.fromkeys(slugs)), list(dict.fromkeys(tokens))
+
+
+def _parse_sawyer_next_data(html: str, slug: str, source_url: str) -> list[dict]:
+    """Activities from __NEXT_DATA__ / __INITIAL_STATE__ JSON when present."""
+    import json as _json
+
+    m = re.search(
+        r'<script[^>]*id="__NEXT_DATA__"[^>]*>(.*?)</script>', html or "", re.S
+    ) or re.search(r"window\.__INITIAL_STATE__\s*=\s*(\{.*?\})\s*[;<]", html or "", re.S)
+    if not m:
+        return []
+    try:
+        data = _json.loads(m.group(1))
+    except Exception:  # noqa: BLE001
+        return []
+
+    found: list[dict] = []
+
+    def walk(node):
+        if isinstance(node, dict):
+            name = node.get("name") or node.get("title")
+            start = node.get("start_date") or node.get("startDate")
+            if isinstance(name, str) and name.strip() and start:
+                found.append(node)
+            for v in node.values():
+                walk(v)
+        elif isinstance(node, list):
+            for v in node:
+                walk(v)
+
+    walk(data)
+    sessions = []
+    for node in found:
+        set_id = node.get("activity_set_id") or node.get("activitySetId") or node.get("id")
+        register = (
+            f"https://www.hisawyer.com/{slug}/schedules/activity-set/{set_id}"
+            if set_id
+            else f"https://www.hisawyer.com/{slug}/schedules"
+        )
+        start = str(node.get("start_date") or node.get("startDate") or "")
+        end = str(node.get("end_date") or node.get("endDate") or "")
+        sessions.append(
+            make_session(
+                str(node.get("name") or node.get("title")),
+                register,
+                platform=SAWYER,
+                dates=f"{start[:10]} - {end[:10]}" if end else start[:10],
+                ages=str(node.get("age_range") or node.get("ages") or ""),
+                price=str(node.get("price") or ""),
+                source_url=source_url,
+                kind="session",
+            )
+        )
+    return sessions
+
+
+def _parse_sawyer_dom_cards(html: str, slug: str, source_url: str) -> list[dict]:
+    """Activity cards on a hisawyer.com/<slug>/schedules page."""
+    import html as _htmllib
+
+    parts = _SAWYER_CARD_SPLIT_RE.split(html or "")
     sessions: list[dict] = []
     seen: set[str] = set()
-    for hit in portal_hits:
-        _, sawyer_links = await _fetch(hit["register_url"])
-        for l in sawyer_links:
-            u = l.get("url", "")
-            if "hisawyer.com" not in u.lower():
-                continue
-            # activity detail URLs often contain /activities/ or /catalog/
-            if not re.search(r"/activit|/catalog|/class|/camp|/program|/session", u, re.I):
-                continue
-            name = _clean_name(l.get("text", ""), u)
-            if not name or len(name) < 3:
-                continue
-            nu = normalize_url(u)
-            if nu in seen:
-                continue
-            seen.add(nu)
-            sessions.append(
-                make_session(
-                    name,
-                    u,
-                    platform=SAWYER,
-                    source_url=url,
-                    kind="session",
-                )
+    for i in range(1, len(parts) - 1, 2):
+        set_id, chunk = parts[i], parts[i + 1]
+        href_m = re.search(
+            rf'href="(/{re.escape(slug)}/[^"]*activity-set/{set_id}[^"]*)"', chunk
+        ) or re.search(rf'href="(/{re.escape(slug)}/[^"]*activity-set/\d+[^"]*)"', chunk)
+        if not href_m:
+            continue
+        register = "https://www.hisawyer.com" + _htmllib.unescape(href_m.group(1))
+        h3s = re.findall(r"<h3[^>]*>([^<]+)</h3>", chunk)
+        name = _htmllib.unescape(h3s[0]).strip() if h3s else ""
+        if not name:
+            continue
+        ages_m = _SAWYER_AGES_RE.search(chunk)
+        dates_m = _SAWYER_DATE_RANGE_RE.search(re.sub(r"<[^>]+>", " ", chunk))
+        price_m = _SAWYER_PRICE_RE.search(chunk)
+        key = normalize_url(register)
+        if key in seen:
+            continue
+        seen.add(key)
+        sessions.append(
+            make_session(
+                name,
+                register,
+                platform=SAWYER,
+                dates=dates_m.group(0).strip() if dates_m else "",
+                ages=_htmllib.unescape(ages_m.group(1)).strip() if ages_m else "",
+                price=price_m.group(0).strip() if price_m else "",
+                source_url=source_url,
+                kind="session",
             )
+        )
+    return sessions
 
+
+def _parse_sawyer_schedules(html: str, slug: str, source_url: str) -> list[dict]:
+    sessions = _parse_sawyer_next_data(html, slug, source_url)
     if sessions:
         return sessions
-    # JS-only schedule: fall back to portal entry with provider context in name
-    best = portal_hits[0]
-    if not best["name"] or best["name"].lower() in ("register", "sign up", "enroll"):
-        slug = urlparse(url).path.strip("/").split("/")[-1] or "programs"
-        best = {**best, "name": slug.replace("-", " ").title() + " (Sawyer registration)"}
-    return [best]
+    return _parse_sawyer_dom_cards(html, slug, source_url)
+
+
+async def adapter_sawyer(url, links, page_text):
+    """Sawyer/hisawyer: discover the business slug (links, raw HTML embed, or
+    embed JS), fetch the public schedules page rendered, parse activity cards.
+    Any step failing -> [] (the Task 1.2 provider fallback row covers it)."""
+    from src import session_log
+    from src.crawl import fetch_rendered
+
+    slugs, tokens = _sawyer_slug_candidates("", links)
+    if not slugs and not tokens:
+        seed_html = await fetch_rendered(url, wait="domcontentloaded")
+        slugs, tokens = _sawyer_slug_candidates(seed_html or "", [])
+
+    # Embed tokens are not slugs; the embed JS bundle names the real schedules
+    # URL. Resolve up to 2 tokens.
+    for token in tokens[:2]:
+        if slugs:
+            break
+        embed_js = await fetch_rendered(
+            f"https://www.hisawyer.com/embed/{token}.js", wait="domcontentloaded"
+        )
+        more, _ = _sawyer_slug_candidates(embed_js or "", [])
+        slugs.extend(more)
+
+    slugs = list(dict.fromkeys(slugs))
+    if not slugs:
+        session_log.trace("sawyer", f"no slug discovered for {url}")
+        return []
+
+    for slug in slugs[:3]:
+        sched_url = f"https://www.hisawyer.com/{slug}/schedules"
+        html = await fetch_rendered(sched_url)
+        if not html:
+            session_log.trace("sawyer", f"schedules fetch failed: {sched_url}")
+            continue
+        sessions = _parse_sawyer_schedules(html, slug, url)
+        if sessions:
+            session_log.trace("sawyer", f"{len(sessions)} activities from {sched_url}")
+            return sessions
+        session_log.trace("sawyer", f"no activities parsed from {sched_url}")
+    return []
 
 
 async def adapter_campbrain(url, links, page_text):

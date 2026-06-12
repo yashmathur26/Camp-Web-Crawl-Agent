@@ -237,6 +237,36 @@ def _extract_links_from_result(base_url: str, result) -> list[dict]:
     return links
 
 
+async def fetch_rendered(
+    url: str,
+    *,
+    wait: str = "networkidle",
+    timeout_s: int = 20,
+) -> str | None:
+    """Rendered page HTML via Playwright; None on failure.
+
+    Raw post-render HTML (not cleaned markdown) — for embed/widget discovery
+    (Sawyer slugs, WebTrac iframes) that markdown cleaning strips out."""
+    if not _is_allowed(url):
+        return None
+    domain = _registered_domain(url)
+    sem = _host_semaphores[domain]
+    browser_config = _browser_config()
+    run_config = _run_config(wait_until=wait, page_timeout=int(timeout_s) * 1000)
+    async with sem:
+        await asyncio.sleep(float(SETTINGS.get("focused_delay_seconds", 1.5)))
+        try:
+            async with _playwright_sem():
+                async with AsyncWebCrawler(config=browser_config) as crawler:
+                    result = await crawler.arun(url=url, config=run_config)
+                    if not result or not getattr(result, "success", False):
+                        return None
+                    return getattr(result, "html", "") or None
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("fetch_rendered failed %s: %s", url, exc)
+            return None
+
+
 async def fetch_page_text(url: str, *, wait_until: str | None = None) -> str:
     """Shallow fetch of visible page text for LLM validation."""
     if not _is_allowed(url):

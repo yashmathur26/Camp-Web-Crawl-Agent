@@ -878,6 +878,22 @@ def _run_session_enumeration(
     logging.info("Pilot analysis: %s", analysis_path)
     print(f"Pilot analysis: {analysis_path}\n")
 
+    # Task 0.2: score against the committed baseline when one exists for this
+    # town. Eval failure must never fail a pipeline run.
+    try:
+        if Path(f"data/_baseline/{slug}").exists():
+            from scripts.score_town import score_town
+
+            result = score_town(town_name)
+            logging.info("Eval vs baseline: %s", result)
+            print(
+                f"Eval vs baseline: recall_fuzzy={result['recall_fuzzy']:.1%} "
+                f"precision={result['precision']:.1%} "
+                f"providers={result['providers_covered_count']}/{result['provider_total']}\n"
+            )
+    except Exception as exc:  # noqa: BLE001 — eval is observability only
+        logging.warning("baseline eval failed for %s: %s", town_name, exc)
+
     if post_phases:
         _run_parent_verify(town_name, verify_all=verify_all, max_llm=verify_max_llm)
         _run_registration_trail(town_name, results)

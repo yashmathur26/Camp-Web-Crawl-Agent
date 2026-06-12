@@ -1,0 +1,34 @@
+# Burlington provider registry (Phase 8 second GT town) — from the frozen
+# baseline provider set + Phase 0 vendor evidence. Aggregator/guide hosts from
+# the old candidate list are intentionally excluded (they are not providers).
+town: Burlington
+state: MA
+providers:
+  - name: MetroWest YMCA
+    host: metrowestymca.org
+    seed: https://metrowestymca.org/camp
+    vendor: unknown                   # SGA software portal; no adapter (R8.1 queue)
+  - name: West Suburban YMCA
+    host: wsymca.org
+    seed: https://wsymca.org/camps
+    vendor: unknown
+  - name: Worcester JCC
+    host: worcesterjcc.org
+    seed: https://worcesterjcc.org/summer-camps
+    vendor: unknown
+  - name: JCC North Shore (Camp Simchah)
+    host: jccns.org
+    seed: https://jccns.org/summer-camp
+    vendor: unknown
+  - name: Life Time MetroWest
+    host: my.lifetime.life
+    seed: https://my.lifetime.life/clubs/ma/metrowest-boston/programs/kids/camps/summer-camps.html
+    vendor: unknown
+  - name: Camp Middlesex
+    host: campmiddlesex.com
+    seed: https://campmiddlesex.com/
+    vendor: unknown
+  - name: Salvation Army (Eastern MA camps)
+    host: easternusa.salvationarmy.org
+    seed: https://easternusa.salvationarmy.org/massachusetts/boston/camp-summerprograms
+    vendor: unknown

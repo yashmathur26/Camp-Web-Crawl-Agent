@@ -219,4 +219,26 @@ def test_runner_counts_match_csvs(tmp_path, monkeypatch):
     assert len(out["providers"]) == 21 and len(out["gaps"]) == 21
     assert all(g.reason == "needs_adapter" for g in out["gaps"])
     narration = (Path(tmp_path) / "lexington" / "engine" / "narration.log").read_text()
-    assert "21 registered provider(s)" in narration
+    assert "21 provider(s)" in narration
+
+def test_checkpoint_resume_skips_finished_providers(tmp_path, monkeypatch):
+    """7.2 DoD: rerun completes without re-extracting finished providers."""
+    import engine.run.runner as runner_mod
+    from engine.model import Gap
+
+    calls = []
+
+    async def _stub(provider):
+        calls.append(provider.host)
+        return [], Gap(provider_id=provider.provider_id, reason="needs_adapter",
+                       evidence="stub", suggested_action="n/a"), {}
+
+    monkeypatch.setattr(runner_mod, "_resolve_extractor", lambda: _stub)
+    asyncio.run(runner_mod.run_town("lexington", out_root=tmp_path))
+    first = len(calls)
+    assert first == 21
+    asyncio.run(runner_mod.run_town("lexington", out_root=tmp_path))
+    assert len(calls) == first          # zero re-extractions on resume
+    calls.clear()
+    asyncio.run(runner_mod.run_town("lexington", out_root=tmp_path, fresh=True))
+    assert len(calls) == 21             # --fresh reruns everything

@@ -17,6 +17,7 @@ import re
 from dataclasses import dataclass, field
 from urllib.parse import urlparse
 
+from engine.fetch.urls import normalize_url
 from engine.model import Gap, Program, Session
 from engine.validate.signals import ADULT_BLOCKER_RE, verify_registrable
 
@@ -80,6 +81,30 @@ _SUMMER_DATE_RE = re.compile(
     r"\b(?:jun|jul|aug)[a-z]*\.?\s*\d{1,2}|\b0?[678]/\d{1,2}\b|summer\s+20\d{2}",
     re.I,
 )
+_MONTH_TOKEN_RE = re.compile(
+    r"\b(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*\b|\b(\d{1,2})/\d{1,2}\b",
+    re.I,
+)
+_MONTH_NUM = {m: i + 1 for i, m in enumerate(
+    ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"]
+)}
+
+
+def is_summer_window(dates: str) -> bool:
+    """True when the date evidence is a summer-window program. A range that
+    STARTS before June ("April 7th - June 16th" spring clinics) is not summer
+    even though a June token appears (Phase-3 live finding)."""
+    months: list[int] = []
+    for m in _MONTH_TOKEN_RE.finditer(dates or ""):
+        if m.group(1):
+            months.append(_MONTH_NUM[m.group(1)[:3].lower()])
+        elif m.group(2):
+            num = int(m.group(2))
+            if 1 <= num <= 12:
+                months.append(num)
+    if not months:
+        return bool(re.search(r"summer\s+20\d{2}", dates or "", re.I))
+    return months[0] in (6, 7, 8)
 _YOUTH_AGE_RE = re.compile(
     r"ages?\s*:?\s*\d|grades?\s*:?\s*(?:[k0-9]|pre)|\bpre-?k\b|kindergart|"
     r"\byouth\b|rising\s+(?:[1-9]|k)",
@@ -178,11 +203,14 @@ def gate_program(
             )
             continue
 
-        # 2. Info-url invariant
-        info_text = fetched_text.get(sess.info_url, "")
+        # 2. Info-url invariant (cache keys are normalized URLs)
+        info_key = (
+            sess.info_url if sess.info_url in fetched_text else normalize_url(sess.info_url)
+        )
+        info_text = fetched_text.get(info_key, "")
         if len(info_text) < MIN_INFO_CHARS or not name_in_text(name, info_text):
             why = (
-                "info_url not fetched this run" if sess.info_url not in fetched_text
+                "info_url not fetched this run" if info_key not in fetched_text
                 else f"info page {len(info_text)} chars"
                 if len(info_text) < MIN_INFO_CHARS
                 else "program name absent from info page"
@@ -197,8 +225,19 @@ def gate_program(
 
         # 3. Evidence on extracted fields + camp-scoped provenance
         evidence_blob = " ".join(filter(None, (sess.dates, sess.ages, sess.price)))
+        field_evidence = bool(
+            (sess.dates and is_summer_window(sess.dates))
+            or _YOUTH_AGE_RE.search(evidence_blob)
+        )
+        # Adult markers in EXTRACTED fields always gap. Page-level adult markers
+        # only gap rows with no protective evidence of their own — catalog pages
+        # carry "Membership"/account chrome that must not sink real camp rows
+        # (Phase-3 live finding: Hayden specialty camps gapped on nav chrome).
+        page_adult = _ADULT_EVIDENCE_RE.search(info_text[:4000]) and not _YOUTH_AGE_RE.search(
+            evidence_blob + " " + info_text[:4000]
+        )
         if _ADULT_EVIDENCE_RE.search(evidence_blob) or (
-            _ADULT_EVIDENCE_RE.search(info_text[:3000]) and not _YOUTH_AGE_RE.search(evidence_blob + " " + info_text[:3000])
+            page_adult and not field_evidence and not program.camp_scoped
         ):
             result.gaps.append(
                 Gap(provider_id=pid, reason="needs_review",
@@ -208,8 +247,7 @@ def gate_program(
             continue
         has_evidence = (
             program.camp_scoped
-            or bool(_SUMMER_DATE_RE.search(evidence_blob))
-            or bool(_YOUTH_AGE_RE.search(evidence_blob))
+            or field_evidence
             or bool(_SUMMER_DATE_RE.search(info_text[:4000]))
             or bool(_YOUTH_AGE_RE.search(info_text[:4000]))
         )
@@ -223,7 +261,11 @@ def gate_program(
 
         # 4. Register verification — upgrade only, never a blocker.
         verdict = "info_confirmed"
-        reg_text = fetched_text.get(sess.register_url, "") if sess.register_url else ""
+        reg_text = ""
+        if sess.register_url:
+            reg_text = fetched_text.get(sess.register_url) or fetched_text.get(
+                normalize_url(sess.register_url), ""
+            )
         check_url = sess.register_url or sess.info_url
         check_text = reg_text or info_text
         sig = verify_registrable(check_url, check_text, context=name)

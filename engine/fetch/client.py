@@ -59,7 +59,9 @@ def html_to_text(html: str) -> str:
 def extract_links(base_url: str, html: str) -> list[dict]:
     links = []
     for m in _A_RE.finditer(html or ""):
-        url = to_absolute(base_url, m.group(1))
+        # hrefs in rendered DOM serialization carry entity-encoded ampersands
+        # (&amp;FMID=...) which break query parsing downstream — unescape first.
+        url = to_absolute(base_url, unescape(m.group(1)))
         if not url:
             continue
         text = re.sub(r"\s+", " ", _HTML_TAG_RE.sub(" ", m.group(2))).strip()

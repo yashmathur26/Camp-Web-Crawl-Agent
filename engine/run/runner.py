@@ -41,6 +41,12 @@ async def run_town(town: str, *, out_root: Path | str = "data") -> dict[str, int
         f"Engine run: {registry.town}, {len(registry.providers)} registered provider(s)"
     )
 
+    try:
+        from engine.extract.base import reset_shared_client
+
+        reset_shared_client()  # fresh run-cache namespace (R4.3 "this run")
+    except ImportError:
+        pass
     extract = _resolve_extractor()
     for entry in registry.providers:
         provider = provider_from_entry(entry, registry.town)
@@ -92,7 +98,11 @@ def _resolve_extractor():
 
 def main(argv: list[str] | None = None) -> int:
     import argparse
+    import logging
 
+    logging.basicConfig(
+        level=logging.INFO, format="%(asctime)s %(name)s %(message)s", datefmt="%H:%M:%S"
+    )
     ap = argparse.ArgumentParser(description="Engine v3 town run")
     ap.add_argument("--town", required=True)
     ap.add_argument("--out-root", default="data")

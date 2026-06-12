@@ -191,8 +191,56 @@ LONG_TAIL = [
     ("fuseprogram.com", "Seven Week Summer Program", "June 22 - August 6", "https://fuseprogram.com/lexington-vacation-summer-program"),
     ("lexdebateinstitute.com", "The Summer Institute", "", "https://lexdebateinstitute.com/summer"),
     ("goddardschool.com", "Wonder of Learning Summer Program", "", "https://goddardschool.com/schools/ma/lexington/lexington/our-school/special-programs/summer-camp"),
-    ("munroecenter.org", "Summer Camp", "", "https://munroecenter.org/summer-camp.html"),
 ]
+
+
+# Verified during the Phase-3 eval loop: program-level entries present in the
+# live LexRec catalog (category/program pages with their own ProgramIDs) that
+# the initial youth-summer selection missed. Same captured-catalog provenance.
+MYREC_ADDITIONS = [
+    "LexRec Summer Day Camp",
+    "Blue Sox Baseball Camp",
+    "Minuteman Sports Clinics",
+    "USTA Tennis in the Parks Youth Tennis Lessons",
+    "Viking Sports Summer Camps",
+    "Circuit Lab - Robotics, Coding, & STEAM Summer Clinics",
+    "FC Academy - Summer Filmmaking Clinics",
+    "Kidcreate - Kpop, Anime, and Gaming",
+    "Kids Test Kitchen - Summer",
+    "Right Brain - Summer STEM Clinics",
+    "Snapology - STEM & Robotics Summer Clinics",
+    "SNL Sports Academy Fishing Clinic",
+    "Viking Pre-K & Kindergarten Soccer",
+]
+
+
+def myrec_addition_rows() -> list[dict]:
+    return [
+        {"provider_host": "lexrecma.myrec.com", "program_name": n,
+         "session_dates": "", "true_info_url": "https://lexrecma.myrec.com/info/activities/default.aspx?type=camps"}
+        for n in MYREC_ADDITIONS
+    ]
+
+
+def munroe_roster_rows() -> list[dict]:
+    """Munroe's captured ACTIVE Summer Camp 2026 roster (tests/fixtures/active/
+    munroe.json) — youth camp sessions only; the umbrella row is superseded."""
+    payload = json.loads((ROOT / "tests/fixtures/active/munroe.json").read_text())
+    url = "https://campscui.active.com/orgs/TheMunroeCenterfortheArts?season=3743834"
+    rows = []
+    for s in payload.get("sessions", []):
+        name = (s.get("name") or "").strip()
+        if not name:
+            continue
+        start = s.get("startDate") or {}
+        dates = ""
+        if isinstance(start, dict) and start.get("month"):
+            dates = f"{int(start['month']):02d}/{int(start.get('day', 1)):02d}/{start.get('year', '')}"
+        rows.append(
+            {"provider_host": "munroecenter.org", "program_name": name,
+             "session_dates": dates, "true_info_url": url}
+        )
+    return rows
 
 
 def robohub_rows() -> list[dict]:
@@ -214,7 +262,9 @@ def main() -> int:
     rows = (
         webtrac_rows()
         + myrec_rows()
+        + myrec_addition_rows()
         + lexplorations_rows()
+        + munroe_roster_rows()
         + robohub_rows()
         + long_tail_rows()
     )

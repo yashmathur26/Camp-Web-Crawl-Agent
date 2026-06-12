@@ -196,10 +196,22 @@ def test_gate_out_of_state_gaps():
 # --- 1.6 runner v0 -------------------------------------------------------------
 
 
-def test_runner_v0_all_gaps_and_counts_match(tmp_path):
-    from engine.run.runner import run_town
+def test_runner_counts_match_csvs(tmp_path, monkeypatch):
+    """R6.1: counts in the narration == rows in the CSVs; un-extractable
+    providers are diagnosed gaps, never silent zeros. (Dispatch stubbed so the
+    test stays offline — vendor extractors have their own fixture tests.)"""
+    import engine.run.runner as runner_mod
 
-    counts = asyncio.run(run_town("lexington", out_root=tmp_path))
+    async def _stub(provider):
+        from engine.model import Gap
+
+        return [], Gap(
+            provider_id=provider.provider_id, reason="needs_adapter",
+            evidence="offline test stub", suggested_action="n/a",
+        ), {}
+
+    monkeypatch.setattr(runner_mod, "_resolve_extractor", lambda: _stub)
+    counts = asyncio.run(runner_mod.run_town("lexington", out_root=tmp_path))
     assert counts["providers.csv"] == 21
     assert counts["programs.csv"] == 0 and counts["sessions.csv"] == 0
     assert counts["gaps.csv"] == 21  # every provider a diagnosed gap

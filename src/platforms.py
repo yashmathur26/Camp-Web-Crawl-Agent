@@ -1137,7 +1137,7 @@ async def adapter_sawyer(url, links, page_text):
     from src import session_log
     from src.crawl import fetch_rendered
 
-    slugs, tokens = _sawyer_slug_candidates("", links)
+    slugs, tokens = _sawyer_slug_candidates(page_text or "", links)
     if not slugs and not tokens:
         seed_html = await fetch_rendered(url, wait="domcontentloaded")
         slugs, tokens = _sawyer_slug_candidates(seed_html or "", [])
@@ -1639,6 +1639,113 @@ def _apply_focus_llm_tiebreaker(
 
 
 # --------------------------------------------------------------------------- #
+# Task 2.2 — rendered rescue: re-detect platform / extract registration links
+# from post-render HTML when the plain fetch found nothing.
+# --------------------------------------------------------------------------- #
+_RENDER_STATE: dict[str, int] = {"town_pages": 0}
+_RENDER_HOST_PAGES: dict[str, int] = {}
+
+
+def reset_render_budget() -> None:
+    """One run = one budget (called from enumerate_town)."""
+    _RENDER_STATE["town_pages"] = 0
+    _RENDER_HOST_PAGES.clear()
+
+
+def _render_host(url: str) -> str:
+    h = urlparse(url).netloc.lower()
+    return h[4:] if h.startswith("www.") else h
+
+
+async def _budgeted_fetch_rendered(url: str) -> str | None:
+    from config.settings import SETTINGS
+    from src import session_log
+    from src.crawl import fetch_rendered
+
+    host = _render_host(url)
+    max_host = int(SETTINGS.get("render_max_pages_per_host", 3))
+    max_town = int(SETTINGS.get("render_max_pages_per_town", 60))
+    if _RENDER_HOST_PAGES.get(host, 0) >= max_host:
+        session_log.trace("render_budget", f"host cap ({max_host}) reached for {host}")
+        return None
+    if _RENDER_STATE["town_pages"] >= max_town:
+        session_log.trace("render_budget", f"town cap ({max_town}) reached")
+        return None
+    _RENDER_HOST_PAGES[host] = _RENDER_HOST_PAGES.get(host, 0) + 1
+    _RENDER_STATE["town_pages"] += 1
+    return await fetch_rendered(
+        url, timeout_s=int(SETTINGS.get("render_timeout_s", 20))
+    )
+
+
+_A_HREF_RE = re.compile(r'<a\b[^>]*?href="([^"#][^"]*)"[^>]*>(.*?)</a>', re.I | re.S)
+
+
+def _links_from_html(base_url: str, html: str) -> list[dict]:
+    import html as _htmllib
+
+    from src.urls import to_absolute
+
+    out: list[dict] = []
+    seen: set[str] = set()
+    for m in _A_HREF_RE.finditer(html or ""):
+        u = to_absolute(base_url, _htmllib.unescape(m.group(1)))
+        if not u or u in seen:
+            continue
+        seen.add(u)
+        text = _htmllib.unescape(re.sub(r"<[^>]+>", " ", m.group(2)))
+        out.append({"url": u, "text": re.sub(r"\s+", " ", text).strip()})
+    return out
+
+
+async def rendered_rescue(url: str, town_hint: str = "") -> tuple[list[dict], str | None]:
+    """(sessions, platform) from a rendered fetch of the seed. Re-detects the
+    platform on post-render HTML (embedded widgets only appear there) and
+    re-routes to the matching adapter; else extracts registration-pattern links."""
+    from src import session_log
+    from src.registration import is_registration_platform_url
+
+    html = await _budgeted_fetch_rendered(url)
+    if not html:
+        return [], None
+    links = _links_from_html(url, html)
+    plat = detect_platform(url, links, html)
+    session_log.trace("rendered_rescue", f"re-detected platform={plat} for {url}")
+    if plat in _ADAPTERS:
+        try:
+            sessions = await _run_adapter(plat, url, links, html)
+            if sessions:
+                return sessions, plat
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("rendered rescue adapter %s failed for %s: %s", plat, url, exc)
+
+    sessions = []
+    seen: set[str] = set()
+    for l in links:
+        u = l.get("url", "")
+        path = urlparse(u).path
+        if not (
+            is_registration_platform_url(u)
+            or re.search(r"regist|enroll|signup|sign-up", path, re.I)
+        ):
+            continue
+        nu = normalize_url(u)
+        if not nu or nu in seen:
+            continue
+        seen.add(nu)
+        sessions.append(
+            make_session(
+                _clean_name(l.get("text", ""), u),
+                u,
+                platform="rendered",
+                source_url=url,
+                kind="session" if re.search(r"camp|summer|program|class", u, re.I) else "portal",
+            )
+        )
+    return sessions, ("rendered" if sessions else None)
+
+
+# --------------------------------------------------------------------------- #
 # Unified dispatcher
 # --------------------------------------------------------------------------- #
 async def _enumerate_provider_v2(url: str, *, town_hint: str = "") -> dict:
@@ -1757,6 +1864,22 @@ async def enumerate_provider(url: str, *, town_hint: str = "") -> dict:
             sessions = sessions + agent_sessions
             platform = f"{platform}+agent_nav" if platform != CUSTOM else "agent_nav"
             session_log.adapter_found(count=len(agent_sessions), platform="agent_nav")
+
+    # Task 2.2: unknown/agent_nav providers with 0 sessions get one rendered
+    # fetch — embedded widgets (Sawyer/WebTrac) only appear post-render.
+    if not sessions and platform.split("+")[0] in (
+        CUSTOM,
+        "agent_nav",
+        SQUARESPACE,
+        WIX,
+        WEEBLY,
+        WORDPRESS,
+    ):
+        rescued, rescue_platform = await rendered_rescue(url, town_hint=town_hint)
+        if rescued:
+            sessions = rescued
+            platform = rescue_platform or platform
+            session_log.adapter_found(count=len(rescued), platform=f"rendered:{platform}")
 
     if (
         len(sessions) < trail_min

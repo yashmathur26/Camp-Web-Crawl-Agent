@@ -328,8 +328,10 @@ async def enumerate_town(
 ) -> list[dict]:
     """Run platform-aware enumeration for every provider in a town."""
     from src import fetch_cache
+    from src.platforms import reset_render_budget
 
     fetch_cache.reset()  # one run = one fresh cache
+    reset_render_budget()  # Task 2.2: per-run rendered-fetch budget
     provider_urls = urls or load_provider_urls(town, candidates_path)
     log_path = session_log.init(log_file)
     logger.info("Session enumeration log: %s", log_path)

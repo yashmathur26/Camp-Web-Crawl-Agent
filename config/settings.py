@@ -164,6 +164,10 @@ SETTINGS = {
     "parent_verify_fetch_timeout_ms": 15000,
     "parent_verify_networkidle_hosts": ("myvscloud", "daxko"),
     "parent_verify_confidence_threshold": 0.75,
+    # Task 2.2 rendered-rescue budgets (Playwright fetches are expensive)
+    "render_max_pages_per_host": 3,
+    "render_max_pages_per_town": 60,
+    "render_timeout_s": 20,
     # Task 4.2 publish gates — only verified rows reach the parent deliverable;
     # everything else is HELD in phase_p/review_queue.csv, never deleted.
     "publish_require_verify": True,

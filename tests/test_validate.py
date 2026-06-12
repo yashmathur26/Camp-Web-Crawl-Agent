@@ -12,13 +12,26 @@ from src.validate_search_result import validate_search_result  # noqa: E402
 def test_rejects_aggregator():
     r = validate_search_result(
         {
-            "url": "https://www.activityhero.com/camps/boston",
+            "url": "https://www.care.com/summer-camps/boston",
             "title": "Summer Camps in Boston",
             "snippet": "Find camps",
         }
     )
     assert r.verdict == "reject"
     assert r.source_type == "aggregator"
+
+
+def test_keeps_guide_for_outbound_mining():
+    # activityhero.com is in GUIDE_DOMAINS: kept so its outbound links are mined.
+    r = validate_search_result(
+        {
+            "url": "https://www.activityhero.com/camps/boston",
+            "title": "Summer Camps in Boston",
+            "snippet": "Find camps",
+        }
+    )
+    assert r.verdict == "keep"
+    assert r.source_type == "guide"
 
 
 def test_rejects_after_school():

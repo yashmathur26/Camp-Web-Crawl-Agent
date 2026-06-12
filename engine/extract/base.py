@@ -88,13 +88,17 @@ def group_sessions_into_programs(
 
 def _vendors() -> dict[str, Extractor]:
     from engine.extract.vendors.active import ActiveExtractor
+    from engine.extract.vendors.communityed import CommunityedExtractor
     from engine.extract.vendors.myrec import MyrecExtractor
+    from engine.extract.vendors.sawyer import SawyerExtractor
     from engine.extract.vendors.webtrac import WebtracExtractor
 
     table: dict[str, Extractor] = {
         "webtrac": WebtracExtractor(),
         "myrec": MyrecExtractor(),
         "active": ActiveExtractor(),
+        "communityed": CommunityedExtractor(),
+        "sawyer": SawyerExtractor(),
     }
     try:
         from engine.extract.generic import GenericExtractor

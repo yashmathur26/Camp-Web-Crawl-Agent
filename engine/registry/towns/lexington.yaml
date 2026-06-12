@@ -53,8 +53,9 @@ providers:
   - name: LexFarm
     host: lexfarm.org
     seed: https://lexfarm.org/education
-    vendor: unknown                  # registers via Sawyer; org unresolved -> generic
-    notes: page says "partnered with Sawyer"; revisit after 4.1
+    vendor: sawyer
+    org_id: lexington-community-farm   # operator-confirmed camps schedule
+    notes: camps at hisawyer.com/lexington-community-farm/schedules?schedule_id=camps
 
   - name: Lexington Christian Academy
     host: lca.edu
@@ -117,7 +118,7 @@ providers:
 
   - name: Drumlin Farm (Mass Audubon)
     host: massaudubon.org
-    seed: https://massaudubon.org/places-to-explore/wildlife-sanctuaries/drumlin-farm
+    seed: https://massaudubon.org/programs-events/nature-camps
     vendor: unknown
     notes: geo-review — sanctuary is Lincoln, MA
 

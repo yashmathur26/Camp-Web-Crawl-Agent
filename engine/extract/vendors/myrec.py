@@ -135,6 +135,20 @@ class MyrecExtractor(Extractor):
                 )
                 if len(text) >= 400:
                     info_url = row["url"]
+                    # Field enrichment — RANGES only: every LexRec detail page
+                    # carries a bare "June 1st" (registration-opens boilerplate)
+                    # which is not program evidence (round-2 leak).
+                    if not row["dates"]:
+                        dm = _DATES_RE.search(text)
+                        if dm and re.search(r"[-–—]|\bto\b", dm.group(0)):
+                            row["dates"] = dm.group(0)
+                    if not row["ages"]:
+                        am = re.search(
+                            r"ages?\s*:?\s*\d{1,2}\s*(?:[-–&]|and|to)\s*(?:\d{1,3}|up)",
+                            text[:6000], re.I,
+                        ) or _AGES_RE.search(text[:4000])
+                        if am:
+                            row["ages"] = am.group(0)
             except BudgetExceeded:
                 pass
             sessions.append(

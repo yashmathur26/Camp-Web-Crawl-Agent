@@ -30,7 +30,8 @@ _SKIP_RE = re.compile(r"about|contact|faq|donate|news|blog|gallery|privacy|login
 _NONCAMP_SECTION_RE = re.compile(
     r"fitness|health-?wellness|weight-?loss|weightloss|wellness|after-?school|"
     r"enrichment|child-?care|child-?watch|membership|personal-?train|massage|"
-    r"aquatics|group-?exercise|find-a?-?program|adult|education-care",
+    r"aquatics|group-?exercise|find-a?-?program|adult|education-care|"
+    r"research|innovation",
     re.I,
 )
 _CAMP_PATH_RE = re.compile(r"camp|summer", re.I)
@@ -112,6 +113,16 @@ def demote_activity_menus(records: list[dict]) -> list[dict]:
 
     keep: list[dict] = []
     for page, rows in by_page.items():
+        # Brand/nav menus (US Sports finding): >=3 same-page records whose
+        # extracted (dates, ages) are IDENTICAL are nav cards, not programs —
+        # real weekly camps (Viking) carry distinct date windows.
+        if len(rows) >= 3:
+            combos = Counter(((r.get("dates") or "").strip(), (r.get("ages") or "").strip())
+                             for r in rows)
+            top, n = combos.most_common(1)[0]
+            if n / len(rows) >= 0.8 and len(rows) >= 3 and top != ("", "") and n >= 3:
+                if all(len(r["name"].split()) <= 6 for r in rows):
+                    continue  # drop the whole nav-card batch
         short = [r for r in rows if len(r["name"].split()) <= 2]
         if len(rows) >= 8 and len(short) / len(rows) >= 0.7:
             ages = Counter((r.get("ages") or "").strip() for r in rows)
@@ -195,6 +206,15 @@ class GenericExtractor(Extractor):
         records = scope_to_camp_pages(records)
         records = demote_activity_menus(records)
 
+        # Register-link discovery (Playcare finding): if the site has a real
+        # /enroll|/register page, point register_url there instead of the info page.
+        register_url = ""
+        for l in links:
+            lp = urlparse(l.get("url", "")).path.lower()
+            if re.search(r"/enroll|/register", lp) and not _NONCAMP_SECTION_RE.search(lp):
+                register_url = l["url"]
+                break
+
         seen: set[str] = set()
         sessions = []
         for r in records:
@@ -204,7 +224,7 @@ class GenericExtractor(Extractor):
             seen.add(key)
             sessions.append(
                 Session(name=r["name"], info_url=r["info_url"],
-                        register_url=r["info_url"], dates=r.get("dates", ""),
+                        register_url=register_url or r["info_url"], dates=r.get("dates", ""),
                         ages=r.get("ages", ""), price=r.get("price", ""),
                         extractor="generic")
             )

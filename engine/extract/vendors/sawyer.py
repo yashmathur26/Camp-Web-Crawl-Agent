@@ -69,6 +69,21 @@ class SawyerExtractor(Extractor):
             except Exception:  # noqa: BLE001
                 html = ""
         rows = pair_headings_to_sets(html)
+        if not rows and provider.org_id:
+            # LexFarm finding: some orgs link a Sawyer SCHEDULES page instead of
+            # embedding activity-sets — render the camps schedule and harvest.
+            from engine.fetch.render import fetch_rendered
+
+            sched = f"https://www.hisawyer.com/{provider.org_id}/schedules?schedule_id=camps"
+            _t, slinks, shtml = await fetch_rendered(sched, cache=fetch.cache, log=fetch.log)
+            seen_sets: set[str] = set()
+            for l in slinks:
+                mm = _ASET_RE.search(l.get("url", ""))
+                name = re.sub(r"\s+", " ", (l.get("text") or "")).strip()
+                if mm and name and 2 < len(name) < 70 and mm.group(2) not in seen_sets:
+                    seen_sets.add(mm.group(2))
+                    rows.append({"name": name, "set_id": mm.group(2),
+                                 "info_url": l["url"], "ages": ""})
         if not rows:
             return ExtractResult(
                 gap=Gap(provider_id=provider.provider_id, reason="empty",

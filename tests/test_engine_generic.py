@@ -145,3 +145,51 @@ def test_camp_page_priority_scoping():
     ]
     names = {r["name"] for r in scope_to_camp_pages(recs)}
     assert names == {"Camp Chickami", "LIT Sessions", "Summer at the J"}
+
+
+def test_gate_off_season_and_field_evidence_only():
+    """Round-2 feedback: winter/april clinics drop; page-text 'June' no longer
+    rescues adult rows without field evidence."""
+    from engine.model import Program, Session
+    from engine.validate.gate import gate_program
+
+    rich = "Soccer clinics all year. Registration June hours. " * 20
+    winter = Session(name="Winter Skills Clinics", info_url="https://x/w", dates="Jan 5 - Mar 9")
+    taichi = Session(name="Tai Chi w/Constance", info_url="https://x/t")
+    blue = Session(name="Blue Sox Baseball Camp", info_url="https://x/b",
+                   dates="July 7-11", ages="7-10")
+    for sess, ok in ((winter, False), (taichi, False), (blue, True)):
+        prog = Program(name=sess.name, provider_id="p", info_url=sess.info_url)
+        prog.sessions = [sess]
+        res = gate_program(prog, fetched_text={sess.info_url: f"{sess.name}. {rich}"})
+        assert bool(res.published) is ok, sess.name
+
+
+def test_nav_card_batches_dropped():
+    """US Sports finding: same-page records with identical dates+ages are nav cards."""
+    from engine.extract.generic import demote_activity_menus
+
+    cards = [{"name": n, "info_url": "https://u.com/nike-euro-camps",
+              "dates": "August 26", "ages": "age 5", "price": ""}
+             for n in ["Euro Sports Camps", "Nike - Chelsea Football Camp",
+                       "Nike Total Football Camp", "Bill Pilat's Goalie School"]]
+    real = [{"name": f"Summer Week #{i} Multi-Sports Camp", "info_url": "https://v.com/camps",
+             "dates": d, "ages": "5-13", "price": ""}
+            for i, d in enumerate(["Jun 15-19", "Jun 22-26", "Jul 6-10"], 1)]
+    out = demote_activity_menus(cards + real)
+    names = {r["name"] for r in out}
+    assert not any("Euro" in n or "Chelsea" in n for n in names)
+    assert sum(1 for n in names if "Multi-Sports" in n) == 3  # distinct dates kept
+
+
+def test_gate_adult_min_age_rejected():
+    """Round-2: extracted 'Ages: 18 and up' is adult evidence."""
+    from engine.model import Program, Session
+    from engine.validate.gate import gate_program
+
+    sess = Session(name="Line Dance with Paul", info_url="https://x/d",
+                   dates="June 22 - August 10", ages="Ages: 18 - 99")
+    prog = Program(name="Line Dance with Paul", provider_id="p", info_url="https://x/d")
+    prog.sessions = [sess]
+    res = gate_program(prog, fetched_text={"https://x/d": "Line Dance with Paul. " * 40})
+    assert not res.published

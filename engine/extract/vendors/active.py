@@ -189,7 +189,11 @@ class ActiveExtractor(Extractor):
             season_url = f"https://campscui.active.com/orgs/{provider.org_id}?season={sid}"
             payload = payloads.get(sid)
             if payload is None:
-                budget.check()
+                try:
+                    budget.check()
+                except Exception:
+                    break  # keep the seasons already captured (round-2: Munroe
+                           # lost its whole roster to a mid-loop BudgetExceeded)
                 _s, more, season_text = await capture_season_sessions(
                     provider.org_id, season_id=sid
                 )

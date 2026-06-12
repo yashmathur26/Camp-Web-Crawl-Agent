@@ -259,7 +259,9 @@ def gate_program(
         page_adult_audience = re.search(
             r"\bfor\s+adults?\b|\badults?\s+only\b|\b(?:18|21)\s*\+", info_text[:4000], re.I
         ) and not _YOUTH_AGE_RE.search(evidence_blob + " " + info_text[:4000])
-        if _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
+        m_age = re.search(r"ages?\s*:?\s*(\d{1,2})", sess.ages or "", re.I)
+        adult_min_age = bool(m_age and int(m_age.group(1)) >= 18)
+        if adult_min_age or _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
             page_adult and not field_evidence and not program.camp_scoped
         ) or (
             not program.camp_scoped
@@ -277,12 +279,19 @@ def gate_program(
                         suggested_action="exclude unless youth context confirmed")
                 )
             continue
-        has_evidence = (
-            program.camp_scoped
-            or field_evidence
-            or bool(_SUMMER_DATE_RE.search(info_text[:4000]))
-            or bool(_YOUTH_AGE_RE.search(info_text[:4000]))
-        )
+        # Off-season: a row whose OWN dates are non-summer is out of scope now
+        # (operator decision: Winter/April clinics, Fall leagues return later).
+        if (sess.dates or "").strip() and not is_summer_window(sess.dates):
+            result.gaps.append(
+                Gap(provider_id=pid, reason="needs_review",
+                    evidence=f"{name}: off-season dates ({sess.dates})",
+                    suggested_action="out of scope until clinics/seasons added")
+            )
+            continue
+        # Evidence must live in the row's OWN extracted fields (or camp scope).
+        # Page-level word scans let every rec-center page "mention June" and
+        # published Tai Chi/Arthritis rows (operator feedback round 2).
+        has_evidence = program.camp_scoped or field_evidence
         if not has_evidence:
             if include_review:
                 sess.verdict = "needs_review"

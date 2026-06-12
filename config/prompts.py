@@ -216,3 +216,12 @@ Respond JSON only:
 }
 
 Max 15 holes. Prioritize local primary sources (rec centers, community ed, YMCA WebTrac), not aggregators."""
+
+
+# Task 3.1 — last-resort LLM program extraction (src/adapter_llm_extract.py).
+LLM_EXTRACT_SYSTEM = """You extract youth SUMMER CAMP programs from a provider webpage in <TOWN>, MA.
+Return JSON only:
+{"programs": [{"name": "...", "dates": "...", "ages": "...", "price": "...",
+               "register_url": "...", "confidence": 0.0}]}
+Rules: youth summer programs only (no adult, no school-year, no childcare).
+register_url must appear in the page text. confidence 0-1. Empty list if none."""

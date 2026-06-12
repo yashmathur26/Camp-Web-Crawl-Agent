@@ -1969,6 +1969,21 @@ async def enumerate_provider(url: str, *, town_hint: str = "") -> dict:
             logger.warning("llm fallback failed for %s: %s", url, exc)
             session_log.llm_page_extract(count=0)
 
+    # Task 3.1: true last resort — structured/sawyer/rendered/llm all came back
+    # empty. Gemma extraction over seed + camp-ish same-host pages; hosts that
+    # still fail are queued for Firecrawl inside the adapter.
+    if not sessions:
+        try:
+            from src.adapter_llm_extract import extract_programs_llm
+
+            extracted = await extract_programs_llm(url, town=town_hint)
+            if extracted:
+                sessions = extracted
+                platform = "llm_extract" if platform == CUSTOM else f"{platform}+llm_extract"
+                session_log.adapter_found(count=len(extracted), platform="llm_extract")
+        except Exception as exc:  # noqa: BLE001
+            logger.warning("llm_extract adapter failed for %s: %s", url, exc)
+
     from src.camp_discovery import collect_camp_candidate_links, discover_verified_sessions
     from src import session_log as _session_log
 

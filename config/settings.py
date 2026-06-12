@@ -164,6 +164,8 @@ SETTINGS = {
     "parent_verify_fetch_timeout_ms": 15000,
     "parent_verify_networkidle_hosts": ("myvscloud", "daxko"),
     "parent_verify_confidence_threshold": 0.75,
+    # Task 3.1 last-resort LLM extraction
+    "llm_extract_min_confidence": 0.6,
     # Task 2.2 rendered-rescue budgets (Playwright fetches are expensive)
     "render_max_pages_per_host": 3,
     "render_max_pages_per_town": 60,

@@ -1,0 +1,25 @@
+{
+  "towns": [
+    {
+      "town": "Lexington",
+      "baseline_published": 77,
+      "published": 44,
+      "junk_published": 0,
+      "junk_rate": 0.0,
+      "fabricated": 0,
+      "parent_ready": 0,
+      "quarantined": 31
+    },
+    {
+      "town": "Burlington",
+      "baseline_published": 21,
+      "published": 0,
+      "junk_published": 0,
+      "junk_rate": 0.0,
+      "fabricated": 0,
+      "parent_ready": 0,
+      "quarantined": 29
+    }
+  ],
+  "gate_ok": true
+}

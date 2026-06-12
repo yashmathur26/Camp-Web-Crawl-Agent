@@ -88,6 +88,9 @@ def group_sessions_into_programs(
 
 def _vendors() -> dict[str, Extractor]:
     from engine.extract.vendors.active import ActiveExtractor
+    from engine.extract.vendors.campbrain import CampbrainExtractor
+    from engine.extract.vendors.daxko import DaxkoExtractor
+    from engine.extract.vendors.enrollsy import EnrollsyExtractor
     from engine.extract.vendors.communityed import CommunityedExtractor
     from engine.extract.vendors.myrec import MyrecExtractor
     from engine.extract.vendors.sawyer import SawyerExtractor
@@ -99,6 +102,9 @@ def _vendors() -> dict[str, Extractor]:
         "active": ActiveExtractor(),
         "communityed": CommunityedExtractor(),
         "sawyer": SawyerExtractor(),
+        "campbrain": CampbrainExtractor(),
+        "enrollsy": EnrollsyExtractor(),
+        "daxko": DaxkoExtractor(),
     }
     try:
         from engine.extract.generic import GenericExtractor
@@ -132,7 +138,11 @@ async def extract_for_provider(provider: Provider):
     the gate's info-url invariant reads (R4.3)."""
     fetch = shared_client()
     table = _vendors()
-    extractor = table.get(provider.vendor) or table.get("unknown")
+    # Task 4.6: a KNOWN vendor without an implementation is a needs_adapter
+    # stub — only vendor "unknown" routes to the generic path.
+    extractor = table.get(provider.vendor)
+    if extractor is None and provider.vendor == "unknown":
+        extractor = table.get("unknown")
     if extractor is None:
         gap = Gap(
             provider_id=provider.provider_id, reason="needs_adapter",

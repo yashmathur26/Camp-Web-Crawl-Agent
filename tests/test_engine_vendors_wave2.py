@@ -35,3 +35,17 @@ def test_sawyer_marketing_page_pairs():
     assert robot["info_url"].endswith("/activity-set/1687198")
     gr = next(r for r in rows if "Gr. 2-3" in r["name"])
     assert gr["ages"]                                 # grades extracted as evidence
+
+
+def test_daxko_port_skips_swim_tests():
+    """Task 4.5 DoD: ported swim-test exclusion."""
+    from engine.extract.vendors.daxko import extract_daxko_sessions
+
+    links = [
+        {"url": "https://operations.daxko.com/Online/5104/ProgramsV2/ProgramDetail.mvc?program_id=1",
+         "text": "2026 BOROUGHS FREE PRE-CAMP SWIM TESTS"},
+        {"url": "https://operations.daxko.com/Online/5104/ProgramsV2/ProgramDetail.mvc?program_id=2",
+         "text": "2026 Boroughs Summer Camp Ages 5/6"},
+    ]
+    rows = extract_daxko_sessions(links, "https://ymcaofcm.org/camp-boroughs")
+    assert len(rows) == 1 and "Summer Camp" in rows[0]["name"]

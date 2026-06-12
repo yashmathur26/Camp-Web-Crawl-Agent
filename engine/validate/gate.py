@@ -236,7 +236,14 @@ def gate_program(
         page_adult = _ADULT_EVIDENCE_RE.search(info_text[:4000]) and not _YOUTH_AGE_RE.search(
             evidence_blob + " " + info_text[:4000]
         )
-        if _ADULT_EVIDENCE_RE.search(evidence_blob) or (
+        # AUDIENCE adult markers ("for adults", "adults only", 18+/21+) state who
+        # the program is FOR — they gap even when summer dates exist (the
+        # Symphony's adults-only July camp). Chrome markers (membership/senior
+        # nav) still need the no-evidence condition.
+        page_adult_audience = re.search(
+            r"\bfor\s+adults?\b|\badults?\s+only\b|\b(?:18|21)\s*\+", info_text[:4000], re.I
+        ) and not _YOUTH_AGE_RE.search(evidence_blob + " " + info_text[:4000])
+        if _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
             page_adult and not field_evidence and not program.camp_scoped
         ):
             result.gaps.append(

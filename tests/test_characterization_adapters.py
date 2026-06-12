@@ -57,9 +57,5 @@ def test_adapter_myrec_session_count_and_program_ids():
     assert all(s.get("info_url") == s["register_url"] for s in sessions)
 
 
-def test_adapter_community_ed_from_crawl_path_fixture():
-    """BASELINE: crawl-path Lexplorations landing yields 0 products (sparse rendered HTML)."""
-    url, html, links = load_platform_fixture("community_ed")
-    with patch_offline_fetch():
-        sessions = asyncio.run(adapter_community_ed(url, links, html))
-    assert len(sessions) == LOCKS["community_ed_session_count"] == 0
+# (deleted per engine-v3 task 4.2 / R1.3: it locked broken behavior — the old
+# adapter yielding 0 Lexplorations products was the bug, not the contract.)

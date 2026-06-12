@@ -19,3 +19,4 @@ build/
 .pytest_cache/
 .mypy_cache/
 .DS_Store
+engine_v3_docs.zip

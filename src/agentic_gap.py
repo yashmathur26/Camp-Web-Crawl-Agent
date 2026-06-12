@@ -234,12 +234,14 @@ def _seed_urls_for_hosts(hosts: set[str], town: str) -> list[str]:
     return picked
 
 
-async def _enumerate_new_hosts(
+def _enumerate_new_hosts_engine(
     town: str,
     new_hosts: set[str],
     gap_urls: list[str],
 ) -> list[dict]:
-    import asyncio
+    """Engine v3 enumerates newly discovered hosts (vendor fingerprint ->
+    extractor -> gate). The old enumerate_town path is gone from Part C."""
+    from src.engine_bridge import enumerate_hosts_via_engine
 
     urls = list(dict.fromkeys(gap_urls))
     for u in _seed_urls_for_hosts(new_hosts, town):
@@ -247,7 +249,7 @@ async def _enumerate_new_hosts(
             urls.append(u)
     if not urls:
         return []
-    return await enumerate_town(town, urls=urls)
+    return enumerate_hosts_via_engine(town, urls)
 
 
 def run_agentic_gap(
@@ -265,7 +267,12 @@ def run_agentic_gap(
     ceiling = max_searches if max_searches is not None else int(
         SETTINGS.get("gap_max_searches_per_round", 100)
     )
-    sessions = sessions or load_sessions_for_verify(town)
+    if sessions is None:
+        # Audit base: the engine's clean catalog when present (216 gated rows
+        # for Lexington vs the old pipeline's 44) — old CSV only as fallback.
+        from src.engine_bridge import engine_sessions_for_town
+
+        sessions = engine_sessions_for_town(town) or load_sessions_for_verify(town)
     if fallback_taxonomy and not sessions:
         return taxonomy_gap_fill(town, max_searches=ceiling)
 
@@ -344,22 +351,14 @@ def run_agentic_gap(
 
         new_session_count = 0
         if new_hosts and gap_urls:
-            results = asyncio.run(_enumerate_new_hosts(town, new_hosts, gap_urls))
-            new_sessions = _sessions_from_results(results)
+            new_sessions = _enumerate_new_hosts_engine(town, new_hosts, gap_urls)
             new_session_count = len(new_sessions)
             sessions = _merge_sessions(sessions, new_sessions)
             all_new_sessions = _merge_sessions(all_new_sessions, new_sessions)
-            write_session_outputs(town, results)
-            write_quality_csvs(town, sessions)
-            verify_result = asyncio.run(
-                run_parent_verify(town, sessions=sessions)
-            )
-            sessions = load_sessions_for_verify(town, sessions_csv=sessions_verified_csv(town))
-            # Part C Stage 4: back-fill the county registry with what we found.
+            # engine rows arrive pre-gated (verdicts set) — no old Phase P pass.
             from src.provider_registry import register_sessions
 
             register_sessions(town, sessions)
-            logger.info("Phase P after gap round %d: %s", round_num, verify_result.get("counts"))
 
         audit_path = gap_audit_json(town, round_num)
         audit["search_plan"] = {

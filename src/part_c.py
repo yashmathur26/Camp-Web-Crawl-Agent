@@ -87,7 +87,9 @@ def run_part_c(
         if state.get("status") == "done":
             logger.info("Part C: %s already done (resume) — skipping", town)
             continue
-        sessions = load_sessions_for_verify(town)
+        from src.engine_bridge import engine_sessions_for_town
+
+        sessions = engine_sessions_for_town(town) or load_sessions_for_verify(town)
         if not sessions:
             logger.info("Part C: %s has no enumerated sessions yet — recording skip "
                         "(run phases A-P first)", town)

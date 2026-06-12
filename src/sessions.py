@@ -59,6 +59,7 @@ SESSION_CSV_COLUMNS = [
     "price",
     "kind",
     "source_url",
+    "granularity",
 ]
 
 
@@ -374,6 +375,9 @@ def write_session_outputs(
         w.writeheader()
         for res in results:
             for s in res.get("sessions", []):
+                # granularity: "session" (a specific registrable camp) unless an
+                # upstream stage marked the row "program" (provider-level).
+                s = {**s, "granularity": s.get("granularity") or "session"}
                 ok, reasons = (True, []) if not gate_on else validate_session(s)
                 if not ok:
                     if is_fabrication_blocked(s):

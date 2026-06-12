@@ -52,6 +52,7 @@ def make_session(
     source_url: str = "",
     kind: str = "session",
     name_source: str = "",
+    granularity: str = "session",
 ) -> dict:
     """Uniform record every adapter returns.
 
@@ -92,6 +93,7 @@ def make_session(
         "name_source": name_source,
         "name_status": name_status,
         "raw_name": raw_name if name_status == "needs_name" else "",
+        "granularity": granularity or "session",
     }
 
 

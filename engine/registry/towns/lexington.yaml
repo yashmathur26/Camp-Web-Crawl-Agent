@@ -1,0 +1,128 @@
+# Lexington provider registry (task 1.3) — curated from
+# scripts/fingerprint_providers.py PROVIDERS + vendor evidence gathered in
+# Phase 0 ground-truth collection (see engine/eval/ground_truth/README.md).
+town: Lexington
+state: MA
+providers:
+  - name: J.W. Hayden Recreation Centre
+    host: jwhayden.org
+    seed: https://www.jwhayden.org/summer-camp
+    vendor: webtrac
+    org_id: majwhaydenweb            # the myvscloud subdomain
+    aliases: [majwhaydenweb.myvscloud.com]
+
+  - name: LexRec (Town of Lexington)
+    host: lexrecma.myrec.com
+    seed: https://lexrecma.myrec.com/info/activities/activities.aspx
+    vendor: myrec
+    org_id: lexrecma
+    aliases: [lexingtonma.gov]       # gov site funnels here (funnel dedupe)
+
+  - name: Lexington Community Ed / Lexplorations
+    host: lexingtoncommunityed.org
+    seed: https://lexingtoncommunityed.org/lexplorations/
+    vendor: communityed
+    org_id: lexplorations            # WooCommerce catalog prefix
+    notes: wp-json/wc/store/products API works (Phase 0) — prefer it (R5.7)
+
+  - name: Munroe Center for the Arts
+    host: munroecenter.org
+    seed: https://munroecenter.org/summer-camp.html
+    vendor: active
+    org_id: TheMunroeCenterfortheArts
+    notes: 2026 season catalog publishes Dec 10; season id needs resolution (3.6)
+
+  - name: The Robo Hub
+    host: therobohub.com
+    seed: https://therobohub.com/summer-camp-2026
+    vendor: sawyer
+    org_id: the-robo-hub
+
+  - name: Waldorf School of Lexington
+    host: thewaldorfschool.org
+    seed: https://thewaldorfschool.org/summer
+    vendor: enrollsy
+    org_id: ""                       # resolve in task 4.4
+
+  - name: Summers Edge Day Camp
+    host: summersedgedaycamp.com
+    seed: https://summersedgedaycamp.com/
+    vendor: campbrain
+    org_id: ""                       # queue-it throttled; resolve in 4.3
+
+  - name: LexFarm
+    host: lexfarm.org
+    seed: https://lexfarm.org/education
+    vendor: unknown                  # registers via Sawyer; org unresolved -> generic
+    notes: page says "partnered with Sawyer"; revisit after 4.1
+
+  - name: Lexington Christian Academy
+    host: lca.edu
+    seed: https://lca.edu/summer
+    vendor: unknown
+    notes: 403 on plain fetch (Phase 0) — expect blocked/rendered path
+
+  - name: Hancock Nursery School
+    host: hancocknurseryschool.org
+    seed: https://hancocknurseryschool.org/hns-summer
+    vendor: unknown
+
+  - name: Lexington United Soccer Club
+    host: lexingtonunited.org
+    seed: https://lexingtonunited.org/spring-summer-vacation-clinics
+    vendor: unknown
+
+  - name: Viking Sports Camps
+    host: vikingcamps.com
+    seed: https://vikingcamps.com/locations/lexington
+    vendor: unknown
+
+  - name: Lexington Playcare Center
+    host: lexingtonplaycarecenter.org
+    seed: https://lexingtonplaycarecenter.org/summer-camp
+    vendor: unknown
+
+  - name: FUSE School
+    host: fuseprogram.com
+    seed: https://fuseprogram.com/lexington-vacation-summer-program
+    vendor: unknown
+
+  - name: Lexington Debate Institute
+    host: lexdebateinstitute.com
+    seed: https://lexdebateinstitute.com/summer
+    vendor: unknown
+
+  - name: Goddard School Lexington
+    host: goddardschool.com
+    seed: https://goddardschool.com/schools/ma/lexington/lexington/our-school/special-programs/summer-camp
+    vendor: unknown
+
+  - name: Lexington Arts & Crafts Society
+    host: students.arbitersports.com
+    seed: https://students.arbitersports.com/organizations/search?query=Lexington+Arts+and+Crafts
+    vendor: unknown
+    notes: arbiter portal; no dedicated extractor planned (R8.1 queue)
+
+  - name: Lexington Symphony (Phoenix Project)
+    host: lexingtonsymphony.org
+    seed: https://lexingtonsymphony.org/phoenixproject
+    vendor: unknown
+    notes: ADULTS-ONLY program (Phase 0) — correct output is zero youth rows
+
+  - name: MGH Aspire
+    host: massgeneral.org
+    seed: https://massgeneral.org/children/aspire/apply
+    vendor: unknown
+    notes: apply page does not enumerate programs (Phase 0)
+
+  - name: Drumlin Farm (Mass Audubon)
+    host: massaudubon.org
+    seed: https://massaudubon.org/places-to-explore/wildlife-sanctuaries/drumlin-farm
+    vendor: unknown
+    notes: geo-review — sanctuary is Lincoln, MA
+
+  - name: Nike / US Sports Camps
+    host: ussportscamps.com
+    seed: https://ussportscamps.com/basketball/massachusetts/lexington
+    vendor: unknown
+    notes: JS search page; ~1 basketball camp near Lexington (Phase 0)

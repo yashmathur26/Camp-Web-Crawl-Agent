@@ -14,7 +14,7 @@ TOWNS_DIR = Path(__file__).resolve().parent / "towns"
 
 KNOWN_VENDORS = (
     "webtrac", "myrec", "active", "sawyer", "campbrain", "enrollsy", "daxko",
-    "communityed", "recdesk", "civicrec", "communitypass", "ultracamp",
+    "communityed", "recdesk", "civicrec", "communitypass", "ultracamp", "viking",
     "unknown",
 )
 

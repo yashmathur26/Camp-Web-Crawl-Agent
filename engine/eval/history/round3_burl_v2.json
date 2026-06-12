@@ -1,0 +1,29 @@
+{
+  "town": "burlington",
+  "timestamp": "20260612T144521",
+  "label": "round3_burl_v2",
+  "gt_programs": 17,
+  "gt_sessions": 2,
+  "published_rows": 14,
+  "program_recall": 0.2353,
+  "session_recall": 0.0,
+  "precision": 0.2857,
+  "info_url_validity": null,
+  "matched_programs": 4,
+  "matched_sessions": 0,
+  "unmatched_gt_programs": [
+    "jccns.org: Camp Simchah",
+    "jccns.org: KinderCamp",
+    "metrowestymca.org: Camp Clearbrook",
+    "metrowestymca.org: Hopkinton Summer Day Camp",
+    "metrowestymca.org: Ninja Sports Camp",
+    "metrowestymca.org: OCP Summer Program",
+    "metrowestymca.org: Stepping Stones Summer Program",
+    "metrowestymca.org: Teen Leadership Camps",
+    "metrowestymca.org: Y STEAM Summer Program",
+    "worcesterjcc.org: Sports Camp",
+    "wsymca.org: Camp Pikati - Day Camp",
+    "wsymca.org: Camp Wells - Day Camp",
+    "wsymca.org: Leaders-In-Training (LITs)"
+  ]
+}

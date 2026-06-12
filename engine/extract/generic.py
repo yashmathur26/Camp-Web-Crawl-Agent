@@ -96,7 +96,13 @@ def scope_to_camp_pages(records: list[dict]) -> list[dict]:
 
     records = [r for r in records if not _NONCAMP_SECTION_RE.search(path_of(r))]
     campy = [r for r in records if _CAMP_PATH_RE.search(path_of(r))]
-    return campy if campy else records
+    if not campy:
+        return records
+    # Keep non-camp-path rows only with STRONG own evidence (dates AND ages) —
+    # Camp Middlesex's real camps live at /about-us/program (round-3 finding).
+    strong = [r for r in records if r not in campy
+              and (r.get("dates") or "").strip() and (r.get("ages") or "").strip()]
+    return campy + strong
 
 
 def demote_activity_menus(records: list[dict]) -> list[dict]:

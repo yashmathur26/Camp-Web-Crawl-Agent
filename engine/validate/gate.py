@@ -107,7 +107,7 @@ def is_summer_window(dates: str) -> bool:
     return months[0] in (6, 7, 8)
 _YOUTH_AGE_RE = re.compile(
     r"ages?\s*:?\s*\d|grades?\s*:?\s*(?:[k0-9]|pre)|\bpre-?k\b|kindergart|"
-    r"\byouth\b|rising\s+(?:[1-9]|k)",
+    r"\byouth\b|rising\s+(?:[1-9]|k)|preschool|toddler",
     re.I,
 )
 _ADULT_EVIDENCE_RE = re.compile(
@@ -130,6 +130,22 @@ _ADULT_FITNESS_RE = re.compile(
 def _adult_fitness_page(info_text: str, youth_blob: str) -> bool:
     hits = set(m.group(1).lower() for m in _ADULT_FITNESS_RE.finditer(info_text[:4000]))
     return len(hits) >= 2 and not _YOUTH_AGE_RE.search(youth_blob)
+
+# Clinical/therapeutic context (MGH Aspire finding): hospital group programs
+# describe themselves in treatment vocabulary no camp page uses. >=2 distinct
+# markers on a non-camp-scoped page -> not a camp (re-categorize if the operator
+# adds therapeutic programs later).
+_CLINICAL_RE = re.compile(
+    r"\b(clinic(?:al|ian)|therap\w+|intervention|diagnos\w+|referral|"
+    r"patients?|psychiat\w+|outpatient|treatment|social\s+work)\b",
+    re.I,
+)
+
+
+def _clinical_page(info_text: str) -> bool:
+    hits = {m.group(1).lower()[:7] for m in _CLINICAL_RE.finditer(info_text[:5000])}
+    return len(hits) >= 2
+
 
 # --- check 5: geo (focused port of is_out_of_state_url) -----------------------
 
@@ -259,8 +275,9 @@ def gate_program(
         page_adult_audience = re.search(
             r"\bfor\s+adults?\b|\badults?\s+only\b|\b(?:18|21)\s*\+", info_text[:4000], re.I
         ) and not _YOUTH_AGE_RE.search(evidence_blob + " " + info_text[:4000])
-        m_age = re.search(r"ages?\s*:?\s*(\d{1,2})", sess.ages or "", re.I)
-        adult_min_age = bool(m_age and int(m_age.group(1)) >= 18)
+        m_age = re.search(r"ages?\s*:?\s*(\d{1,2})(?!\s*(?:mo|month))", sess.ages or "", re.I)
+        adult_min_age = bool(m_age and int(m_age.group(1)) >= 18
+                             and "month" not in (sess.ages or "").lower())
         if adult_min_age or _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
             page_adult and not field_evidence and not program.camp_scoped
         ) or (
@@ -278,6 +295,13 @@ def gate_program(
                         evidence=f"{name}: adult/membership evidence",
                         suggested_action="exclude unless youth context confirmed")
                 )
+            continue
+        if not program.camp_scoped and _clinical_page(info_text):
+            result.gaps.append(
+                Gap(provider_id=pid, reason="needs_review",
+                    evidence=f"{name}: clinical/therapeutic program context",
+                    suggested_action="not a camp; revisit if therapeutic category added")
+            )
             continue
         # Off-season: a row whose OWN dates are non-summer is out of scope now
         # (operator decision: Winter/April clinics, Fall leagues return later).

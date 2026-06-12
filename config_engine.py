@@ -15,6 +15,9 @@ ENGINE = {
     "fetch_timeout_s": 25,
     # R5.4 — one hanging host must not eat the town run (wall-clock, not count).
     "provider_budget_s": 120,
+    # Render-heavy vendors (ACTIVE SPA captures ~90s each; MyRec's per-detail
+    # renders) exceeded 120s and gapped real rosters (Munroe round-2 loss).
+    "render_heavy_budget_s": 300,
     # Politeness between requests to the same host.
     "politeness_delay_s": 1.0,
     # Browser pool cap — unbounded Playwright instances OOM'd the old runs.

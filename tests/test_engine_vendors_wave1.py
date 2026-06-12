@@ -77,7 +77,7 @@ class _StubFetch:
 
             def get(self, url):
                 hit = self._outer.pages.get(url)
-                return (hit[0], hit[1], 200) if hit else None
+                return (hit[0], hit[1], 200, "") if hit else None
 
         self.cache = _Cache(self)
 

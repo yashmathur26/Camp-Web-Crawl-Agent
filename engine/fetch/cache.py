@@ -27,12 +27,14 @@ class FetchCache:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
         self.run_id = run_id or time.strftime("%Y%m%dT%H%M%S")
         self.ttl_s = (ttl_h if ttl_h is not None else float(ENGINE["cache_ttl_h"])) * 3600
-        self._mem: dict[str, tuple[str, list[dict], int]] = {}
+        self._mem: dict[str, tuple[str, list[dict], int, str]] = {}
         self._db = sqlite3.connect(self.db_path)
+        # v2: raw html stored alongside text — cache hits previously returned
+        # no html, breaking parsers that read markup (Viking/LexFarm finding).
         self._db.execute(
-            "CREATE TABLE IF NOT EXISTS fetch_cache ("
+            "CREATE TABLE IF NOT EXISTS fetch_cache_v2 ("
             "  key TEXT PRIMARY KEY, text TEXT, links_json TEXT,"
-            "  status INTEGER, ts REAL)"
+            "  status INTEGER, ts REAL, html TEXT DEFAULT '')"
         )
         self._db.commit()
         self.hits = 0
@@ -41,35 +43,36 @@ class FetchCache:
     def _key(self, url: str) -> str:
         return normalize_url(url) or url
 
-    def get(self, url: str) -> tuple[str, list[dict], int] | None:
+    def get(self, url: str) -> tuple[str, list[dict], int, str] | None:
         key = self._key(url)
         if key in self._mem:
             self.hits += 1
-            text, links, status = self._mem[key]
-            return text, [dict(l) for l in links], status
+            text, links, status, html = self._mem[key]
+            return text, [dict(l) for l in links], status, html
         row = self._db.execute(
-            "SELECT text, links_json, status, ts FROM fetch_cache WHERE key=?", (key,)
+            "SELECT text, links_json, status, ts, html FROM fetch_cache_v2 WHERE key=?", (key,)
         ).fetchone()
         if row is not None:
-            text, links_json, status, ts = row
+            text, links_json, status, ts, html = row
             if self.ttl_s <= 0 or (time.time() - ts) <= self.ttl_s:
                 links = json.loads(links_json or "[]")
-                self._mem[key] = (text, links, status)
+                self._mem[key] = (text, links, status, html or "")
                 self.hits += 1
-                return text, [dict(l) for l in links], status
+                return text, [dict(l) for l in links], status, html or ""
         self.misses += 1
         return None
 
-    def put(self, url: str, text: str, links: list[dict], status: int = 200) -> None:
+    def put(self, url: str, text: str, links: list[dict], status: int = 200,
+            html: str = "") -> None:
         # Don't cache failed/empty fetches — a later retry may succeed.
         if not (text or "").strip():
             return
         key = self._key(url)
-        self._mem[key] = (text, links, status)
+        self._mem[key] = (text, links, status, html)
         self._db.execute(
-            "INSERT OR REPLACE INTO fetch_cache (key, text, links_json, status, ts) "
-            "VALUES (?,?,?,?,?)",
-            (key, text, json.dumps(links), status, time.time()),
+            "INSERT OR REPLACE INTO fetch_cache_v2 (key, text, links_json, status, ts, html) "
+            "VALUES (?,?,?,?,?,?)",
+            (key, text, json.dumps(links), status, time.time(), html),
         )
         self._db.commit()
 

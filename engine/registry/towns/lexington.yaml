@@ -76,7 +76,7 @@ providers:
   - name: Viking Sports Camps
     host: vikingcamps.com
     seed: https://vikingcamps.com/locations/lexington
-    vendor: unknown
+    vendor: viking                   # server-rendered WP taxonomy (round-3 probe)
 
   - name: Lexington Playcare Center
     host: lexingtonplaycarecenter.org

@@ -67,7 +67,8 @@ class MyrecExtractor(Extractor):
     vendor = "myrec"
 
     async def extract(self, provider: Provider, fetch: FetchClient) -> ExtractResult:
-        budget = Budget()
+        from config_engine import ENGINE
+        budget = Budget(seconds=float(ENGINE["render_heavy_budget_s"]))
         parsed = urlparse(provider.seed_url)
         base = f"{parsed.scheme}://{parsed.netloc}"
         camps_listing = f"{base}/info/activities/default.aspx?type=camps"

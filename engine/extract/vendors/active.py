@@ -157,7 +157,8 @@ class ActiveExtractor(Extractor):
     vendor = "active"
 
     async def extract(self, provider: Provider, fetch: FetchClient) -> ExtractResult:
-        budget = Budget()
+        from config_engine import ENGINE
+        budget = Budget(seconds=float(ENGINE["render_heavy_budget_s"]))
         if not provider.org_id:
             return ExtractResult(
                 gap=Gap(provider_id=provider.provider_id, reason="needs_review",

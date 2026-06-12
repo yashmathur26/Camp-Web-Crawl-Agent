@@ -57,9 +57,9 @@ async def fetch_rendered(
     if cache is not None:
         cached = cache.get(url)
         if cached is not None:
-            text, links, _status = cached
+            text, links, _status, html = cached
             _record("cache", len(text))
-            return text, links, ""
+            return text, links, html
 
     try:
         from playwright.async_api import async_playwright
@@ -101,5 +101,5 @@ async def fetch_rendered(
     links = extract_links(url, html)
     _record("ok", len(text))
     if cache is not None and text.strip():
-        cache.put(url, text, links)
+        cache.put(url, text, links, html=html)
     return text, links, html

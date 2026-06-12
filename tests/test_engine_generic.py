@@ -193,3 +193,20 @@ def test_gate_adult_min_age_rejected():
     prog.sessions = [sess]
     res = gate_program(prog, fetched_text={"https://x/d": "Line Dance with Paul. " * 40})
     assert not res.published
+
+
+def test_gate_clinical_program_rejected():
+    """MGH Aspire finding: hospital group programming is not a camp."""
+    from engine.model import Program, Session
+    from engine.validate.gate import gate_program
+
+    text = ("Aspire Group Programming. Our clinicians provide social-skills "
+            "group therapy for children ages 5-13. Referral required; treatment "
+            "plans reviewed with families. Summer groups run June-August. " * 8)
+    sess = Session(name="Aspire Group Programming", info_url="https://h.org/a",
+                   ages="ages 5-13", dates="June - August")
+    prog = Program(name="Aspire Group Programming", provider_id="p", info_url="https://h.org/a")
+    prog.sessions = [sess]
+    res = gate_program(prog, fetched_text={"https://h.org/a": text})
+    assert not res.published
+    assert "clinical" in res.gaps[0].evidence

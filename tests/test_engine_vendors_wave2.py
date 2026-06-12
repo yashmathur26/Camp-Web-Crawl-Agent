@@ -49,3 +49,17 @@ def test_daxko_port_skips_swim_tests():
     ]
     rows = extract_daxko_sessions(links, "https://ymcaofcm.org/camp-boroughs")
     assert len(rows) == 1 and "Summer Camp" in rows[0]["name"]
+
+
+def test_viking_catalog_parses_real_fixture():
+    """Operator request: Viking's 115-program paginated summer-camp catalog."""
+    from engine.extract.vendors.viking import parse_catalog
+
+    html = (FIXTURES / "viking/summer_camp_catalog.html").read_text(errors="ignore")
+    rows = parse_catalog(html)
+    assert len(rows) >= 15
+    dated = [r for r in rows if r["dates"]]
+    assert len(dated) >= 10                      # card evidence parsed
+    assert any("Multi-Sports" in r["name"] for r in rows)
+    lex = parse_catalog(html, town="Lexington")
+    assert all(r["in_town"] for r in lex) or lex == rows

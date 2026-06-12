@@ -130,9 +130,9 @@ class FetchClient:
             return "", [], ""
         cached = self.cache.get(url)
         if cached is not None:
-            text, links, _status = cached
+            text, links, _status, html = cached
             self._record(url, "cache", 0, len(text))
-            return text, links, ""
+            return text, links, html
         if not self._allowed(url):
             self._record(url, "refused", 0, 0, "robots.txt")
             return "", [], ""
@@ -148,7 +148,7 @@ class FetchClient:
                 ms = int((time.monotonic() - t0) * 1000)
                 self._record(url, "ok", ms, len(text), f"http={resp.status_code}")
                 if resp.status_code < 400:
-                    self.cache.put(url, text, links, resp.status_code)
+                    self.cache.put(url, text, links, resp.status_code, html=html)
                     return text, links, html
                 return "", links, html  # 4xx/5xx: no cache, caller diagnoses
             except httpx.TimeoutException as exc:

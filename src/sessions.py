@@ -453,6 +453,56 @@ def _dedupe_across_providers(results: list[dict]) -> list[dict]:
     return out
 
 
+_TIER_RANK = {"registrable": 2, "needs_trail": 1, "rejected": 0}
+
+
+def _dedupe_published_rows(rows: list[dict]) -> list[dict]:
+    """Task 4.1: canonicalize register URLs and collapse duplicates.
+
+    Identity, in priority order: platform ID (FMID/ProgramID), canonical URL,
+    (host, norm_name, dates). Higher quality tier wins a collision."""
+    from src.session_quality import classify_session_tier
+    from src.textnorm import norm_name
+    from src.urls import canonical_register_url, register_platform_id
+
+    kept: list[dict] = []
+    ranks: list[int] = []
+    key_to_idx: dict[tuple, int] = {}
+    for row in rows:
+        canon = canonical_register_url(
+            row.get("register_url", ""), row.get("platform", "")
+        )
+        row = {**row, "register_url": canon or row.get("register_url", "")}
+
+        keys: list[tuple] = []
+        pid = register_platform_id(canon)
+        if pid:
+            keys.append(("pid", pid))
+        if canon:
+            keys.append(("url", canon))
+        norm = norm_name(row.get("name", ""))
+        if norm:
+            host = host_of(canon or row.get("source_url", ""))
+            keys.append(("hnd", host, norm, (row.get("dates") or "").strip()))
+
+        hit = next((k for k in keys if k in key_to_idx), None)
+        if hit is None:
+            idx = len(kept)
+            kept.append(row)
+            ranks.append(_TIER_RANK.get(classify_session_tier(row)[0], 0))
+            for k in keys:
+                key_to_idx[k] = idx
+            continue
+        idx = key_to_idx[hit]
+        rank = _TIER_RANK.get(classify_session_tier(row)[0], 0)
+        if rank > ranks[idx]:
+            kept[idx] = row
+            ranks[idx] = rank
+        for k in keys:
+            key_to_idx.setdefault(k, idx)
+    return kept
+
+
 def write_session_outputs(
     town: str,
     results: list[dict],
@@ -482,32 +532,38 @@ def write_session_outputs(
             if (s.get("granularity") or "session") == "session":
                 hosts_with_sessions.add(host_of(s.get("source_url") or res.get("url", "")))
 
-    total = 0
     quarantined: list[dict] = []
     fabricated_blocked = 0
     program_rows_dropped = 0
+    publishable: list[dict] = []
+    for res in results:
+        for s in res.get("sessions", []):
+            # granularity: "session" (a specific registrable camp) unless an
+            # upstream stage marked the row "program" (provider-level).
+            s = {**s, "granularity": s.get("granularity") or "session"}
+            if (
+                s["granularity"] == "program"
+                and host_of(s.get("source_url") or res.get("url", "")) in hosts_with_sessions
+            ):
+                program_rows_dropped += 1
+                continue
+            ok, reasons = (True, []) if not gate_on else validate_session(s)
+            if not ok:
+                if is_fabrication_blocked(s):
+                    fabricated_blocked += 1
+                quarantined.append({**s, "_quarantine_reason": ";".join(reasons)})
+                continue
+            publishable.append(s)
+
+    publishable = _dedupe_published_rows(publishable)
+
+    total = 0
     with open(csv_path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=SESSION_CSV_COLUMNS)
         w.writeheader()
-        for res in results:
-            for s in res.get("sessions", []):
-                # granularity: "session" (a specific registrable camp) unless an
-                # upstream stage marked the row "program" (provider-level).
-                s = {**s, "granularity": s.get("granularity") or "session"}
-                if (
-                    s["granularity"] == "program"
-                    and host_of(s.get("source_url") or res.get("url", "")) in hosts_with_sessions
-                ):
-                    program_rows_dropped += 1
-                    continue
-                ok, reasons = (True, []) if not gate_on else validate_session(s)
-                if not ok:
-                    if is_fabrication_blocked(s):
-                        fabricated_blocked += 1
-                    quarantined.append({**s, "_quarantine_reason": ";".join(reasons)})
-                    continue
-                w.writerow({c: s.get(c, "") for c in SESSION_CSV_COLUMNS})
-                total += 1
+        for s in publishable:
+            w.writerow({c: s.get(c, "") for c in SESSION_CSV_COLUMNS})
+            total += 1
 
     if quarantined:
         with open(quarantine_path, "w", encoding="utf-8", newline="") as f:

@@ -91,8 +91,21 @@ def plan_round_searches(
     }
 
 
-def _hole_recently_searched(hole_id: str, cache: dict[str, str], days: int) -> bool:
-    ts = cache.get(hole_id)
+def _entry(cache: dict, hole_id: str) -> dict:
+    """v2 cache entries are dicts {searched_at, attempts, status}; v1 entries
+    were bare ISO strings — migrate on read."""
+    raw = cache.get(hole_id)
+    if isinstance(raw, str):
+        return {"searched_at": raw, "attempts": 1, "status": "searched"}
+    return raw or {}
+
+
+def _hole_recently_searched(hole_id: str, cache: dict, days: int) -> bool:
+    e = _entry(cache, hole_id)
+    if e.get("status") == "exhausted":
+        ttl = int(SETTINGS.get("gap_hole_exhausted_days", 60))
+        days = ttl
+    ts = e.get("searched_at")
     if not ts:
         return False
     try:
@@ -102,6 +115,30 @@ def _hole_recently_searched(hole_id: str, cache: dict[str, str], days: int) -> b
         return datetime.now(timezone.utc) - then < timedelta(days=days)
     except ValueError:
         return False
+
+
+def _record_attempt(cache: dict, hole_id: str, *, found_host: bool, variants_tried: int) -> None:
+    e = _entry(cache, hole_id)
+    attempts = int(e.get("attempts", 0)) + variants_tried
+    status = "searched"
+    if found_host:
+        status = "filled"
+    elif attempts >= 6:  # 2 rounds x 3 variants with zero valid hosts
+        status = "exhausted"
+    cache[hole_id] = {
+        "searched_at": datetime.now(timezone.utc).isoformat(),
+        "attempts": attempts,
+        "status": status,
+    }
+
+
+def exhausted_categories(cache: dict) -> set[str]:
+    out = set()
+    for hole_id, raw in cache.items():
+        e = _entry(cache, hole_id)
+        if e.get("status") == "exhausted" and hole_id.startswith("missing_category_"):
+            out.add(hole_id.replace("missing_category_", ""))
+    return out
 
 
 def _search_holes(
@@ -119,38 +156,49 @@ def _search_holes(
 
     for hole in holes[:max_searches]:
         hole_id = hole.get("hole_id", "")
-        query = hole.get("search_query", "")
-        if not query:
+        # Stage 3.2: up to 3 query variants, stopping early when a variant
+        # yields a new in-state, non-aggregator host.
+        variants = [q for q in (hole.get("query_variants") or []) if q]
+        if not variants and hole.get("search_query"):
+            variants = [hole["search_query"]]
+        if not variants:
             continue
-        try:
-            raw = search(query, SETTINGS["results_per_search"])
-        except ConfigError as exc:
-            logger.warning("gap search failed %r: %s", query, exc)
-            continue
-        searches_run += 1
+        hole_hosts: set[str] = set()
+        tried = 0
+        for query in variants[:3]:
+            try:
+                raw = search(query, SETTINGS["results_per_search"])
+            except ConfigError as exc:
+                logger.warning("gap search failed %r: %s", query, exc)
+                continue
+            searches_run += 1
+            tried += 1
+            kept, _ = validate_search_results(raw)
+            for item in kept:
+                url = normalize_url(item["url"])
+                if not url:
+                    continue
+                host = urlparse(url).netloc.lower().replace("www.", "")
+                hole_hosts.add(host)
+                rows.append(
+                    {
+                        "url": url,
+                        "state": STATE,
+                        "town_hint": town,
+                        "source_type": "gap_agentic",
+                        "found_via": "gap",
+                        "found_on_page": query,
+                        "link_text": item.get("title", ""),
+                        "discovered_at": "",
+                        "hole_id": hole_id,
+                    }
+                )
+            if hole_hosts:
+                break  # variant succeeded — stop escalating
         searched_ids.add(hole_id)
         if hole_id:
-            cache[hole_id] = datetime.now(timezone.utc).isoformat()
-        kept, _ = validate_search_results(raw)
-        for item in kept:
-            url = normalize_url(item["url"])
-            if not url:
-                continue
-            host = urlparse(url).netloc.lower().replace("www.", "")
-            new_hosts.add(host)
-            rows.append(
-                {
-                    "url": url,
-                    "state": STATE,
-                    "town_hint": town,
-                    "source_type": "gap_agentic",
-                    "found_via": "gap",
-                    "found_on_page": query,
-                    "link_text": item.get("title", ""),
-                    "discovered_at": "",
-                    "hole_id": hole_id,
-                }
-            )
+            _record_attempt(cache, hole_id, found_host=bool(hole_hosts), variants_tried=max(1, tried))
+        new_hosts |= hole_hosts
     return rows, new_hosts, searches_run
 
 
@@ -228,9 +276,22 @@ def run_agentic_gap(
     total_searches = 0
     total_links = 0
 
+    registry_skipped: dict[str, str] = {}
     for round_num in range(1, rounds + 1):
         audit = audit_catalog(town, sessions, use_llm=not fallback_taxonomy)
         holes = audit.get("holes", [])
+        # Part C Stage 4: a registered in-radius provider already covers some
+        # categories — credit them as covered_via and skip those searches.
+        from src.provider_registry import skippable_holes
+
+        holes, skipped = skippable_holes(town, holes)
+        registry_skipped.update(skipped)
+        if skipped:
+            logger.info(
+                "Gap round %d: %d hole(s) covered via registry (%s)",
+                round_num, len(skipped),
+                ", ".join(f"{c}<-{t}" for c, t in list(skipped.items())[:6]),
+            )
         plan = plan_round_searches(
             holes,
             cache=cache,
@@ -294,6 +355,10 @@ def run_agentic_gap(
                 run_parent_verify(town, sessions=sessions)
             )
             sessions = load_sessions_for_verify(town, sessions_csv=sessions_verified_csv(town))
+            # Part C Stage 4: back-fill the county registry with what we found.
+            from src.provider_registry import register_sessions
+
+            register_sessions(town, sessions)
             logger.info("Phase P after gap round %d: %s", round_num, verify_result.get("counts"))
 
         audit_path = gap_audit_json(town, round_num)
@@ -328,6 +393,26 @@ def run_agentic_gap(
 
     _save_hole_cache(cache)
 
+    # Part C Stage 3.1: write the coverage matrix (the guarantee artifact).
+    from src.coverage_matrix import build_matrix, coverage_summary, write_matrix
+    from src.provider_registry import register_sessions, registry_coverage
+
+    register_sessions(town, sessions)
+    shared = {**registry_coverage(town), **registry_skipped}
+    shared = {c: t for c, t in shared.items() if t != town}
+    matrix_rows = build_matrix(
+        town, sessions,
+        exhausted=exhausted_categories(cache),
+        shared_coverage=shared,
+        use_llm=not fallback_taxonomy,
+    )
+    matrix_path = write_matrix(town, matrix_rows)
+    summary = coverage_summary(matrix_rows)
+    logger.info(
+        "Coverage matrix %s: %d/%d covered (core %d%%) -> %s",
+        town, summary["covered"], summary["categories"], summary["core_pct"], matrix_path,
+    )
+
     new_csv = gap_new_sessions_csv(town)
     if all_new_sessions:
         from src.csv_mirror import write_csv_bundle
@@ -349,4 +434,6 @@ def run_agentic_gap(
         "total_links_added": total_links,
         "new_sessions": len(all_new_sessions),
         "final_session_count": len(sessions),
+        "coverage": summary,
+        "registry_skipped": registry_skipped,
     }

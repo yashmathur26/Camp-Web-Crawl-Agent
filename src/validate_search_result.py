@@ -51,6 +51,32 @@ def _combined_text(item: dict) -> str:
     return " ".join(parts).lower()
 
 
+CHAIN_BRANCH_DOMAINS: frozenset[str] = frozenset({
+    "codeninjas.com", "schoolofrock.com", "goldfishswimschool.com",
+    "britishswimschool.com", "idtech.com", "mathnasium.com", "kumon.com",
+    "snapology.com", "kidcreate.com", "engineeringforkids.com",
+    "challengersports.com", "ussportscamps.com", "supersoccerstars.com",
+    "skyhawks.com", "britishsoccercamps.com",
+})
+
+_LOCATION_SIGNAL_RE = None
+
+
+def _has_location_signal(url: str, title_snippet: str) -> bool:
+    """/locations/<town>, MA town name in title, or an MA zip."""
+    import re as _re
+
+    from config.towns import TOWNS
+
+    low = url.lower()
+    if "/locations/" in low or "/location/" in low:
+        return True
+    blob = f"{low} {title_snippet.lower()}"
+    if _re.search(r"\b0[12]\d{3}\b", blob):  # MA zips 01xxx/02xxx
+        return True
+    return any(t.lower() in blob for t in TOWNS)
+
+
 def is_aggregator_domain(url: str) -> bool:
     return _registered_domain(url) in AGGREGATOR_DENY_DOMAINS
 
@@ -86,6 +112,15 @@ def validate_search_result(item: dict) -> ValidationResult:
     path_lower = parsed.path.lower()
 
     if is_aggregator_domain(url):
+        # Part C 3.5: branded local-branch pages (Code Ninjas, School of Rock,
+        # Goldfish Swim...) are PRIMARY sources for niche categories when the
+        # URL/title carries a location signal.
+        if _registered_domain(url) in CHAIN_BRANCH_DOMAINS and _has_location_signal(
+            url, title_snippet
+        ):
+            return ValidationResult(
+                url, "keep", f"chain branch w/ location: {_registered_domain(url)}", "primary"
+            )
         return ValidationResult(
             url, "reject", f"aggregator domain: {_registered_domain(url)}", "aggregator"
         )

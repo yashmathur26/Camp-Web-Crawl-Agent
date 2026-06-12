@@ -70,22 +70,31 @@ def _rule_based_holes(
 
     covered: set[str] = set()
     for s in parent_ready:
+        # Part C Stage 2: categorizer tags (rules+Gemma) when present;
+        # substring fallback otherwise.
+        cats = s.get("categories") or []
+        if cats:
+            covered.update(cats)
+            continue
         cat = _category_from_session(s)
         if cat:
             covered.add(cat)
+    from config.gap_taxonomy import CORE_CATEGORIES, queries_for_category
+
     for cat in GAP_CATEGORIES:
         if cat not in covered:
-            tpl = GAP_SEARCH_TEMPLATES.get(cat)
-            if tpl:
-                holes.append(
-                    {
-                        "hole_id": f"missing_category_{cat}",
-                        "type": "missing_category",
-                        "priority": 3,
-                        "search_query": tpl.format(town=town, state=STATE),
-                        "rationale": f"No parent_ready sessions for category {cat}",
-                    }
-                )
+            variants = queries_for_category(cat, town)
+            holes.append(
+                {
+                    "hole_id": f"missing_category_{cat}",
+                    "type": "missing_category",
+                    "category": cat,
+                    "priority": 1 if cat in CORE_CATEGORIES else 3,
+                    "search_query": variants[0],
+                    "query_variants": variants,
+                    "rationale": f"No parent_ready sessions for category {cat}",
+                }
+            )
 
     ready_by_host: Counter = Counter()
     all_by_host: dict[str, list[dict]] = defaultdict(list)
@@ -200,6 +209,9 @@ def audit_catalog(
     camp_links_path: Path | str | None = None,
     use_llm: bool = True,
 ) -> dict:
+    from src.categorizer import categorize_sessions
+
+    sessions = categorize_sessions(sessions, use_llm=use_llm)
     known_hosts = _load_camp_link_hosts(town, camp_links_path)
     rule_holes = _rule_based_holes(town, sessions, known_hosts)
     holes = _llm_refine_holes(town, sessions, rule_holes) if use_llm else rule_holes

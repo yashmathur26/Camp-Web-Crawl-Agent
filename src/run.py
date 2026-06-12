@@ -987,6 +987,18 @@ def main() -> None:
     parser.add_argument(
         "--phase",
         choices=["A", "B", "B5", "Q", "verify", "P", "trail", "gap", "C", "all"],
+    )
+    parser.add_argument(
+        "--all-towns", action="store_true",
+        help="Part C: run gap fill across all 54 towns (population-ordered)",
+    )
+    parser.add_argument(
+        "--towns", default="",
+        help="Part C: comma-separated town list (e.g. Lexington,Arlington)",
+    )
+    parser.add_argument(
+        "--no-resume", action="store_true",
+        help="Part C: ignore cache/part_c_progress.json and rerun every town",
         default="all",
         help="Which phase(s) to run (verify/P = parent enrollment check)",
     )
@@ -1218,7 +1230,16 @@ def main() -> None:
                 max_llm=args.verify_max_llm,
             )
 
-        if run_phase == "gap" and town_filter and not dry_run:
+        if run_phase in ("gap", "C") and not dry_run and (args.all_towns or args.towns):
+            from src.part_c import run_part_c
+
+            run_part_c(
+                towns=[t.strip() for t in args.towns.split(",") if t.strip()] or None,
+                all_towns=args.all_towns,
+                resume=not args.no_resume,
+                rounds=gap_rounds,
+            )
+        elif run_phase == "gap" and town_filter and not dry_run:
             _run_gap_fill(
                 town_filter[0],
                 max_searches=args.max_searches,

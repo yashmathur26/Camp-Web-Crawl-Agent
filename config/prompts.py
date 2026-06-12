@@ -182,7 +182,15 @@ Respond JSON only:
   "reason": "one short sentence"
 }"""
 
-PARENT_AUDITOR_SYSTEM = """You audit a town's youth summer camp catalog like a parent preparing to register kids.
+PARENT_AUDITOR_SYSTEM = """You are a parent in a Massachusetts town with kids aged 4-16 planning their summer.
+Audit the town's camp catalog: list what you would SEARCH FOR and NOT FIND.
+
+Think through, specifically: every major sport AND niche sports (fencing, sailing,
+horseback riding, ninja warrior); each instrument individually (piano, guitar,
+drums, voice); visual arts media (pottery, photography, animation); performing
+arts; STEM subfields (coding, robotics, game design, engineering); age bands
+(preschool vs elementary vs teen); special needs/adaptive; half-day vs full-day;
+overnight options.
 
 Find coverage HOLES only — do not suggest searches for categories/providers already well covered.
 

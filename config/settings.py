@@ -25,10 +25,11 @@ SETTINGS = {
     "dry_run": True,
     # Ollama
     "ollama_base_url": "http://localhost:11434",
-    "ollama_model": "llama3.2",
-    "ollama_filter_model": "llama3.2",
-    "ollama_fast_model": "llama3.2:1b",
-    "ollama_verify_model": "llama3.2",
+    # Part C Stage 0 (16GB sizing): gemma3:4b verify/auditor, gemma3:1b fast.
+    "ollama_model": "gemma3:4b",
+    "ollama_filter_model": "gemma3:4b",
+    "ollama_fast_model": "gemma3:1b",
+    "ollama_verify_model": "gemma3:4b",
     "ollama_classify_concurrency": 3,
     "ollama_verify_concurrency": 2,
     "ollama_preload_models": True,
@@ -168,4 +169,9 @@ SETTINGS = {
     "gap_max_searches_per_round": 100,
     "gap_hole_cache_days": 7,
     "gap_fallback_taxonomy": False,
+    # Part C: exhausted-state TTL, regional sharing radius, per-town budgets.
+    "gap_hole_exhausted_days": 60,
+    "gap_share_radius_miles": 10,
+    "gap_share_radius_rare_miles": 15,
+    "gap_search_budget_per_town": 400,
 }

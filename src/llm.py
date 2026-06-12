@@ -49,11 +49,13 @@ def resolve_model(preferred: str | None) -> str:
         return base_match
     for fallback in (
         SETTINGS.get("ollama_fast_model"),
-        "llama3.2:1b",
+        "gemma3:4b",
+        "gemma3:1b",
         SETTINGS.get("ollama_verify_model"),
         SETTINGS.get("ollama_filter_model"),
         SETTINGS["ollama_model"],
-        "llama3.2",
+        "gemma3:12b",
+        "llama3.2",          # legacy safety net
         "llama3.2:latest",
     ):
         if fallback and fallback in installed:

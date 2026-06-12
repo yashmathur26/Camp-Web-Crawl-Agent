@@ -1768,4 +1768,12 @@ async def enumerate_provider(url: str, *, town_hint: str = "") -> dict:
 
         deduped, dropped = _apply_focus_llm_tiebreaker(deduped, dropped, town_hint=town_hint)
 
-    return {"url": url, "platform": platform, "sessions": deduped, "dropped": dropped}
+    # links: harvested link pool, used by the Task 1.2 provider-level fallback
+    # to pick the best register URL when an adapter found 0 sessions.
+    return {
+        "url": url,
+        "platform": platform,
+        "sessions": deduped,
+        "dropped": dropped,
+        "links": all_links,
+    }

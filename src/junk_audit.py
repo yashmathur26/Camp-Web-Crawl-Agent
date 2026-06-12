@@ -218,6 +218,11 @@ def validate_session(session: dict) -> tuple[bool, list[str]]:
     This is the backstop — it mostly passes because Phases 1-4 cleaned the data;
     anything still bad is quarantined rather than published."""
     reasons = audit_row(session)
+    # Task 1.2: provider-level fallback rows (granularity="program") are honest
+    # "this provider runs a summer program" pointers — they carry no per-session
+    # age/date/price by design, so no_evidence does not apply to them.
+    if (session.get("granularity") or "") == "program":
+        reasons = [r for r in reasons if r != "no_evidence"]
     for key in ("register_url", "info_url", "source_url"):
         u = session.get(key) or ""
         if u and _OFF_TOPIC_URL_RE.search(urlparse(u).path):

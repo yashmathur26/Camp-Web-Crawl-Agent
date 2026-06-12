@@ -213,6 +213,111 @@ def _filter_b5_providers(urls: list[str]) -> list[str]:
     return kept
 
 
+# --------------------------------------------------------------------------- #
+# Task 1.2 — provider-level fallback rows
+# --------------------------------------------------------------------------- #
+def _known_provider_hosts(town: str) -> set[str]:
+    """Hosts we have independent evidence are camp providers: Phase B harvest
+    hosts + committed baseline providers for the town."""
+    from src.data_layout import DATA_ROOT, town_slug
+    from src.parent_auditor import _load_camp_link_hosts
+
+    hosts = set(_load_camp_link_hosts(town))
+    baseline = DATA_ROOT / "_baseline" / town_slug(town) / "baseline.json"
+    if baseline.exists():
+        try:
+            import json
+
+            data = json.loads(baseline.read_text(encoding="utf-8"))
+            for p in data.get("providers", []):
+                h = (p.get("host") or "").lower()
+                if h.startswith("www."):
+                    h = h[4:]
+                if h:
+                    hosts.add(h)
+        except Exception as exc:  # noqa: BLE001 — baseline is observability input
+            logger.warning("could not read baseline providers: %s", exc)
+    return hosts
+
+
+def _is_known_camp_provider(url: str, known_hosts: set[str]) -> bool:
+    from src.camp_hosts import is_camp_host_seed_url
+
+    return host_of(url) in known_hosts or is_camp_host_seed_url(url)
+
+
+def _provider_display_name(seed_url: str, result: dict | None = None) -> str:
+    """Page <title> first segment when captured, else host minus TLD."""
+    title = ((result or {}).get("title") or "").strip()
+    if title:
+        return re.split(r"\s*[|—–-]\s+", title)[0].strip() or title
+    import tldextract
+
+    host = host_of(seed_url)
+    ext = tldextract.extract(host)
+    stem = ".".join(p for p in (ext.subdomain, ext.domain) if p) or host
+    return stem.replace(".", " ").title()
+
+
+_REGISTERISH_PATH_RE = re.compile(r"regist|enroll|signup|sign-up", re.I)
+
+
+def _best_register_url(result: dict, seed_url: str) -> str:
+    from src.registration import is_registration_platform_url
+
+    links = result.get("links") or []
+    for l in links:
+        u = l.get("url", "")
+        if u and is_registration_platform_url(u):
+            return u
+    seed_host = host_of(seed_url)
+    for l in links:
+        u = l.get("url", "")
+        if u and host_of(u) == seed_host and _REGISTERISH_PATH_RE.search(urlparse(u).path):
+            return u
+    return seed_url
+
+
+def _fallback_program_row(seed_url: str, result: dict) -> dict:
+    return {
+        "name": f"{_provider_display_name(seed_url, result)} — Summer Program",
+        "register_url": _best_register_url(result, seed_url),
+        "info_url": "",
+        "platform": result.get("platform") or "fallback",
+        "dates": "",
+        "ages": "",
+        "price": "",
+        "kind": "session",
+        "source_url": seed_url,
+        "granularity": "program",
+        "name_source": "fallback",
+        "name_status": "ok",
+    }
+
+
+def apply_provider_fallbacks(
+    results: list[dict],
+    town: str,
+    *,
+    known_hosts: set[str] | None = None,
+) -> list[dict]:
+    """Known camp providers that enumerated 0 sessions still publish one
+    provider-level row (granularity="program") so the catalog covers them.
+    Unknown hosts stay empty — precision guard."""
+    hosts = _known_provider_hosts(town) if known_hosts is None else known_hosts
+    out: list[dict] = []
+    for res in results:
+        seed = res.get("url", "")
+        if not res.get("sessions") and seed and _is_known_camp_provider(seed, hosts):
+            row = _fallback_program_row(seed, res)
+            session_log.trace(
+                "fallback_row", f"provider-level row for {host_of(seed)} -> {row['register_url']}"
+            )
+            res = {**res, "sessions": [row]}
+        out.append(res)
+    return out
+
+
 async def enumerate_town(
     town: str,
     *,
@@ -305,6 +410,8 @@ async def enumerate_town(
     if SETTINGS.get("b5_cross_provider_dedupe", True):
         results = _dedupe_across_providers(results)
 
+    results = apply_provider_fallbacks(results, town)
+
     elapsed = time.monotonic() - t0
     total_sessions = sum(len(r.get("sessions", [])) for r in results)
     with_camps = sum(1 for r in results if r.get("sessions"))
@@ -367,9 +474,18 @@ def write_session_outputs(
 
     gate_on = bool(SETTINGS.get("b5_validation_gate", True))
 
+    # Task 1.2 dedup guard: a host with >=1 real session row drops its stale
+    # provider-level (granularity="program") fallback rows.
+    hosts_with_sessions: set[str] = set()
+    for res in results:
+        for s in res.get("sessions", []):
+            if (s.get("granularity") or "session") == "session":
+                hosts_with_sessions.add(host_of(s.get("source_url") or res.get("url", "")))
+
     total = 0
     quarantined: list[dict] = []
     fabricated_blocked = 0
+    program_rows_dropped = 0
     with open(csv_path, "w", encoding="utf-8", newline="") as f:
         w = csv.DictWriter(f, fieldnames=SESSION_CSV_COLUMNS)
         w.writeheader()
@@ -378,6 +494,12 @@ def write_session_outputs(
                 # granularity: "session" (a specific registrable camp) unless an
                 # upstream stage marked the row "program" (provider-level).
                 s = {**s, "granularity": s.get("granularity") or "session"}
+                if (
+                    s["granularity"] == "program"
+                    and host_of(s.get("source_url") or res.get("url", "")) in hosts_with_sessions
+                ):
+                    program_rows_dropped += 1
+                    continue
                 ok, reasons = (True, []) if not gate_on else validate_session(s)
                 if not ok:
                     if is_fabrication_blocked(s):

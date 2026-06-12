@@ -36,15 +36,19 @@ def test_write_outputs_round_trip_granularity():
         dates="July 7",
     )
     plain.pop("granularity")  # legacy row constructed without the key
+    # Different host than the session row — same-host program rows are dropped
+    # by the Task 1.2 dedup guard, which is tested in test_fallback_rows.py.
     program = make_session(
-        "Camp Org — Summer Program",
-        "https://camp.org/signup",
-        info_url="https://camp.org/summer",
+        "Other Org — Summer Program",
+        "https://other.org/signup",
+        info_url="https://other.org/summer",
         dates="June-Aug",
+        source_url="https://other.org/",
         granularity="program",
     )
     results = [
-        {"url": "https://camp.org", "platform": "custom", "sessions": [plain, program]}
+        {"url": "https://camp.org", "platform": "custom", "sessions": [plain]},
+        {"url": "https://other.org", "platform": "custom", "sessions": [program]},
     ]
     orig = settings.SETTINGS.get("b5_validation_gate", True)
     settings.SETTINGS["b5_validation_gate"] = True
@@ -54,6 +58,6 @@ def test_write_outputs_round_trip_granularity():
         with open(csv_path, newline="", encoding="utf-8") as f:
             rows = {r["name"]: r for r in csv.DictReader(f)}
         assert rows["Art Camp"]["granularity"] == "session"
-        assert rows["Camp Org — Summer Program"]["granularity"] == "program"
+        assert rows["Other Org — Summer Program"]["granularity"] == "program"
     finally:
         settings.SETTINGS["b5_validation_gate"] = orig

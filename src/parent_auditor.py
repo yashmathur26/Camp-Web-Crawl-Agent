@@ -65,7 +65,11 @@ def _rule_based_holes(
     known_hosts: set[str],
 ) -> list[dict]:
     buckets = split_parent_verdicts(sessions)
-    parent_ready = buckets["parent_ready"]
+    # Engine v3 contract: info_confirmed rows are parent-findable — counting
+    # them as covered stops Part C searching for categories it already has.
+    parent_ready = buckets["parent_ready"] + [
+        s for s in sessions if s.get("parent_verdict") == "info_confirmed"
+    ]
     holes: list[dict] = []
 
     covered: set[str] = set()

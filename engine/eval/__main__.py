@@ -11,6 +11,7 @@ from pathlib import Path
 from engine.eval.score import (
     HISTORY_DIR,
     format_table,
+    load_aliases,
     load_ground_truth,
     load_published,
     score,
@@ -54,7 +55,11 @@ def main() -> int:
 
     gt = load_ground_truth(args.town)
     published = load_published(input_path)
-    metrics = score(published, gt, check_info_urls=not args.offline)
+    metrics = score(
+        published, gt,
+        check_info_urls=not args.offline,
+        aliases=load_aliases(args.town),
+    )
     print(f"\nEval — town={args.town}  input={input_path}\n")
     print(format_table(metrics))
     if metrics["unmatched_gt_programs"]:

@@ -182,10 +182,26 @@ def load_published(path: Path) -> list[PublishedRow]:
 # Scoring
 # --------------------------------------------------------------------------- #
 
-def _hosts_related(gt_host: str, pub_host: str) -> bool:
+def load_aliases(town: str) -> dict[str, str]:
+    """Optional <town>.aliases.csv: alt_host,provider_host — maps vendor/funnel
+    hosts (majwhaydenweb.myvscloud.com, lexingtonma.gov) to the GT provider."""
+    path = GROUND_TRUTH_DIR / f"{town.lower()}.aliases.csv"
+    if not path.exists():
+        return {}
+    with open(path, newline="", encoding="utf-8") as f:
+        return {
+            r["alt_host"].strip().lower(): r["provider_host"].strip().lower()
+            for r in csv.DictReader(f)
+            if r.get("alt_host") and r.get("provider_host")
+        }
+
+
+def _hosts_related(gt_host: str, pub_host: str, aliases: dict[str, str] | None = None) -> bool:
     """Provider matching by host, tolerant of funnel aliases (gov -> myrec)."""
     if not gt_host or not pub_host:
         return False
+    if aliases and aliases.get(pub_host) == gt_host:
+        return True
     return gt_host == pub_host or gt_host in pub_host or pub_host in gt_host
 
 
@@ -195,6 +211,7 @@ def score(
     *,
     check_info_urls: bool = False,
     fetch_fn=None,
+    aliases: dict[str, str] | None = None,
 ) -> dict:
     gt_programs: dict[tuple[str, str], list[dict]] = {}
     for r in ground_truth:
@@ -212,7 +229,7 @@ def score(
         gt_host, _ = key
         gt_name = gt_rows[0]["program_name"]
         for i, pub in enumerate(published):
-            if not _hosts_related(gt_host, pub.provider_host):
+            if not _hosts_related(gt_host, pub.provider_host, aliases):
                 continue
             if names_match(gt_name, pub.name):
                 matched_programs.add(key)
@@ -221,7 +238,7 @@ def score(
     for r in gt_sessions:
         gt_win = parse_date_window(r["session_dates"])
         for pub in published:
-            if not _hosts_related(r["provider_host"].strip().lower(), pub.provider_host):
+            if not _hosts_related(r["provider_host"].strip().lower(), pub.provider_host, aliases):
                 continue
             if not names_match(r["program_name"], pub.name):
                 continue

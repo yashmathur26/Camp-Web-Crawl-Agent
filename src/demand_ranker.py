@@ -22,7 +22,8 @@ from src.llm import OllamaError, chat, is_available
 
 logger = logging.getLogger(__name__)
 
-_CACHE_PATH = Path("cache/category_demand.json")
+import os as _os
+_CACHE_PATH = Path(_os.environ.get("FIREFLY_CACHE_ROOT", "cache")) / "category_demand.json"
 
 _RANKER_SYSTEM = """You are ranking youth summer camp categories by PARENT DEMAND
 in suburban Massachusetts: how many parents would search for each when planning

@@ -14,10 +14,13 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import time
 from pathlib import Path
 
 from config_engine import ENGINE
+
+logger = logging.getLogger("engine.run")
 from engine.model import Gap, Program, Provider
 from engine.registry.schema import RegistryEntry, load_town
 from engine.run.report import RunReport
@@ -108,10 +111,25 @@ async def run_town(
     out_dir = Path(out_root) / town.lower() / "engine"
     report = RunReport(town=registry.town)
     ckpt = {} if fresh else load_checkpoint(out_dir)
+
+    # P1.3: drop to 1 provider at a time when memory is tight, regardless of
+    # the configured concurrency. (psutil read inline — engine never imports
+    # src/, per R2.)
+    concurrency = int(ENGINE["concurrency"])
+    try:
+        import psutil
+
+        free_mb = int(psutil.virtual_memory().available / (1024 ** 2))
+        if free_mb < 6000:
+            concurrency = 1
+        logger.info("engine start: %dMB free, concurrency=%d", free_mb, concurrency)
+    except Exception:  # noqa: BLE001
+        pass
+
     report.narrate(
         f"Engine run: {registry.town}, {len(registry.providers)} provider(s), "
         f"{sum(1 for v in ckpt.values() if v.get('done'))} from checkpoint, "
-        f"concurrency={ENGINE['concurrency']}"
+        f"concurrency={concurrency}"
     )
 
     try:
@@ -121,7 +139,7 @@ async def run_town(
     except ImportError:
         pass
     extract = _resolve_extractor()
-    sem = asyncio.Semaphore(int(ENGINE["concurrency"]))
+    sem = asyncio.Semaphore(concurrency)
     lock = asyncio.Lock()
 
     async def run_one(entry: RegistryEntry) -> None:
@@ -170,6 +188,14 @@ async def run_town(
                 save_checkpoint(out_dir, ckpt)  # crash-safe: saved per provider
 
     await asyncio.gather(*(run_one(e) for e in registry.providers))
+    # Close the shared Chromium inside this loop (clean close, not abandon) —
+    # frees its RAM before the caller moves on to Phase C.
+    try:
+        from engine.fetch.render import shutdown_browser_pool
+
+        await shutdown_browser_pool()
+    except Exception:  # noqa: BLE001
+        pass
     return report.write(out_dir)
 
 

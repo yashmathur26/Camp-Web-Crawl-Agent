@@ -25,7 +25,9 @@ logger = logging.getLogger(__name__)
 
 def engine_sessions_for_town(town: str) -> list[dict]:
     """Load the engine's published sessions for a town in old-pipeline shape."""
-    path = Path("data") / town.lower() / "engine" / "sessions.csv"
+    from src.data_layout import DATA_ROOT, town_slug
+
+    path = DATA_ROOT / town_slug(town) / "engine" / "sessions.csv"
     if not path.exists():
         return []
     import csv

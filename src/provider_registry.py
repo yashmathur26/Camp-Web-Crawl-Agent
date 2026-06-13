@@ -25,7 +25,8 @@ from src.categorizer import categorize_sessions
 
 logger = logging.getLogger(__name__)
 
-REGISTRY_PATH = Path("data/shared/provider_registry.json")
+import os as _os
+REGISTRY_PATH = Path(_os.environ.get("FIREFLY_DATA_ROOT", "data")) / "shared" / "provider_registry.json"
 
 # Long-tail categories so rare that a parent will drive farther for them.
 RARE_CATEGORIES = frozenset(

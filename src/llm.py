@@ -259,6 +259,42 @@ def chat_with_repair(
         )
 
 
+def unload_model(model: str | None = None) -> None:
+    """Tell Ollama to evict a model now (keep_alive: 0), freeing its RAM.
+
+    On 16GB the W3W pilot kept gemma3:4b + gemma3:1b resident (~9GB workers
+    each in the Jetsam log). Calling this between phases — or before loading a
+    different model — keeps at most one model in memory."""
+    base = SETTINGS["ollama_base_url"].rstrip("/")
+    name = resolve_model(model or SETTINGS.get("ollama_model"))
+    try:
+        requests.post(
+            f"{base}/api/chat",
+            json={"model": name, "messages": [], "keep_alive": 0},
+            timeout=10,
+        )
+        logger.info("Unloaded Ollama model: %s", name)
+    except requests.RequestException as exc:
+        logger.debug("unload_model(%s) failed (non-fatal): %s", name, exc)
+
+
+def unload_all_models() -> None:
+    """Evict every currently-loaded model (read from /api/ps)."""
+    base = SETTINGS["ollama_base_url"].rstrip("/")
+    try:
+        resp = requests.get(f"{base}/api/ps", timeout=5)
+        loaded = [m.get("name", "") for m in resp.json().get("models", [])]
+    except requests.RequestException:
+        loaded = []
+    # Also try the configured roles in case /api/ps is unavailable.
+    for name in set(loaded) | {
+        SETTINGS.get("ollama_model"), SETTINGS.get("ollama_fast_model"),
+        SETTINGS.get("ollama_verify_model"), SETTINGS.get("ollama_filter_model"),
+    }:
+        if name:
+            unload_model(name)
+
+
 def is_available() -> bool:
     base = SETTINGS["ollama_base_url"].rstrip("/")
     try:

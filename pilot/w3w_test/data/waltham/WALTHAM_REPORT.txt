@@ -1,0 +1,178 @@
+WALTHAM PILOT REPORT
+====================
+Isolated test run (W3W pilot) — June 12, 2026
+All files live under: pilot/w3w_test/data/waltham/
+
+This report explains what the pipeline did for Waltham, what it found,
+and how accurate/useful the results are for parents. There is NO ground-truth
+spreadsheet for Waltham (unlike Lexington), so accuracy is judged from
+local relevance, registration quality, and obvious noise — not a formal
+recall/precision score.
+
+
+WHAT RAN (AND FINISHED)
+-----------------------
+Waltham was the only town in the 3-town pilot that completed every phase.
+
+  Phase A — Search discovery     ~53 web searches (Waltham-specific keywords)
+  Phase B — Crawl & harvest      Visited provider sites; saved camp links
+  Registry bootstrap             Auto-built provider list from discoveries
+  Engine v3                      Structured extraction + quality gate
+  Phase C — Gap fill             40 targeted searches + enumeration (~74 min)
+
+Wall-clock for Waltham (successful run): roughly 19:32 → 20:47 (~75 minutes
+after discovery; longer if earlier failed attempts are included).
+
+
+WHAT DISCOVERY FOUND
+--------------------
+Camp links harvested for Waltham (town_hint = Waltham): 184 URLs
+
+Top discovery sources:
+  • fessendensummercamps.org (Newton — near Waltham)
+  • activityhero.com, ussportscamps.com (national aggregators)
+  • city.waltham.ma.us (municipal recreation)
+  • runningbrook.org, walthambgc.org, ymcaboston.org (local orgs)
+  • bostontechmom.com, teenlife.com (parent guide / listicle sites)
+
+Discovery worked in the sense that it surfaced real Waltham-adjacent
+providers. It also pulled in a lot of aggregator and out-of-town noise,
+which is expected without a curated registry.
+
+
+REGISTRY & ENGINE (STRUCTURED EXTRACTION)
+-----------------------------------------
+Auto registry: pilot/w3w_test/registry/waltham.yaml
+  → Only 1 provider was bootstrapped: jewishcamp.org
+
+Engine output: pilot/w3w_test/data/waltham/engine/sessions.csv
+  → 9 published sessions (all from jewishcamp.org)
+  → All via generic LLM extractor
+  → All verdict: info_confirmed (not parent_ready — no strong register link)
+  → 2 provider gaps logged (needs_review)
+
+Honest assessment of the ENGINE layer for Waltham:
+  POOR as a Waltham town catalog.
+
+  Why:
+  • The registry only had one seed URL, so the engine never touched
+    Waltham Rec, YMCA, Boys & Girls Club, Fessenden, etc.
+  • The 9 rows are mostly Jewish camp *resource pages* (Mensch Perfect,
+    Making Mensches PDFs) — not registrable summer camp weeks in Waltham.
+  • Same register URL repeated across different “program” names
+    (jewishcamp.org/camp-resources/making-mensches).
+
+  The engine did its job on the input it was given; the input was too thin.
+
+
+PHASE C — GAP FILL (WHERE THE REAL VOLUME CAME FROM)
+----------------------------------------------------
+Phase C audit: pilot/w3w_test/data/waltham/phase_gap/audit_round1.json
+  → 40 web searches executed (budget cap for this pilot)
+
+New sessions file: pilot/w3w_test/data/waltham/phase_gap/new_sessions.csv
+  → 111 camp session rows discovered in gap-fill only
+
+Coverage matrix: pilot/w3w_test/data/waltham/phase_gap/coverage_matrix.csv
+
+  Category coverage (156 parent-interest categories):
+    • 47 categories covered by Waltham-area sessions found in this run
+    • 17 categories credited as “covered via Lexington” (shared registry)
+    • 92 categories still open holes
+    • Core 17/17 “must-have” categories: marked covered (100%)
+
+  Note: “Core 100%” means at least one tagged session exists per core
+  bucket somewhere in the merged catalog — NOT that Waltham has a complete,
+  local program in every bucket. Several core hits are metro-wide or
+  generic (e.g. discoverchampions.com, clubs.bluesombrero.com).
+
+
+EXAMPLES OF GOOD / LOCAL FINDS (GAP FILL)
+-----------------------------------------
+These look like real programs a Waltham parent might care about:
+
+  • Cabot Day Camp — ymcaboston.org (Waltham camp guide), $400–475/week
+  • Legends summer camp — walthambgc.org (Waltham Boys & Girls Club)
+  • STEM Discovery Camp — fessendensummercamps.org (Newton, nearby)
+  • Swim clinic in Waltham — fitterandfaster.com (Waltham, MA in URL)
+  • Children’s Summer Art Camp — newartcenter.org (Newton/Waltham area)
+  • Various dance/music camps — stepbystepinc.com, mainstreetdancecenters.com
+
+Rough local-relevance count (hosts with “waltham” in name or YMCA Waltham):
+  ~4–6 rows with clearly Waltham-branded hosts
+  ~15–25 rows with reasonable Greater Boston / adjacent-town relevance
+
+
+EXAMPLES OF NOISE / LOW ACCURACY (GAP FILL)
+-------------------------------------------
+  • Aggregators & listicles: bostontechmom.com, mommypoppins.com, teenlife.com
+  • National camp chains: vikingcamps.com (4 rows), ussportscamps.com (3)
+  • Clearly wrong geography: orlandoballet.org (4), summeratstjohns.org (Danvers)
+  • Wrong content type: NASA robotics page, “Day Camp Counselors” job posting,
+    Broadway World theater listings, adult trainee programs ($10k tuition)
+  • Duplicate / thin LLM extractions from the same marketing page
+
+Noise estimate (aggregator + obvious non-camp hosts): ~7–15% strict,
+but ~40–50% of rows are “camp-related but not Waltham-local” if you
+require programs parents in Waltham would realistically enroll in.
+
+
+ACCURACY SUMMARY (PLAIN LANGUAGE)
+---------------------------------
+
+  Dimension                          Rating    Notes
+  ─────────────────────────────────  ────────  ─────────────────────────────
+  Waltham-local camp coverage        Fair      Found YMCA, BGC, some municipal
+                                               links; missed deep MyRec/WebTrac
+                                               if town uses them
+
+  Registration-ready quality         Low       Almost all rows are generic LLM
+                                               path; few parent_ready verdicts;
+                                               many info/brochure pages
+
+  Precision (real camps vs noise)    Medium    Most rows are camp-shaped; many
+                                               are wrong town or aggregator
+
+  Category matrix completeness       Good*     64/156 on paper; *inflated by
+                                               Lexington cross-credit + broad tags
+
+  Engine-only quality                Poor      9 rows, wrong provider focus
+
+  Gap-fill discovery value           Good      111 candidates; ~20–30 useful
+                                               local/nearby leads for human review
+
+  Formal eval vs ground truth        N/A       No waltham.csv ground truth exists
+
+
+OVERALL VERDICT
+---------------
+Waltham COMPLETED the pilot pipeline and proved the system can cold-start
+a town: search → links → gap-fill → category matrix.
+
+It did NOT produce a parent-ready, Waltham-only summer camp catalog you
+could ship tomorrow.
+
+Best use of current output:
+  • A research starter list for human curation
+  • Evidence that registry bootstrap must be improved before Engine v3
+    (need city.waltham.ma.us, ymcaboston.org, walthambgc.org, MyRec if any)
+  • Phase C gap-fill found real gems (YMCA Cabot, BGC Legends) the engine missed
+
+Recommended next steps for Waltham quality:
+  1. Hand-curate registry/waltham.yaml with 10–15 known providers from the
+     184 camp_links (see camp_links.csv filtered to town_hint=Waltham).
+  2. Re-run Engine v3 only (~5–15 min) — expect far better base catalog.
+  3. Re-run Phase C with smaller search budget after memory fixes.
+  4. Build ground-truth waltham.csv (20–40 known programs) for real metrics.
+
+
+KEY FILES TO INSPECT
+--------------------
+  pilot/w3w_test/data/waltham/engine/sessions.csv       — 9 engine rows
+  pilot/w3w_test/data/waltham/phase_gap/new_sessions.csv — 111 gap rows
+  pilot/w3w_test/data/waltham/phase_gap/coverage_matrix.csv
+  pilot/w3w_test/data/waltham/phase_gap/audit_round1.json
+  pilot/w3w_test/registry/waltham.yaml
+  pilot/w3w_test/data/shared/phase_b/camp_links.csv    — filter town_hint=Waltham
+
+Generated: 2026-06-12 (post-crash analysis)

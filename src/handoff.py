@@ -20,8 +20,10 @@ from src.provider_registry import load_registry, registry_coverage
 
 logger = logging.getLogger(__name__)
 
-MANIFEST_CSV = Path("data/shared/firecrawl_manifest.csv")
-MANIFEST_JSON = Path("data/shared/firecrawl_manifest.json")
+import os as _os
+_SHARED = Path(_os.environ.get("FIREFLY_DATA_ROOT", "data")) / "shared"
+MANIFEST_CSV = _SHARED / "firecrawl_manifest.csv"
+MANIFEST_JSON = _SHARED / "firecrawl_manifest.json"
 
 COLUMNS = ["url", "provider_name", "host", "towns_served", "categories",
            "parent_verdict", "source_phase", "priority"]

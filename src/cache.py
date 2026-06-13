@@ -1,11 +1,12 @@
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Iterable
 
 from src.urls import normalize_url
 
-_CACHE_DIR = Path("cache")
+_CACHE_DIR = Path(os.environ.get("FIREFLY_CACHE_ROOT", "cache"))
 _SEEN_SEARCHES_PATH = _CACHE_DIR / "seen_searches.json"
 _SEEN_URLS_PATH = _CACHE_DIR / "seen_urls.json"
 

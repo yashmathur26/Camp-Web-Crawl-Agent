@@ -30,6 +30,24 @@ ENGINE = {
     "ollama_model": "llama3.2",
     # Cross-run cache reuse window; 0 disables persistence reuse.
     "cache_ttl_h": 24,
-    # Phase 7 only — parallel provider jobs.
+    # Phase 7 only — parallel provider jobs (overridden by resource profile).
     "concurrency": 4,
+    # Per-provider render cap (MyRec/WebTrac detail pages) — profile-set.
+    "max_details_per_provider": 60,
 }
+
+
+def _apply_resource_profile() -> None:
+    """Overlay the active memory profile onto ENGINE. On 16gb: concurrency 1,
+    one browser, capped per-provider renders."""
+    from config.resource import PROFILE
+
+    if "engine_concurrency" in PROFILE:
+        ENGINE["concurrency"] = PROFILE["engine_concurrency"]
+    if "max_browsers" in PROFILE:
+        ENGINE["max_browsers"] = PROFILE["max_browsers"]
+    if "max_details_per_provider" in PROFILE:
+        ENGINE["max_details_per_provider"] = PROFILE["max_details_per_provider"]
+
+
+_apply_resource_profile()

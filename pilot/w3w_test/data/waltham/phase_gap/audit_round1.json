@@ -1,0 +1,2502 @@
+{
+  "town": "Waltham",
+  "holes": [
+    {
+      "hole_id": "missing_category_swim",
+      "type": "missing_category",
+      "category": "swim",
+      "priority": 1,
+      "search_query": "Waltham MA youth swim summer camp",
+      "query_variants": [
+        "Waltham MA youth swim summer camp",
+        "swim summer camp kids near Waltham Massachusetts",
+        "swim summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category swim",
+      "demand": 10
+    },
+    {
+      "hole_id": "missing_category_dance",
+      "type": "missing_category",
+      "category": "dance",
+      "priority": 1,
+      "search_query": "Waltham MA youth dance summer camp",
+      "query_variants": [
+        "Waltham MA youth dance summer camp",
+        "dance summer camp kids near Waltham Massachusetts",
+        "dance summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category dance",
+      "demand": 10
+    },
+    {
+      "hole_id": "missing_category_soccer",
+      "type": "missing_category",
+      "category": "soccer",
+      "priority": 1,
+      "search_query": "Waltham MA youth soccer summer camp",
+      "query_variants": [
+        "Waltham MA youth soccer summer camp",
+        "soccer summer camp kids near Waltham Massachusetts",
+        "soccer summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category soccer",
+      "demand": 9
+    },
+    {
+      "hole_id": "missing_category_music",
+      "type": "missing_category",
+      "category": "music",
+      "priority": 1,
+      "search_query": "Waltham MA youth music summer camp",
+      "query_variants": [
+        "Waltham MA youth music summer camp",
+        "music summer camp kids near Waltham Massachusetts",
+        "music summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category music",
+      "demand": 9
+    },
+    {
+      "hole_id": "missing_category_sports_multi",
+      "type": "missing_category",
+      "category": "sports_multi",
+      "priority": 1,
+      "search_query": "Waltham MA youth multi sport summer camp",
+      "query_variants": [
+        "Waltham MA youth multi sport summer camp",
+        "multi sport summer camp kids near Waltham Massachusetts",
+        "multi sport summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category sports_multi",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_basketball",
+      "type": "missing_category",
+      "category": "basketball",
+      "priority": 1,
+      "search_query": "Waltham MA youth basketball summer camp",
+      "query_variants": [
+        "Waltham MA youth basketball summer camp",
+        "basketball summer camp kids near Waltham Massachusetts",
+        "basketball summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category basketball",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_theater",
+      "type": "missing_category",
+      "category": "theater",
+      "priority": 1,
+      "search_query": "Waltham MA youth theater summer camp",
+      "query_variants": [
+        "Waltham MA youth theater summer camp",
+        "theater summer camp kids near Waltham Massachusetts",
+        "theater summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category theater",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_stem",
+      "type": "missing_category",
+      "category": "stem",
+      "priority": 1,
+      "search_query": "Waltham MA youth STEM summer camp",
+      "query_variants": [
+        "Waltham MA youth STEM summer camp",
+        "STEM summer camp kids near Waltham Massachusetts",
+        "STEM summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category stem",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_coding",
+      "type": "missing_category",
+      "category": "coding",
+      "priority": 1,
+      "search_query": "Waltham MA youth coding summer camp",
+      "query_variants": [
+        "Waltham MA youth coding summer camp",
+        "coding summer camp kids near Waltham Massachusetts",
+        "coding summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category coding",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_robotics",
+      "type": "missing_category",
+      "category": "robotics",
+      "priority": 1,
+      "search_query": "Waltham MA youth robotics summer camp",
+      "query_variants": [
+        "Waltham MA youth robotics summer camp",
+        "robotics summer camp kids near Waltham Massachusetts",
+        "robotics summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category robotics",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_nature",
+      "type": "missing_category",
+      "category": "nature",
+      "priority": 1,
+      "search_query": "Waltham MA youth nature summer camp",
+      "query_variants": [
+        "Waltham MA youth nature summer camp",
+        "nature summer camp kids near Waltham Massachusetts",
+        "nature summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category nature",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_cooking",
+      "type": "missing_category",
+      "category": "cooking",
+      "priority": 1,
+      "search_query": "Waltham MA youth cooking summer camp",
+      "query_variants": [
+        "Waltham MA youth cooking summer camp",
+        "cooking summer camp kids near Waltham Massachusetts",
+        "cooking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category cooking",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_preschool",
+      "type": "missing_category",
+      "category": "preschool",
+      "priority": 1,
+      "search_query": "Waltham MA youth preschool summer camp",
+      "query_variants": [
+        "Waltham MA youth preschool summer camp",
+        "preschool summer camp kids near Waltham Massachusetts",
+        "preschool summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category preschool",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_special_needs",
+      "type": "missing_category",
+      "category": "special_needs",
+      "priority": 1,
+      "search_query": "Waltham MA youth special needs adaptive summer camp",
+      "query_variants": [
+        "Waltham MA youth special needs adaptive summer camp",
+        "special needs adaptive summer camp kids near Waltham Massachusetts",
+        "special needs adaptive summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category special_needs",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_teen_leadership",
+      "type": "missing_category",
+      "category": "teen_leadership",
+      "priority": 1,
+      "search_query": "Waltham MA youth teen leadership summer camp",
+      "query_variants": [
+        "Waltham MA youth teen leadership summer camp",
+        "teen leadership summer camp kids near Waltham Massachusetts",
+        "teen leadership summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category teen_leadership",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_art",
+      "type": "missing_category",
+      "category": "art",
+      "priority": 1,
+      "search_query": "Waltham MA youth art summer camp",
+      "query_variants": [
+        "Waltham MA youth art summer camp",
+        "art summer camp kids near Waltham Massachusetts",
+        "art summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category art",
+      "demand": 4
+    },
+    {
+      "hole_id": "waltham_swim_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth swim summer camp",
+      "rationale": "No parent-ready sessions found for the 'swim' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_dance_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth dance summer camp",
+      "rationale": "No parent-ready sessions found for the 'dance' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_soccer_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth soccer summer camp",
+      "rationale": "No parent-ready sessions found for the 'soccer' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_music_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth music summer camp",
+      "rationale": "No parent-ready sessions found for the 'music' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_sports_multi_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth multi sport summer camp",
+      "rationale": "No parent-ready sessions found for the 'sports_multi' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_basketball_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth basketball summer camp",
+      "rationale": "No parent-ready sessions found for the 'basketball' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_theater_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth theater summer camp",
+      "rationale": "No parent-ready sessions found for the 'theater' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_stem_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth STEM summer camp",
+      "rationale": "No parent-ready sessions found for the 'stem' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_coding_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth coding summer camp",
+      "rationale": "No parent-ready sessions found for the 'coding' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_robotics_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth robotics summer camp",
+      "rationale": "No parent-ready sessions found for the 'robotics' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_nature_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth nature summer camp",
+      "rationale": "No parent-ready sessions found for the 'nature' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_cooking_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth cooking summer camp",
+      "rationale": "No parent-ready sessions found for the 'cooking' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_preschool_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth preschool summer camp",
+      "rationale": "No parent-ready sessions found for the 'preschool' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_special_needs_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth special needs adaptive summer camp",
+      "rationale": "No parent-ready sessions found for the 'special_needs' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_teen_leadership_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth teen leadership summer camp",
+      "rationale": "No parent-ready sessions found for the 'teen_leadership' category in Waltham."
+    },
+    {
+      "hole_id": "waltham_art_gap",
+      "type": "missing_category",
+      "priority": 1,
+      "search_query": "Waltham MA youth art summer camp",
+      "rationale": "No parent-ready sessions found for the 'art' category in Waltham."
+    },
+    {
+      "hole_id": "missing_category_ice_hockey",
+      "type": "missing_category",
+      "category": "ice_hockey",
+      "priority": 3,
+      "search_query": "Waltham MA youth ice hockey summer camp",
+      "query_variants": [
+        "Waltham MA youth ice hockey summer camp",
+        "ice hockey summer camp kids near Waltham Massachusetts",
+        "ice hockey summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category ice_hockey",
+      "demand": 9
+    },
+    {
+      "hole_id": "missing_category_drama",
+      "type": "missing_category",
+      "category": "drama",
+      "priority": 3,
+      "search_query": "Waltham MA youth drama summer camp",
+      "query_variants": [
+        "Waltham MA youth drama summer camp",
+        "drama summer camp kids near Waltham Massachusetts",
+        "drama summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category drama",
+      "demand": 9
+    },
+    {
+      "hole_id": "missing_category_football",
+      "type": "missing_category",
+      "category": "football",
+      "priority": 3,
+      "search_query": "Waltham MA youth football summer camp",
+      "query_variants": [
+        "Waltham MA youth football summer camp",
+        "football summer camp kids near Waltham Massachusetts",
+        "football summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category football",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_gymnastics",
+      "type": "missing_category",
+      "category": "gymnastics",
+      "priority": 3,
+      "search_query": "Waltham MA youth gymnastics summer camp",
+      "query_variants": [
+        "Waltham MA youth gymnastics summer camp",
+        "gymnastics summer camp kids near Waltham Massachusetts",
+        "gymnastics summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category gymnastics",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_guitar",
+      "type": "missing_category",
+      "category": "guitar",
+      "priority": 3,
+      "search_query": "Waltham MA youth guitar summer camp",
+      "query_variants": [
+        "Waltham MA youth guitar summer camp",
+        "guitar summer camp kids near Waltham Massachusetts",
+        "guitar summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category guitar",
+      "demand": 8
+    },
+    {
+      "hole_id": "missing_category_golf",
+      "type": "missing_category",
+      "category": "golf",
+      "priority": 3,
+      "search_query": "Waltham MA youth golf summer camp",
+      "query_variants": [
+        "Waltham MA youth golf summer camp",
+        "golf summer camp kids near Waltham Massachusetts",
+        "golf summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category golf",
+      "demand": 7
+    },
+    {
+      "hole_id": "missing_category_track_and_field",
+      "type": "missing_category",
+      "category": "track_and_field",
+      "priority": 3,
+      "search_query": "Waltham MA youth track and field summer camp",
+      "query_variants": [
+        "Waltham MA youth track and field summer camp",
+        "track and field summer camp kids near Waltham Massachusetts",
+        "track and field summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category track_and_field",
+      "demand": 7
+    },
+    {
+      "hole_id": "missing_category_cheerleading",
+      "type": "missing_category",
+      "category": "cheerleading",
+      "priority": 3,
+      "search_query": "Waltham MA youth cheerleading summer camp",
+      "query_variants": [
+        "Waltham MA youth cheerleading summer camp",
+        "cheerleading summer camp kids near Waltham Massachusetts",
+        "cheerleading summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category cheerleading",
+      "demand": 7
+    },
+    {
+      "hole_id": "missing_category_photography",
+      "type": "missing_category",
+      "category": "photography",
+      "priority": 3,
+      "search_query": "Waltham MA youth photography summer camp",
+      "query_variants": [
+        "Waltham MA youth photography summer camp",
+        "photography summer camp kids near Waltham Massachusetts",
+        "photography summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category photography",
+      "demand": 7
+    },
+    {
+      "hole_id": "missing_category_piano",
+      "type": "missing_category",
+      "category": "piano",
+      "priority": 3,
+      "search_query": "Waltham MA youth piano summer camp",
+      "query_variants": [
+        "Waltham MA youth piano summer camp",
+        "piano summer camp kids near Waltham Massachusetts",
+        "piano summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category piano",
+      "demand": 7
+    },
+    {
+      "hole_id": "missing_category_softball",
+      "type": "missing_category",
+      "category": "softball",
+      "priority": 3,
+      "search_query": "Waltham MA youth softball summer camp",
+      "query_variants": [
+        "Waltham MA youth softball summer camp",
+        "softball summer camp kids near Waltham Massachusetts",
+        "softball summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category softball",
+      "demand": 6
+    },
+    {
+      "hole_id": "missing_category_cross_country",
+      "type": "missing_category",
+      "category": "cross_country",
+      "priority": 3,
+      "search_query": "Waltham MA youth cross country summer camp",
+      "query_variants": [
+        "Waltham MA youth cross country summer camp",
+        "cross country summer camp kids near Waltham Massachusetts",
+        "cross country summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category cross_country",
+      "demand": 6
+    },
+    {
+      "hole_id": "missing_category_running",
+      "type": "missing_category",
+      "category": "running",
+      "priority": 3,
+      "search_query": "Waltham MA youth running summer camp",
+      "query_variants": [
+        "Waltham MA youth running summer camp",
+        "running summer camp kids near Waltham Massachusetts",
+        "running summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category running",
+      "demand": 6
+    },
+    {
+      "hole_id": "missing_category_drawing",
+      "type": "missing_category",
+      "category": "drawing",
+      "priority": 3,
+      "search_query": "Waltham MA youth drawing summer camp",
+      "query_variants": [
+        "Waltham MA youth drawing summer camp",
+        "drawing summer camp kids near Waltham Massachusetts",
+        "drawing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category drawing",
+      "demand": 6
+    },
+    {
+      "hole_id": "missing_category_filmmaking",
+      "type": "missing_category",
+      "category": "filmmaking",
+      "priority": 3,
+      "search_query": "Waltham MA youth filmmaking summer camp",
+      "query_variants": [
+        "Waltham MA youth filmmaking summer camp",
+        "filmmaking summer camp kids near Waltham Massachusetts",
+        "filmmaking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category filmmaking",
+      "demand": 6
+    },
+    {
+      "hole_id": "missing_category_ballet",
+      "type": "missing_category",
+      "category": "ballet",
+      "priority": 3,
+      "search_query": "Waltham MA youth ballet summer camp",
+      "query_variants": [
+        "Waltham MA youth ballet summer camp",
+        "ballet summer camp kids near Waltham Massachusetts",
+        "ballet summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category ballet",
+      "demand": 6
+    },
+    {
+      "hole_id": "missing_category_baseball",
+      "type": "missing_category",
+      "category": "baseball",
+      "priority": 3,
+      "search_query": "Waltham MA youth baseball summer camp",
+      "query_variants": [
+        "Waltham MA youth baseball summer camp",
+        "baseball summer camp kids near Waltham Massachusetts",
+        "baseball summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category baseball",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_lacrosse",
+      "type": "missing_category",
+      "category": "lacrosse",
+      "priority": 3,
+      "search_query": "Waltham MA youth lacrosse summer camp",
+      "query_variants": [
+        "Waltham MA youth lacrosse summer camp",
+        "lacrosse summer camp kids near Waltham Massachusetts",
+        "lacrosse summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category lacrosse",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_field_hockey",
+      "type": "missing_category",
+      "category": "field_hockey",
+      "priority": 3,
+      "search_query": "Waltham MA youth field hockey summer camp",
+      "query_variants": [
+        "Waltham MA youth field hockey summer camp",
+        "field hockey summer camp kids near Waltham Massachusetts",
+        "field hockey summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category field_hockey",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_ultimate_frisbee",
+      "type": "missing_category",
+      "category": "ultimate_frisbee",
+      "priority": 3,
+      "search_query": "Waltham MA youth ultimate frisbee summer camp",
+      "query_variants": [
+        "Waltham MA youth ultimate frisbee summer camp",
+        "ultimate frisbee summer camp kids near Waltham Massachusetts",
+        "ultimate frisbee summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category ultimate_frisbee",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_martial_arts",
+      "type": "missing_category",
+      "category": "martial_arts",
+      "priority": 3,
+      "search_query": "Waltham MA youth martial arts summer camp",
+      "query_variants": [
+        "Waltham MA youth martial arts summer camp",
+        "martial arts summer camp kids near Waltham Massachusetts",
+        "martial arts summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category martial_arts",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_painting",
+      "type": "missing_category",
+      "category": "painting",
+      "priority": 3,
+      "search_query": "Waltham MA youth painting summer camp",
+      "query_variants": [
+        "Waltham MA youth painting summer camp",
+        "painting summer camp kids near Waltham Massachusetts",
+        "painting summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category painting",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_ceramics",
+      "type": "missing_category",
+      "category": "ceramics",
+      "priority": 3,
+      "search_query": "Waltham MA youth ceramics summer camp",
+      "query_variants": [
+        "Waltham MA youth ceramics summer camp",
+        "ceramics summer camp kids near Waltham Massachusetts",
+        "ceramics summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category ceramics",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_musical_theater",
+      "type": "missing_category",
+      "category": "musical_theater",
+      "priority": 3,
+      "search_query": "Waltham MA youth musical theater summer camp",
+      "query_variants": [
+        "Waltham MA youth musical theater summer camp",
+        "musical theater summer camp kids near Waltham Massachusetts",
+        "musical theater summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category musical_theater",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_drumming",
+      "type": "missing_category",
+      "category": "drumming",
+      "priority": 3,
+      "search_query": "Waltham MA youth drumming summer camp",
+      "query_variants": [
+        "Waltham MA youth drumming summer camp",
+        "drumming summer camp kids near Waltham Massachusetts",
+        "drumming summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category drumming",
+      "demand": 5
+    },
+    {
+      "hole_id": "missing_category_tennis",
+      "type": "missing_category",
+      "category": "tennis",
+      "priority": 3,
+      "search_query": "Waltham MA youth tennis summer camp",
+      "query_variants": [
+        "Waltham MA youth tennis summer camp",
+        "tennis summer camp kids near Waltham Massachusetts",
+        "tennis summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category tennis",
+      "demand": 4
+    },
+    {
+      "hole_id": "missing_category_flag_football",
+      "type": "missing_category",
+      "category": "flag_football",
+      "priority": 3,
+      "search_query": "Waltham MA youth flag football summer camp",
+      "query_variants": [
+        "Waltham MA youth flag football summer camp",
+        "flag football summer camp kids near Waltham Massachusetts",
+        "flag football summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category flag_football",
+      "demand": 4
+    },
+    {
+      "hole_id": "missing_category_wrestling",
+      "type": "missing_category",
+      "category": "wrestling",
+      "priority": 3,
+      "search_query": "Waltham MA youth wrestling summer camp",
+      "query_variants": [
+        "Waltham MA youth wrestling summer camp",
+        "wrestling summer camp kids near Waltham Massachusetts",
+        "wrestling summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category wrestling",
+      "demand": 4
+    },
+    {
+      "hole_id": "missing_category_pottery",
+      "type": "missing_category",
+      "category": "pottery",
+      "priority": 3,
+      "search_query": "Waltham MA youth pottery summer camp",
+      "query_variants": [
+        "Waltham MA youth pottery summer camp",
+        "pottery summer camp kids near Waltham Massachusetts",
+        "pottery summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category pottery",
+      "demand": 4
+    },
+    {
+      "hole_id": "missing_category_film_and_video",
+      "type": "missing_category",
+      "category": "film_and_video",
+      "priority": 3,
+      "search_query": "Waltham MA youth film and video summer camp",
+      "query_variants": [
+        "Waltham MA youth film and video summer camp",
+        "film and video summer camp kids near Waltham Massachusetts",
+        "film and video summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category film_and_video",
+      "demand": 4
+    },
+    {
+      "hole_id": "missing_category_hip_hop_dance",
+      "type": "missing_category",
+      "category": "hip_hop_dance",
+      "priority": 3,
+      "search_query": "Waltham MA youth hip hop dance summer camp",
+      "query_variants": [
+        "Waltham MA youth hip hop dance summer camp",
+        "hip hop dance summer camp kids near Waltham Massachusetts",
+        "hip hop dance summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category hip_hop_dance",
+      "demand": 4
+    },
+    {
+      "hole_id": "missing_category_volleyball",
+      "type": "missing_category",
+      "category": "volleyball",
+      "priority": 3,
+      "search_query": "Waltham MA youth volleyball summer camp",
+      "query_variants": [
+        "Waltham MA youth volleyball summer camp",
+        "volleyball summer camp kids near Waltham Massachusetts",
+        "volleyball summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category volleyball",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_squash",
+      "type": "missing_category",
+      "category": "squash",
+      "priority": 3,
+      "search_query": "Waltham MA youth squash summer camp",
+      "query_variants": [
+        "Waltham MA youth squash summer camp",
+        "squash summer camp kids near Waltham Massachusetts",
+        "squash summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category squash",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_karate",
+      "type": "missing_category",
+      "category": "karate",
+      "priority": 3,
+      "search_query": "Waltham MA youth karate summer camp",
+      "query_variants": [
+        "Waltham MA youth karate summer camp",
+        "karate summer camp kids near Waltham Massachusetts",
+        "karate summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category karate",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_taekwondo",
+      "type": "missing_category",
+      "category": "taekwondo",
+      "priority": 3,
+      "search_query": "Waltham MA youth taekwondo summer camp",
+      "query_variants": [
+        "Waltham MA youth taekwondo summer camp",
+        "taekwondo summer camp kids near Waltham Massachusetts",
+        "taekwondo summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category taekwondo",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_sailing",
+      "type": "missing_category",
+      "category": "sailing",
+      "priority": 3,
+      "search_query": "Waltham MA youth sailing summer camp",
+      "query_variants": [
+        "Waltham MA youth sailing summer camp",
+        "sailing summer camp kids near Waltham Massachusetts",
+        "sailing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category sailing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_archery",
+      "type": "missing_category",
+      "category": "archery",
+      "priority": 3,
+      "search_query": "Waltham MA youth archery summer camp",
+      "query_variants": [
+        "Waltham MA youth archery summer camp",
+        "archery summer camp kids near Waltham Massachusetts",
+        "archery summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category archery",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_mountain_biking",
+      "type": "missing_category",
+      "category": "mountain_biking",
+      "priority": 3,
+      "search_query": "Waltham MA youth mountain biking summer camp",
+      "query_variants": [
+        "Waltham MA youth mountain biking summer camp",
+        "mountain biking summer camp kids near Waltham Massachusetts",
+        "mountain biking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category mountain_biking",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_rock_climbing",
+      "type": "missing_category",
+      "category": "rock_climbing",
+      "priority": 3,
+      "search_query": "Waltham MA youth rock climbing summer camp",
+      "query_variants": [
+        "Waltham MA youth rock climbing summer camp",
+        "rock climbing summer camp kids near Waltham Massachusetts",
+        "rock climbing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category rock_climbing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_rugby",
+      "type": "missing_category",
+      "category": "rugby",
+      "priority": 3,
+      "search_query": "Waltham MA youth rugby summer camp",
+      "query_variants": [
+        "Waltham MA youth rugby summer camp",
+        "rugby summer camp kids near Waltham Massachusetts",
+        "rugby summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category rugby",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_frisbee",
+      "type": "missing_category",
+      "category": "frisbee",
+      "priority": 3,
+      "search_query": "Waltham MA youth frisbee summer camp",
+      "query_variants": [
+        "Waltham MA youth frisbee summer camp",
+        "frisbee summer camp kids near Waltham Massachusetts",
+        "frisbee summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category frisbee",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_fine_arts",
+      "type": "missing_category",
+      "category": "fine_arts",
+      "priority": 3,
+      "search_query": "Waltham MA youth fine arts summer camp",
+      "query_variants": [
+        "Waltham MA youth fine arts summer camp",
+        "fine arts summer camp kids near Waltham Massachusetts",
+        "fine arts summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category fine_arts",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_sculpture",
+      "type": "missing_category",
+      "category": "sculpture",
+      "priority": 3,
+      "search_query": "Waltham MA youth sculpture summer camp",
+      "query_variants": [
+        "Waltham MA youth sculpture summer camp",
+        "sculpture summer camp kids near Waltham Massachusetts",
+        "sculpture summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category sculpture",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_animation",
+      "type": "missing_category",
+      "category": "animation",
+      "priority": 3,
+      "search_query": "Waltham MA youth animation summer camp",
+      "query_variants": [
+        "Waltham MA youth animation summer camp",
+        "animation summer camp kids near Waltham Massachusetts",
+        "animation summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category animation",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_improv_comedy",
+      "type": "missing_category",
+      "category": "improv_comedy",
+      "priority": 3,
+      "search_query": "Waltham MA youth improv comedy summer camp",
+      "query_variants": [
+        "Waltham MA youth improv comedy summer camp",
+        "improv comedy summer camp kids near Waltham Massachusetts",
+        "improv comedy summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category improv_comedy",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_rock_band",
+      "type": "missing_category",
+      "category": "rock_band",
+      "priority": 3,
+      "search_query": "Waltham MA youth rock band summer camp",
+      "query_variants": [
+        "Waltham MA youth rock band summer camp",
+        "rock band summer camp kids near Waltham Massachusetts",
+        "rock band summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category rock_band",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_songwriting",
+      "type": "missing_category",
+      "category": "songwriting",
+      "priority": 3,
+      "search_query": "Waltham MA youth songwriting summer camp",
+      "query_variants": [
+        "Waltham MA youth songwriting summer camp",
+        "songwriting summer camp kids near Waltham Massachusetts",
+        "songwriting summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category songwriting",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_voice_and_singing",
+      "type": "missing_category",
+      "category": "voice_and_singing",
+      "priority": 3,
+      "search_query": "Waltham MA youth voice and singing summer camp",
+      "query_variants": [
+        "Waltham MA youth voice and singing summer camp",
+        "voice and singing summer camp kids near Waltham Massachusetts",
+        "voice and singing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category voice_and_singing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_creative_writing",
+      "type": "missing_category",
+      "category": "creative_writing",
+      "priority": 3,
+      "search_query": "Waltham MA youth creative writing summer camp",
+      "query_variants": [
+        "Waltham MA youth creative writing summer camp",
+        "creative writing summer camp kids near Waltham Massachusetts",
+        "creative writing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category creative_writing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_comic_and_manga",
+      "type": "missing_category",
+      "category": "comic_and_manga",
+      "priority": 3,
+      "search_query": "Waltham MA youth comic and manga summer camp",
+      "query_variants": [
+        "Waltham MA youth comic and manga summer camp",
+        "comic and manga summer camp kids near Waltham Massachusetts",
+        "comic and manga summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category comic_and_manga",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_fashion_design",
+      "type": "missing_category",
+      "category": "fashion_design",
+      "priority": 3,
+      "search_query": "Waltham MA youth fashion design summer camp",
+      "query_variants": [
+        "Waltham MA youth fashion design summer camp",
+        "fashion design summer camp kids near Waltham Massachusetts",
+        "fashion design summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category fashion_design",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_sewing",
+      "type": "missing_category",
+      "category": "sewing",
+      "priority": 3,
+      "search_query": "Waltham MA youth sewing summer camp",
+      "query_variants": [
+        "Waltham MA youth sewing summer camp",
+        "sewing summer camp kids near Waltham Massachusetts",
+        "sewing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category sewing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_jewelry_making",
+      "type": "missing_category",
+      "category": "jewelry_making",
+      "priority": 3,
+      "search_query": "Waltham MA youth jewelry making summer camp",
+      "query_variants": [
+        "Waltham MA youth jewelry making summer camp",
+        "jewelry making summer camp kids near Waltham Massachusetts",
+        "jewelry making summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category jewelry_making",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_woodworking",
+      "type": "missing_category",
+      "category": "woodworking",
+      "priority": 3,
+      "search_query": "Waltham MA youth woodworking summer camp",
+      "query_variants": [
+        "Waltham MA youth woodworking summer camp",
+        "woodworking summer camp kids near Waltham Massachusetts",
+        "woodworking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category woodworking",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_graphic_design",
+      "type": "missing_category",
+      "category": "graphic_design",
+      "priority": 3,
+      "search_query": "Waltham MA youth graphic design summer camp",
+      "query_variants": [
+        "Waltham MA youth graphic design summer camp",
+        "graphic design summer camp kids near Waltham Massachusetts",
+        "graphic design summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category graphic_design",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_science",
+      "type": "missing_category",
+      "category": "science",
+      "priority": 3,
+      "search_query": "Waltham MA youth science summer camp",
+      "query_variants": [
+        "Waltham MA youth science summer camp",
+        "science summer camp kids near Waltham Massachusetts",
+        "science summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category science",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_lego_robotics",
+      "type": "missing_category",
+      "category": "lego_robotics",
+      "priority": 3,
+      "search_query": "Waltham MA youth lego robotics summer camp",
+      "query_variants": [
+        "Waltham MA youth lego robotics summer camp",
+        "lego robotics summer camp kids near Waltham Massachusetts",
+        "lego robotics summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category lego_robotics",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_programming",
+      "type": "missing_category",
+      "category": "programming",
+      "priority": 3,
+      "search_query": "Waltham MA youth programming summer camp",
+      "query_variants": [
+        "Waltham MA youth programming summer camp",
+        "programming summer camp kids near Waltham Massachusetts",
+        "programming summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category programming",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_python_coding",
+      "type": "missing_category",
+      "category": "python_coding",
+      "priority": 3,
+      "search_query": "Waltham MA youth python coding summer camp",
+      "query_variants": [
+        "Waltham MA youth python coding summer camp",
+        "python coding summer camp kids near Waltham Massachusetts",
+        "python coding summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category python_coding",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_scratch_coding",
+      "type": "missing_category",
+      "category": "scratch_coding",
+      "priority": 3,
+      "search_query": "Waltham MA youth scratch coding summer camp",
+      "query_variants": [
+        "Waltham MA youth scratch coding summer camp",
+        "scratch coding summer camp kids near Waltham Massachusetts",
+        "scratch coding summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category scratch_coding",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_web_design",
+      "type": "missing_category",
+      "category": "web_design",
+      "priority": 3,
+      "search_query": "Waltham MA youth web design summer camp",
+      "query_variants": [
+        "Waltham MA youth web design summer camp",
+        "web design summer camp kids near Waltham Massachusetts",
+        "web design summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category web_design",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_app_development",
+      "type": "missing_category",
+      "category": "app_development",
+      "priority": 3,
+      "search_query": "Waltham MA youth app development summer camp",
+      "query_variants": [
+        "Waltham MA youth app development summer camp",
+        "app development summer camp kids near Waltham Massachusetts",
+        "app development summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category app_development",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_video_game_design",
+      "type": "missing_category",
+      "category": "video_game_design",
+      "priority": 3,
+      "search_query": "Waltham MA youth video game design summer camp",
+      "query_variants": [
+        "Waltham MA youth video game design summer camp",
+        "video game design summer camp kids near Waltham Massachusetts",
+        "video game design summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category video_game_design",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_game_design",
+      "type": "missing_category",
+      "category": "game_design",
+      "priority": 3,
+      "search_query": "Waltham MA youth game design summer camp",
+      "query_variants": [
+        "Waltham MA youth game design summer camp",
+        "game design summer camp kids near Waltham Massachusetts",
+        "game design summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category game_design",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_minecraft",
+      "type": "missing_category",
+      "category": "minecraft",
+      "priority": 3,
+      "search_query": "Waltham MA youth minecraft summer camp",
+      "query_variants": [
+        "Waltham MA youth minecraft summer camp",
+        "minecraft summer camp kids near Waltham Massachusetts",
+        "minecraft summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category minecraft",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_roblox",
+      "type": "missing_category",
+      "category": "roblox",
+      "priority": 3,
+      "search_query": "Waltham MA youth roblox summer camp",
+      "query_variants": [
+        "Waltham MA youth roblox summer camp",
+        "roblox summer camp kids near Waltham Massachusetts",
+        "roblox summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category roblox",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_engineering",
+      "type": "missing_category",
+      "category": "engineering",
+      "priority": 3,
+      "search_query": "Waltham MA youth engineering summer camp",
+      "query_variants": [
+        "Waltham MA youth engineering summer camp",
+        "engineering summer camp kids near Waltham Massachusetts",
+        "engineering summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category engineering",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_electronics",
+      "type": "missing_category",
+      "category": "electronics",
+      "priority": 3,
+      "search_query": "Waltham MA youth electronics summer camp",
+      "query_variants": [
+        "Waltham MA youth electronics summer camp",
+        "electronics summer camp kids near Waltham Massachusetts",
+        "electronics summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category electronics",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_3d_printing",
+      "type": "missing_category",
+      "category": "3d_printing",
+      "priority": 3,
+      "search_query": "Waltham MA youth 3d printing summer camp",
+      "query_variants": [
+        "Waltham MA youth 3d printing summer camp",
+        "3d printing summer camp kids near Waltham Massachusetts",
+        "3d printing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category 3d_printing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_math",
+      "type": "missing_category",
+      "category": "math",
+      "priority": 3,
+      "search_query": "Waltham MA youth math summer camp",
+      "query_variants": [
+        "Waltham MA youth math summer camp",
+        "math summer camp kids near Waltham Massachusetts",
+        "math summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category math",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_chemistry",
+      "type": "missing_category",
+      "category": "chemistry",
+      "priority": 3,
+      "search_query": "Waltham MA youth chemistry summer camp",
+      "query_variants": [
+        "Waltham MA youth chemistry summer camp",
+        "chemistry summer camp kids near Waltham Massachusetts",
+        "chemistry summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category chemistry",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_biology",
+      "type": "missing_category",
+      "category": "biology",
+      "priority": 3,
+      "search_query": "Waltham MA youth biology summer camp",
+      "query_variants": [
+        "Waltham MA youth biology summer camp",
+        "biology summer camp kids near Waltham Massachusetts",
+        "biology summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category biology",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_astronomy_and_space",
+      "type": "missing_category",
+      "category": "astronomy_and_space",
+      "priority": 3,
+      "search_query": "Waltham MA youth astronomy and space summer camp",
+      "query_variants": [
+        "Waltham MA youth astronomy and space summer camp",
+        "astronomy and space summer camp kids near Waltham Massachusetts",
+        "astronomy and space summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category astronomy_and_space",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_marine_biology",
+      "type": "missing_category",
+      "category": "marine_biology",
+      "priority": 3,
+      "search_query": "Waltham MA youth marine biology summer camp",
+      "query_variants": [
+        "Waltham MA youth marine biology summer camp",
+        "marine biology summer camp kids near Waltham Massachusetts",
+        "marine biology summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category marine_biology",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_artificial_intelligence",
+      "type": "missing_category",
+      "category": "artificial_intelligence",
+      "priority": 3,
+      "search_query": "Waltham MA youth artificial intelligence summer camp",
+      "query_variants": [
+        "Waltham MA youth artificial intelligence summer camp",
+        "artificial intelligence summer camp kids near Waltham Massachusetts",
+        "artificial intelligence summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category artificial_intelligence",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_data_science",
+      "type": "missing_category",
+      "category": "data_science",
+      "priority": 3,
+      "search_query": "Waltham MA youth data science summer camp",
+      "query_variants": [
+        "Waltham MA youth data science summer camp",
+        "data science summer camp kids near Waltham Massachusetts",
+        "data science summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category data_science",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_chess",
+      "type": "missing_category",
+      "category": "chess",
+      "priority": 3,
+      "search_query": "Waltham MA youth chess summer camp",
+      "query_variants": [
+        "Waltham MA youth chess summer camp",
+        "chess summer camp kids near Waltham Massachusetts",
+        "chess summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category chess",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_debate",
+      "type": "missing_category",
+      "category": "debate",
+      "priority": 3,
+      "search_query": "Waltham MA youth debate summer camp",
+      "query_variants": [
+        "Waltham MA youth debate summer camp",
+        "debate summer camp kids near Waltham Massachusetts",
+        "debate summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category debate",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_public_speaking",
+      "type": "missing_category",
+      "category": "public_speaking",
+      "priority": 3,
+      "search_query": "Waltham MA youth public speaking summer camp",
+      "query_variants": [
+        "Waltham MA youth public speaking summer camp",
+        "public speaking summer camp kids near Waltham Massachusetts",
+        "public speaking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category public_speaking",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_model_un",
+      "type": "missing_category",
+      "category": "model_un",
+      "priority": 3,
+      "search_query": "Waltham MA youth model un summer camp",
+      "query_variants": [
+        "Waltham MA youth model un summer camp",
+        "model un summer camp kids near Waltham Massachusetts",
+        "model un summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category model_un",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_entrepreneurship",
+      "type": "missing_category",
+      "category": "entrepreneurship",
+      "priority": 3,
+      "search_query": "Waltham MA youth entrepreneurship summer camp",
+      "query_variants": [
+        "Waltham MA youth entrepreneurship summer camp",
+        "entrepreneurship summer camp kids near Waltham Massachusetts",
+        "entrepreneurship summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category entrepreneurship",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_financial_literacy",
+      "type": "missing_category",
+      "category": "financial_literacy",
+      "priority": 3,
+      "search_query": "Waltham MA youth financial literacy summer camp",
+      "query_variants": [
+        "Waltham MA youth financial literacy summer camp",
+        "financial literacy summer camp kids near Waltham Massachusetts",
+        "financial literacy summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category financial_literacy",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_spanish_language",
+      "type": "missing_category",
+      "category": "spanish_language",
+      "priority": 3,
+      "search_query": "Waltham MA youth spanish language summer camp",
+      "query_variants": [
+        "Waltham MA youth spanish language summer camp",
+        "spanish language summer camp kids near Waltham Massachusetts",
+        "spanish language summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category spanish_language",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_french_language",
+      "type": "missing_category",
+      "category": "french_language",
+      "priority": 3,
+      "search_query": "Waltham MA youth french language summer camp",
+      "query_variants": [
+        "Waltham MA youth french language summer camp",
+        "french language summer camp kids near Waltham Massachusetts",
+        "french language summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category french_language",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_mandarin_language",
+      "type": "missing_category",
+      "category": "mandarin_language",
+      "priority": 3,
+      "search_query": "Waltham MA youth mandarin language summer camp",
+      "query_variants": [
+        "Waltham MA youth mandarin language summer camp",
+        "mandarin language summer camp kids near Waltham Massachusetts",
+        "mandarin language summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category mandarin_language",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_reading_and_writing",
+      "type": "missing_category",
+      "category": "reading_and_writing",
+      "priority": 3,
+      "search_query": "Waltham MA youth reading and writing summer camp",
+      "query_variants": [
+        "Waltham MA youth reading and writing summer camp",
+        "reading and writing summer camp kids near Waltham Massachusetts",
+        "reading and writing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category reading_and_writing",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_medicine_and_health",
+      "type": "missing_category",
+      "category": "medicine_and_health",
+      "priority": 3,
+      "search_query": "Waltham MA youth medicine and health summer camp",
+      "query_variants": [
+        "Waltham MA youth medicine and health summer camp",
+        "medicine and health summer camp kids near Waltham Massachusetts",
+        "medicine and health summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category medicine_and_health",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_veterinary",
+      "type": "missing_category",
+      "category": "veterinary",
+      "priority": 3,
+      "search_query": "Waltham MA youth veterinary summer camp",
+      "query_variants": [
+        "Waltham MA youth veterinary summer camp",
+        "veterinary summer camp kids near Waltham Massachusetts",
+        "veterinary summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category veterinary",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_architecture",
+      "type": "missing_category",
+      "category": "architecture",
+      "priority": 3,
+      "search_query": "Waltham MA youth architecture summer camp",
+      "query_variants": [
+        "Waltham MA youth architecture summer camp",
+        "architecture summer camp kids near Waltham Massachusetts",
+        "architecture summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category architecture",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_outdoor_adventure",
+      "type": "missing_category",
+      "category": "outdoor_adventure",
+      "priority": 3,
+      "search_query": "Waltham MA youth outdoor adventure summer camp",
+      "query_variants": [
+        "Waltham MA youth outdoor adventure summer camp",
+        "outdoor adventure summer camp kids near Waltham Massachusetts",
+        "outdoor adventure summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category outdoor_adventure",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_wilderness_survival",
+      "type": "missing_category",
+      "category": "wilderness_survival",
+      "priority": 3,
+      "search_query": "Waltham MA youth wilderness survival summer camp",
+      "query_variants": [
+        "Waltham MA youth wilderness survival summer camp",
+        "wilderness survival summer camp kids near Waltham Massachusetts",
+        "wilderness survival summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category wilderness_survival",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_forest_school",
+      "type": "missing_category",
+      "category": "forest_school",
+      "priority": 3,
+      "search_query": "Waltham MA youth forest school summer camp",
+      "query_variants": [
+        "Waltham MA youth forest school summer camp",
+        "forest school summer camp kids near Waltham Massachusetts",
+        "forest school summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category forest_school",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_farm",
+      "type": "missing_category",
+      "category": "farm",
+      "priority": 3,
+      "search_query": "Waltham MA youth farm summer camp",
+      "query_variants": [
+        "Waltham MA youth farm summer camp",
+        "farm summer camp kids near Waltham Massachusetts",
+        "farm summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category farm",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_gardening",
+      "type": "missing_category",
+      "category": "gardening",
+      "priority": 3,
+      "search_query": "Waltham MA youth gardening summer camp",
+      "query_variants": [
+        "Waltham MA youth gardening summer camp",
+        "gardening summer camp kids near Waltham Massachusetts",
+        "gardening summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category gardening",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_environmental",
+      "type": "missing_category",
+      "category": "environmental",
+      "priority": 3,
+      "search_query": "Waltham MA youth environmental summer camp",
+      "query_variants": [
+        "Waltham MA youth environmental summer camp",
+        "environmental summer camp kids near Waltham Massachusetts",
+        "environmental summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category environmental",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_zoo_and_animal",
+      "type": "missing_category",
+      "category": "zoo_and_animal",
+      "priority": 3,
+      "search_query": "Waltham MA youth zoo and animal summer camp",
+      "query_variants": [
+        "Waltham MA youth zoo and animal summer camp",
+        "zoo and animal summer camp kids near Waltham Massachusetts",
+        "zoo and animal summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category zoo_and_animal",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_baking",
+      "type": "missing_category",
+      "category": "baking",
+      "priority": 3,
+      "search_query": "Waltham MA youth baking summer camp",
+      "query_variants": [
+        "Waltham MA youth baking summer camp",
+        "baking summer camp kids near Waltham Massachusetts",
+        "baking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category baking",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_culinary",
+      "type": "missing_category",
+      "category": "culinary",
+      "priority": 3,
+      "search_query": "Waltham MA youth culinary summer camp",
+      "query_variants": [
+        "Waltham MA youth culinary summer camp",
+        "culinary summer camp kids near Waltham Massachusetts",
+        "culinary summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category culinary",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_magic",
+      "type": "missing_category",
+      "category": "magic",
+      "priority": 3,
+      "search_query": "Waltham MA youth magic summer camp",
+      "query_variants": [
+        "Waltham MA youth magic summer camp",
+        "magic summer camp kids near Waltham Massachusetts",
+        "magic summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category magic",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_escape_room",
+      "type": "missing_category",
+      "category": "escape_room",
+      "priority": 3,
+      "search_query": "Waltham MA youth escape room summer camp",
+      "query_variants": [
+        "Waltham MA youth escape room summer camp",
+        "escape room summer camp kids near Waltham Massachusetts",
+        "escape room summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category escape_room",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_dungeons_and_dragons",
+      "type": "missing_category",
+      "category": "dungeons_and_dragons",
+      "priority": 3,
+      "search_query": "Waltham MA youth dungeons and dragons summer camp",
+      "query_variants": [
+        "Waltham MA youth dungeons and dragons summer camp",
+        "dungeons and dragons summer camp kids near Waltham Massachusetts",
+        "dungeons and dragons summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category dungeons_and_dragons",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_board_game",
+      "type": "missing_category",
+      "category": "board_game",
+      "priority": 3,
+      "search_query": "Waltham MA youth board game summer camp",
+      "query_variants": [
+        "Waltham MA youth board game summer camp",
+        "board game summer camp kids near Waltham Massachusetts",
+        "board game summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category board_game",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_scavenger_hunt",
+      "type": "missing_category",
+      "category": "scavenger_hunt",
+      "priority": 3,
+      "search_query": "Waltham MA youth scavenger hunt summer camp",
+      "query_variants": [
+        "Waltham MA youth scavenger hunt summer camp",
+        "scavenger hunt summer camp kids near Waltham Massachusetts",
+        "scavenger hunt summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category scavenger_hunt",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_leadership",
+      "type": "missing_category",
+      "category": "leadership",
+      "priority": 3,
+      "search_query": "Waltham MA youth leadership summer camp",
+      "query_variants": [
+        "Waltham MA youth leadership summer camp",
+        "leadership summer camp kids near Waltham Massachusetts",
+        "leadership summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category leadership",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_counselor_in_training",
+      "type": "missing_category",
+      "category": "counselor_in_training",
+      "priority": 3,
+      "search_query": "Waltham MA youth counselor in training summer camp",
+      "query_variants": [
+        "Waltham MA youth counselor in training summer camp",
+        "counselor in training summer camp kids near Waltham Massachusetts",
+        "counselor in training summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category counselor_in_training",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_steam",
+      "type": "missing_category",
+      "category": "steam",
+      "priority": 3,
+      "search_query": "Waltham MA youth STEAM summer camp",
+      "query_variants": [
+        "Waltham MA youth STEAM summer camp",
+        "STEAM summer camp kids near Waltham Massachusetts",
+        "STEAM summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category steam",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_maker",
+      "type": "missing_category",
+      "category": "maker",
+      "priority": 3,
+      "search_query": "Waltham MA youth maker summer camp",
+      "query_variants": [
+        "Waltham MA youth maker summer camp",
+        "maker summer camp kids near Waltham Massachusetts",
+        "maker summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category maker",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_inventor",
+      "type": "missing_category",
+      "category": "inventor",
+      "priority": 3,
+      "search_query": "Waltham MA youth inventor summer camp",
+      "query_variants": [
+        "Waltham MA youth inventor summer camp",
+        "inventor summer camp kids near Waltham Massachusetts",
+        "inventor summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category inventor",
+      "demand": 3
+    },
+    {
+      "hole_id": "missing_category_badminton",
+      "type": "missing_category",
+      "category": "badminton",
+      "priority": 3,
+      "search_query": "Waltham MA youth badminton summer camp",
+      "query_variants": [
+        "Waltham MA youth badminton summer camp",
+        "badminton summer camp kids near Waltham Massachusetts",
+        "badminton summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category badminton",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_pickleball",
+      "type": "missing_category",
+      "category": "pickleball",
+      "priority": 3,
+      "search_query": "Waltham MA youth pickleball summer camp",
+      "query_variants": [
+        "Waltham MA youth pickleball summer camp",
+        "pickleball summer camp kids near Waltham Massachusetts",
+        "pickleball summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category pickleball",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_judo",
+      "type": "missing_category",
+      "category": "judo",
+      "priority": 3,
+      "search_query": "Waltham MA youth judo summer camp",
+      "query_variants": [
+        "Waltham MA youth judo summer camp",
+        "judo summer camp kids near Waltham Massachusetts",
+        "judo summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category judo",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_jiu_jitsu",
+      "type": "missing_category",
+      "category": "jiu_jitsu",
+      "priority": 3,
+      "search_query": "Waltham MA youth jiu jitsu summer camp",
+      "query_variants": [
+        "Waltham MA youth jiu jitsu summer camp",
+        "jiu jitsu summer camp kids near Waltham Massachusetts",
+        "jiu jitsu summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category jiu_jitsu",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_boxing",
+      "type": "missing_category",
+      "category": "boxing",
+      "priority": 3,
+      "search_query": "Waltham MA youth boxing summer camp",
+      "query_variants": [
+        "Waltham MA youth boxing summer camp",
+        "boxing summer camp kids near Waltham Massachusetts",
+        "boxing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category boxing",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_fencing",
+      "type": "missing_category",
+      "category": "fencing",
+      "priority": 3,
+      "search_query": "Waltham MA youth fencing summer camp",
+      "query_variants": [
+        "Waltham MA youth fencing summer camp",
+        "fencing summer camp kids near Waltham Massachusetts",
+        "fencing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category fencing",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_water_polo",
+      "type": "missing_category",
+      "category": "water_polo",
+      "priority": 3,
+      "search_query": "Waltham MA youth water polo summer camp",
+      "query_variants": [
+        "Waltham MA youth water polo summer camp",
+        "water polo summer camp kids near Waltham Massachusetts",
+        "water polo summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category water_polo",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_golf_clinic",
+      "type": "missing_category",
+      "category": "golf_clinic",
+      "priority": 3,
+      "search_query": "Waltham MA youth golf clinic summer camp",
+      "query_variants": [
+        "Waltham MA youth golf clinic summer camp",
+        "golf clinic summer camp kids near Waltham Massachusetts",
+        "golf clinic summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category golf_clinic",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_skateboarding",
+      "type": "missing_category",
+      "category": "skateboarding",
+      "priority": 3,
+      "search_query": "Waltham MA youth skateboarding summer camp",
+      "query_variants": [
+        "Waltham MA youth skateboarding summer camp",
+        "skateboarding summer camp kids near Waltham Massachusetts",
+        "skateboarding summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category skateboarding",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_bmx",
+      "type": "missing_category",
+      "category": "bmx",
+      "priority": 3,
+      "search_query": "Waltham MA youth bmx summer camp",
+      "query_variants": [
+        "Waltham MA youth bmx summer camp",
+        "bmx summer camp kids near Waltham Massachusetts",
+        "bmx summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category bmx",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_parkour",
+      "type": "missing_category",
+      "category": "parkour",
+      "priority": 3,
+      "search_query": "Waltham MA youth parkour summer camp",
+      "query_variants": [
+        "Waltham MA youth parkour summer camp",
+        "parkour summer camp kids near Waltham Massachusetts",
+        "parkour summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category parkour",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_ninja_warrior",
+      "type": "missing_category",
+      "category": "ninja_warrior",
+      "priority": 3,
+      "search_query": "Waltham MA youth ninja warrior summer camp",
+      "query_variants": [
+        "Waltham MA youth ninja warrior summer camp",
+        "ninja warrior summer camp kids near Waltham Massachusetts",
+        "ninja warrior summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category ninja_warrior",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_horseback_riding",
+      "type": "missing_category",
+      "category": "horseback_riding",
+      "priority": 3,
+      "search_query": "Waltham MA youth horseback riding summer camp",
+      "query_variants": [
+        "Waltham MA youth horseback riding summer camp",
+        "horseback riding summer camp kids near Waltham Massachusetts",
+        "horseback riding summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category horseback_riding",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_figure_skating",
+      "type": "missing_category",
+      "category": "figure_skating",
+      "priority": 3,
+      "search_query": "Waltham MA youth figure skating summer camp",
+      "query_variants": [
+        "Waltham MA youth figure skating summer camp",
+        "figure skating summer camp kids near Waltham Massachusetts",
+        "figure skating summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category figure_skating",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_speed_skating",
+      "type": "missing_category",
+      "category": "speed_skating",
+      "priority": 3,
+      "search_query": "Waltham MA youth speed skating summer camp",
+      "query_variants": [
+        "Waltham MA youth speed skating summer camp",
+        "speed skating summer camp kids near Waltham Massachusetts",
+        "speed skating summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category speed_skating",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_curling",
+      "type": "missing_category",
+      "category": "curling",
+      "priority": 3,
+      "search_query": "Waltham MA youth curling summer camp",
+      "query_variants": [
+        "Waltham MA youth curling summer camp",
+        "curling summer camp kids near Waltham Massachusetts",
+        "curling summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category curling",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_handball",
+      "type": "missing_category",
+      "category": "handball",
+      "priority": 3,
+      "search_query": "Waltham MA youth handball summer camp",
+      "query_variants": [
+        "Waltham MA youth handball summer camp",
+        "handball summer camp kids near Waltham Massachusetts",
+        "handball summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category handball",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_printmaking",
+      "type": "missing_category",
+      "category": "printmaking",
+      "priority": 3,
+      "search_query": "Waltham MA youth printmaking summer camp",
+      "query_variants": [
+        "Waltham MA youth printmaking summer camp",
+        "printmaking summer camp kids near Waltham Massachusetts",
+        "printmaking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category printmaking",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_circus_arts",
+      "type": "missing_category",
+      "category": "circus_arts",
+      "priority": 3,
+      "search_query": "Waltham MA youth circus arts summer camp",
+      "query_variants": [
+        "Waltham MA youth circus arts summer camp",
+        "circus arts summer camp kids near Waltham Massachusetts",
+        "circus arts summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category circus_arts",
+      "demand": 2
+    },
+    {
+      "hole_id": "missing_category_table_tennis",
+      "type": "missing_category",
+      "category": "table_tennis",
+      "priority": 3,
+      "search_query": "Waltham MA youth table tennis summer camp",
+      "query_variants": [
+        "Waltham MA youth table tennis summer camp",
+        "table tennis summer camp kids near Waltham Massachusetts",
+        "table tennis summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category table_tennis",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_rowing",
+      "type": "missing_category",
+      "category": "rowing",
+      "priority": 3,
+      "search_query": "Waltham MA youth rowing summer camp",
+      "query_variants": [
+        "Waltham MA youth rowing summer camp",
+        "rowing summer camp kids near Waltham Massachusetts",
+        "rowing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category rowing",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_crew",
+      "type": "missing_category",
+      "category": "crew",
+      "priority": 3,
+      "search_query": "Waltham MA youth crew summer camp",
+      "query_variants": [
+        "Waltham MA youth crew summer camp",
+        "crew summer camp kids near Waltham Massachusetts",
+        "crew summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category crew",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_diving",
+      "type": "missing_category",
+      "category": "diving",
+      "priority": 3,
+      "search_query": "Waltham MA youth diving summer camp",
+      "query_variants": [
+        "Waltham MA youth diving summer camp",
+        "diving summer camp kids near Waltham Massachusetts",
+        "diving summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category diving",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_kayaking",
+      "type": "missing_category",
+      "category": "kayaking",
+      "priority": 3,
+      "search_query": "Waltham MA youth kayaking summer camp",
+      "query_variants": [
+        "Waltham MA youth kayaking summer camp",
+        "kayaking summer camp kids near Waltham Massachusetts",
+        "kayaking summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category kayaking",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_stand_up_paddleboard",
+      "type": "missing_category",
+      "category": "stand_up_paddleboard",
+      "priority": 3,
+      "search_query": "Waltham MA youth stand up paddleboard summer camp",
+      "query_variants": [
+        "Waltham MA youth stand up paddleboard summer camp",
+        "stand up paddleboard summer camp kids near Waltham Massachusetts",
+        "stand up paddleboard summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category stand_up_paddleboard",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_surfing",
+      "type": "missing_category",
+      "category": "surfing",
+      "priority": 3,
+      "search_query": "Waltham MA youth surfing summer camp",
+      "query_variants": [
+        "Waltham MA youth surfing summer camp",
+        "surfing summer camp kids near Waltham Massachusetts",
+        "surfing summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category surfing",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_disc_golf",
+      "type": "missing_category",
+      "category": "disc_golf",
+      "priority": 3,
+      "search_query": "Waltham MA youth disc golf summer camp",
+      "query_variants": [
+        "Waltham MA youth disc golf summer camp",
+        "disc golf summer camp kids near Waltham Massachusetts",
+        "disc golf summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category disc_golf",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_equestrian",
+      "type": "missing_category",
+      "category": "equestrian",
+      "priority": 3,
+      "search_query": "Waltham MA youth equestrian summer camp",
+      "query_variants": [
+        "Waltham MA youth equestrian summer camp",
+        "equestrian summer camp kids near Waltham Massachusetts",
+        "equestrian summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category equestrian",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_cricket",
+      "type": "missing_category",
+      "category": "cricket",
+      "priority": 3,
+      "search_query": "Waltham MA youth cricket summer camp",
+      "query_variants": [
+        "Waltham MA youth cricket summer camp",
+        "cricket summer camp kids near Waltham Massachusetts",
+        "cricket summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category cricket",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_quidditch",
+      "type": "missing_category",
+      "category": "quidditch",
+      "priority": 3,
+      "search_query": "Waltham MA youth quidditch summer camp",
+      "query_variants": [
+        "Waltham MA youth quidditch summer camp",
+        "quidditch summer camp kids near Waltham Massachusetts",
+        "quidditch summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category quidditch",
+      "demand": 1
+    },
+    {
+      "hole_id": "missing_category_stop_motion_animation",
+      "type": "missing_category",
+      "category": "stop_motion_animation",
+      "priority": 3,
+      "search_query": "Waltham MA youth stop motion animation summer camp",
+      "query_variants": [
+        "Waltham MA youth stop motion animation summer camp",
+        "stop motion animation summer camp kids near Waltham Massachusetts",
+        "stop motion animation summer clinic registration Waltham MA 2026"
+      ],
+      "rationale": "No parent_ready sessions for category stop_motion_animation",
+      "demand": 1
+    }
+  ],
+  "coverage_score": 0.0,
+  "parent_ready": 0,
+  "total_sessions": 9,
+  "search_plan": {
+    "searchable_holes": [
+      {
+        "hole_id": "missing_category_stem",
+        "query": "Waltham MA youth STEM summer camp"
+      },
+      {
+        "hole_id": "missing_category_coding",
+        "query": "Waltham MA youth coding summer camp"
+      },
+      {
+        "hole_id": "missing_category_robotics",
+        "query": "Waltham MA youth robotics summer camp"
+      },
+      {
+        "hole_id": "waltham_swim_gap",
+        "query": "Waltham MA youth swim summer camp"
+      },
+      {
+        "hole_id": "waltham_dance_gap",
+        "query": "Waltham MA youth dance summer camp"
+      },
+      {
+        "hole_id": "waltham_soccer_gap",
+        "query": "Waltham MA youth soccer summer camp"
+      },
+      {
+        "hole_id": "waltham_music_gap",
+        "query": "Waltham MA youth music summer camp"
+      },
+      {
+        "hole_id": "waltham_sports_multi_gap",
+        "query": "Waltham MA youth multi sport summer camp"
+      },
+      {
+        "hole_id": "waltham_basketball_gap",
+        "query": "Waltham MA youth basketball summer camp"
+      },
+      {
+        "hole_id": "waltham_theater_gap",
+        "query": "Waltham MA youth theater summer camp"
+      },
+      {
+        "hole_id": "waltham_stem_gap",
+        "query": "Waltham MA youth STEM summer camp"
+      },
+      {
+        "hole_id": "waltham_coding_gap",
+        "query": "Waltham MA youth coding summer camp"
+      },
+      {
+        "hole_id": "waltham_robotics_gap",
+        "query": "Waltham MA youth robotics summer camp"
+      },
+      {
+        "hole_id": "waltham_nature_gap",
+        "query": "Waltham MA youth nature summer camp"
+      },
+      {
+        "hole_id": "waltham_cooking_gap",
+        "query": "Waltham MA youth cooking summer camp"
+      },
+      {
+        "hole_id": "waltham_preschool_gap",
+        "query": "Waltham MA youth preschool summer camp"
+      },
+      {
+        "hole_id": "waltham_special_needs_gap",
+        "query": "Waltham MA youth special needs adaptive summer camp"
+      },
+      {
+        "hole_id": "waltham_teen_leadership_gap",
+        "query": "Waltham MA youth teen leadership summer camp"
+      },
+      {
+        "hole_id": "waltham_art_gap",
+        "query": "Waltham MA youth art summer camp"
+      },
+      {
+        "hole_id": "missing_category_drama",
+        "query": "Waltham MA youth drama summer camp"
+      },
+      {
+        "hole_id": "missing_category_guitar",
+        "query": "Waltham MA youth guitar summer camp"
+      },
+      {
+        "hole_id": "missing_category_golf",
+        "query": "Waltham MA youth golf summer camp"
+      },
+      {
+        "hole_id": "missing_category_photography",
+        "query": "Waltham MA youth photography summer camp"
+      },
+      {
+        "hole_id": "missing_category_piano",
+        "query": "Waltham MA youth piano summer camp"
+      },
+      {
+        "hole_id": "missing_category_cross_country",
+        "query": "Waltham MA youth cross country summer camp"
+      },
+      {
+        "hole_id": "missing_category_running",
+        "query": "Waltham MA youth running summer camp"
+      },
+      {
+        "hole_id": "missing_category_drawing",
+        "query": "Waltham MA youth drawing summer camp"
+      },
+      {
+        "hole_id": "missing_category_ballet",
+        "query": "Waltham MA youth ballet summer camp"
+      },
+      {
+        "hole_id": "missing_category_field_hockey",
+        "query": "Waltham MA youth field hockey summer camp"
+      },
+      {
+        "hole_id": "missing_category_ultimate_frisbee",
+        "query": "Waltham MA youth ultimate frisbee summer camp"
+      },
+      {
+        "hole_id": "missing_category_painting",
+        "query": "Waltham MA youth painting summer camp"
+      },
+      {
+        "hole_id": "missing_category_drumming",
+        "query": "Waltham MA youth drumming summer camp"
+      },
+      {
+        "hole_id": "missing_category_film_and_video",
+        "query": "Waltham MA youth film and video summer camp"
+      },
+      {
+        "hole_id": "missing_category_hip_hop_dance",
+        "query": "Waltham MA youth hip hop dance summer camp"
+      },
+      {
+        "hole_id": "missing_category_volleyball",
+        "query": "Waltham MA youth volleyball summer camp"
+      },
+      {
+        "hole_id": "missing_category_squash",
+        "query": "Waltham MA youth squash summer camp"
+      },
+      {
+        "hole_id": "missing_category_karate",
+        "query": "Waltham MA youth karate summer camp"
+      },
+      {
+        "hole_id": "missing_category_taekwondo",
+        "query": "Waltham MA youth taekwondo summer camp"
+      },
+      {
+        "hole_id": "missing_category_archery",
+        "query": "Waltham MA youth archery summer camp"
+      },
+      {
+        "hole_id": "missing_category_mountain_biking",
+        "query": "Waltham MA youth mountain biking summer camp"
+      }
+    ],
+    "holes_audited": 135,
+    "ideal_searches": 135,
+    "planned_searches": 40,
+    "max_ceiling": 40,
+    "deferred_over_ceiling": 95
+  },
+  "searches_run": 40,
+  "queries": [
+    "Waltham MA youth STEM summer camp",
+    "Waltham MA youth coding summer camp",
+    "Waltham MA youth robotics summer camp",
+    "Waltham MA youth swim summer camp",
+    "Waltham MA youth dance summer camp",
+    "Waltham MA youth soccer summer camp",
+    "Waltham MA youth music summer camp",
+    "Waltham MA youth multi sport summer camp",
+    "Waltham MA youth basketball summer camp",
+    "Waltham MA youth theater summer camp",
+    "Waltham MA youth STEM summer camp",
+    "Waltham MA youth coding summer camp",
+    "Waltham MA youth robotics summer camp",
+    "Waltham MA youth nature summer camp",
+    "Waltham MA youth cooking summer camp",
+    "Waltham MA youth preschool summer camp",
+    "Waltham MA youth special needs adaptive summer camp",
+    "Waltham MA youth teen leadership summer camp",
+    "Waltham MA youth art summer camp",
+    "Waltham MA youth drama summer camp",
+    "Waltham MA youth guitar summer camp",
+    "Waltham MA youth golf summer camp",
+    "Waltham MA youth photography summer camp",
+    "Waltham MA youth piano summer camp",
+    "Waltham MA youth cross country summer camp",
+    "Waltham MA youth running summer camp",
+    "Waltham MA youth drawing summer camp",
+    "Waltham MA youth ballet summer camp",
+    "Waltham MA youth field hockey summer camp",
+    "Waltham MA youth ultimate frisbee summer camp",
+    "Waltham MA youth painting summer camp",
+    "Waltham MA youth drumming summer camp",
+    "Waltham MA youth film and video summer camp",
+    "Waltham MA youth hip hop dance summer camp",
+    "Waltham MA youth volleyball summer camp",
+    "Waltham MA youth squash summer camp",
+    "Waltham MA youth karate summer camp",
+    "Waltham MA youth taekwondo summer camp",
+    "Waltham MA youth archery summer camp",
+    "Waltham MA youth mountain biking summer camp"
+  ]
+}

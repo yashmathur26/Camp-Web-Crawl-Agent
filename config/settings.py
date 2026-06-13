@@ -185,4 +185,43 @@ SETTINGS = {
     "gap_share_radius_miles": 10,
     "gap_share_radius_rare_miles": 15,
     "gap_search_budget_per_town": 400,
+    # Phase C enumeration ceiling (set by the resource profile below) — the
+    # post-search extraction burst, not the searches, drove the 16GB Jetsam.
+    "gap_max_urls_per_round": 50,
+    "max_details_per_provider": 60,
 }
+
+
+def _apply_resource_profile() -> None:
+    """Overlay the active memory profile (config/resource.py) onto SETTINGS.
+
+    On the 16gb profile this collapses every Ollama role to ONE model (so a
+    second model never loads), shortens keep_alive, drops concurrency to 1, and
+    caps Phase C enumeration — the cross-layer budget the W3W crash needed.
+    """
+    from config.resource import ACTIVE_PROFILE, PROFILE
+
+    SETTINGS["resource_profile"] = ACTIVE_PROFILE
+
+    single = PROFILE.get("ollama_single_model")
+    if single:
+        for role in (
+            "ollama_model", "ollama_filter_model",
+            "ollama_fast_model", "ollama_verify_model",
+        ):
+            SETTINGS[role] = single
+
+    for key in (
+        "ollama_keep_alive", "ollama_preload_models",
+        "ollama_classify_concurrency", "ollama_verify_concurrency",
+        "crawl_concurrency", "b5_max_browsers",
+        "gap_max_urls_per_round", "gap_max_searches_per_round",
+        "gap_search_budget_per_town", "max_details_per_provider",
+        "min_free_mb_phase_c", "min_free_mb_engine", "min_free_mb_crawl",
+        "phase_c_enabled",
+    ):
+        if key in PROFILE:
+            SETTINGS[key] = PROFILE[key]
+
+
+_apply_resource_profile()

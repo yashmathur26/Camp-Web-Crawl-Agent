@@ -1,0 +1,15 @@
+Engine run: Watertown, 3 provider(s), 0 from checkpoint, concurrency=4
+[bostonjcc.org] vendor=unknown → 5 program(s), 5 session(s), 0 gap(s) in 26.0s
+[dpjcc.org] vendor=unknown → 15 program(s), 15 session(s), 0 gap(s) in 28.6s
+[schedule.play-well.org] vendor=unknown → 1 program(s), 1 session(s), 12 gap(s) in 28.9s
+  gap: needs_review — Minecraft Master Engineering using LEGO® Materials: off-season dates (Sep 16th - Oct 28th)
+  gap: needs_review — Pro Sports Lab using LEGO® Materials: off-season dates (Jan 20th - Mar 3rd)
+  gap: needs_review — Adventures in STEM using LEGO® Materials: off-season dates (Sep 15th - Oct 27th)
+  gap: needs_review — Minecraft Engineering using LEGO® Materials: off-season dates (Apr 7th - Jun 2nd)
+  gap: needs_review — Chelmsford Adventures in STEM using LEGO® Materials: off-season dates (Sep 9th - Oct 14th)
+== engine run — Watertown — 2026-06-12 21:17:26 ==
+  providers.csv: 3 rows
+  programs.csv: 21 rows
+  sessions.csv: 21 rows
+  gaps.csv: 12 rows
+  slowest providers: schedule.play-well.org=28.9s, dpjcc.org=28.6s, bostonjcc.org=26.0s

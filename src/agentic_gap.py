@@ -5,6 +5,7 @@ from __future__ import annotations
 import csv
 import json
 import logging
+import os
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 from urllib.parse import urlparse
@@ -29,7 +30,7 @@ from src.validate_search_result import validate_search_results
 
 logger = logging.getLogger(__name__)
 
-_HOLE_CACHE_PATH = Path("cache/gap_hole_searches.json")
+_HOLE_CACHE_PATH = Path(os.environ.get("FIREFLY_CACHE_ROOT", "cache")) / "gap_hole_searches.json"
 
 
 def _load_hole_cache() -> dict[str, str]:
@@ -240,15 +241,26 @@ def _enumerate_new_hosts_engine(
     gap_urls: list[str],
 ) -> list[dict]:
     """Engine v3 enumerates newly discovered hosts (vendor fingerprint ->
-    extractor -> gate). The old enumerate_town path is gone from Part C."""
-    from src.engine_bridge import enumerate_hosts_via_engine
+    extractor -> gate). The old enumerate_town path is gone from Part C.
 
-    urls = list(dict.fromkeys(gap_urls))
-    for u in _seed_urls_for_hosts(new_hosts, town):
-        if u not in urls:
-            urls.append(u)
+    P0.4: cap the URL set — one URL per host first (breadth), then fill, capped
+    — so a 40-search round (200+ links, MyRec hosts each rendering dozens of
+    detail pages) can't stack Playwright + LLM past the memory ceiling."""
+    cap = int(SETTINGS.get("gap_max_urls_per_round", 50))
+    ordered = list(dict.fromkeys(gap_urls)) + list(_seed_urls_for_hosts(new_hosts, town))
+    primary, extra, seen = [], [], set()
+    for u in dict.fromkeys(ordered):
+        host = urlparse(u).netloc.lower().replace("www.", "")
+        (primary if host not in seen else extra).append(u)
+        seen.add(host)
+    total = len(primary) + len(extra)
+    urls = (primary + extra)[:cap]
     if not urls:
         return []
+    if total > cap:
+        logger.info("gap enum capped: %d urls -> %d (gap_max_urls_per_round)", total, cap)
+    from src.engine_bridge import enumerate_hosts_via_engine
+
     return enumerate_hosts_via_engine(town, urls)
 
 
@@ -262,6 +274,11 @@ def run_agentic_gap(
 ) -> dict:
     """Two-pass agentic gap fill with dynamic search sizing per round."""
     import asyncio
+
+    from src.resource_guard import gate, log_memory
+
+    gate("phase_c")  # raises MemoryBudgetError if the machine can't afford it
+    log_memory("phase_c_start", town=town)
 
     slug = town_slug(town)
     ceiling = max_searches if max_searches is not None else int(

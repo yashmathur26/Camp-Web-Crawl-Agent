@@ -127,7 +127,12 @@ class MyrecExtractor(Extractor):
                     ages=row["ages"], extractor=self.vendor,
                 )
             )
-        for pid, row in sorted(need_render.items(), key=lambda kv: _render_priority(kv[1])):
+        # P0.4: cap rendered detail pages per provider (16GB Jetsam burst).
+        from config_engine import ENGINE
+
+        detail_cap = int(ENGINE.get("max_details_per_provider", 60))
+        ranked = sorted(need_render.items(), key=lambda kv: _render_priority(kv[1]))
+        for pid, row in ranked[:detail_cap]:
             info_url = ""
             try:
                 budget.check()

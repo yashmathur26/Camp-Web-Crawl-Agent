@@ -5,12 +5,18 @@ a hand-curated list of (vendor, org_id) providers per town. The proposer
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass, field
 from pathlib import Path
 
 import yaml
 
-TOWNS_DIR = Path(__file__).resolve().parent / "towns"
+TOWNS_DIR = Path(
+    os.environ.get(
+        "FIREFLY_REGISTRY_DIR",
+        str(Path(__file__).resolve().parent / "towns"),
+    )
+)
 
 KNOWN_VENDORS = (
     "webtrac", "myrec", "active", "sawyer", "campbrain", "enrollsy", "daxko",

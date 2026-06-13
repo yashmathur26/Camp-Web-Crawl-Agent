@@ -16,7 +16,8 @@ from config.gap_taxonomy import ALL_CATEGORIES, CORE_CATEGORIES, GAP_CATEGORIES
 from src.categorizer import categorize_sessions, coverage_by_category
 from src.data_layout import town_phase_dir
 
-SHARED_DIR = Path("data/shared")
+import os as _os
+SHARED_DIR = Path(_os.environ.get("FIREFLY_DATA_ROOT", "data")) / "shared"
 COUNTY_CSV = SHARED_DIR / "coverage_county.csv"
 
 MATRIX_COLUMNS = [

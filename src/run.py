@@ -1003,6 +1003,8 @@ def main() -> None:
     parser.add_argument(
         "--phase",
         choices=["A", "B", "B5", "Q", "verify", "P", "trail", "gap", "C", "all"],
+        default="all",
+        help="Which phase(s) to run (verify/P = parent enrollment check)",
     )
     parser.add_argument(
         "--all-towns", action="store_true",
@@ -1015,8 +1017,6 @@ def main() -> None:
     parser.add_argument(
         "--no-resume", action="store_true",
         help="Part C: ignore cache/part_c_progress.json and rerun every town",
-        default="all",
-        help="Which phase(s) to run (verify/P = parent enrollment check)",
     )
     parser.add_argument(
         "--limit",

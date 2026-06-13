@@ -28,7 +28,8 @@ from src.llm import OllamaError, chat, is_available
 
 logger = logging.getLogger(__name__)
 
-_CACHE_PATH = Path("cache/session_categories.json")
+import os as _os
+_CACHE_PATH = Path(_os.environ.get("FIREFLY_CACHE_ROOT", "cache")) / "session_categories.json"
 
 CATEGORIZER_SYSTEM = """You tag youth summer programs with activity categories.
 Given a list of program names, return JSON only:

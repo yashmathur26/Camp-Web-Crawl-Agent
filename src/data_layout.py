@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
-DATA_ROOT = Path("data")
-LOGS_ROOT = Path("logs")
+DATA_ROOT = Path(os.environ.get("FIREFLY_DATA_ROOT", "data"))
+LOGS_ROOT = Path(os.environ.get("FIREFLY_LOGS_ROOT", "logs"))
 
 PHASE_META: dict[str, tuple[str, str]] = {
     "phase_a": (

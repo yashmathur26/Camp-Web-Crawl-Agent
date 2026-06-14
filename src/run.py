@@ -294,6 +294,151 @@ def _build_queries(
     return queries
 
 
+def _search_cap_reached(stats: RunStats, search_limit: int | None) -> bool:
+    if search_limit is not None and stats.searches_used >= search_limit:
+        return True
+    return stats.searches_used >= SETTINGS["max_searches_per_run"]
+
+
+def _host_of(url: str) -> str:
+    h = urlparse(url or "").netloc.lower()
+    return h[4:] if h.startswith("www.") else h
+
+
+def _run_one_search(
+    query: str, town: str, keyword: str, phase: str, *,
+    seen_url_set: set[str], now: str, rejected_rows: list[dict], stats: RunStats,
+) -> set[str]:
+    """Run one search end-to-end (cache/fetch → validate → append candidates).
+    Returns the provider hosts surfaced (for the adaptive yield-stop)."""
+    cached = get_cached_search_results(query)
+    if cached is not None:
+        raw_results = cached
+    else:
+        try:
+            raw_results = search(query, SETTINGS["results_per_search"])
+        except ConfigError as exc:
+            logging.warning("Search failed for %r: %s", query, exc)
+            return set()
+        record_search(query, raw_results)
+        stats.searches_used += 1
+
+    kept, validation = validate_search_results(raw_results)
+    if SETTINGS.get("phase_a_llm_judge"):
+        from src.agent_tools import _llm_judge_results
+
+        unknown = [i for i in kept if i.get("source_type") == "unknown"]
+        if unknown:
+            judged = _llm_judge_results(query, unknown)
+            preferred = [i for i in kept if i.get("source_type") != "unknown"]
+            kept = preferred + judged
+    for v in validation:
+        if v.verdict == "reject":
+            stats.rejected_results += 1
+            rejected_rows.append(
+                {
+                    "url": v.url,
+                    "title": next(
+                        (r.get("title", "") for r in raw_results if normalize_url(r.get("url", "")) == v.url),
+                        "",
+                    ),
+                    "snippet": next(
+                        (r.get("snippet", "") for r in raw_results if normalize_url(r.get("url", "")) == v.url),
+                        "",
+                    ),
+                    "town": town, "keyword": keyword, "phase": phase,
+                    "reason": v.reason, "source_type": v.source_type, "discovered_at": now,
+                }
+            )
+
+    query_candidates: list[dict] = []
+    hosts: set[str] = set()
+    for item in kept:
+        normalized = item["url"]
+        if phase == "C" and normalized in seen_url_set:
+            continue
+        classified = "guide" if item.get("source_type") == "guide" else classify(normalized)
+        if classified == "camp" and phase == "C" and normalized in seen_url_set:
+            continue
+        query_candidates.append(
+            {
+                "url": normalized, "state": STATE, "town": town, "keyword": keyword,
+                "phase": phase, "classified_as": classified, "crawled": "false",
+                "discovered_at": now, "title": item.get("title", ""),
+                "preferred": "true" if item.get("preferred") else "false",
+            }
+        )
+        h = _host_of(normalized)
+        if h:
+            hosts.add(h)
+        if phase == "C":
+            seen_url_set.add(normalized)
+    if query_candidates:
+        _append_candidates(query_candidates)
+    return hosts
+
+
+def _run_phase_a_budgeted(
+    stats: RunStats, dry_run: bool, search_limit: int | None,
+    seen_url_set: set[str], towns: list[str] | None,
+) -> None:
+    """Phase A with a population-scaled, adaptive per-town budget (discovery-
+    expansion roadmap). Curated college/school queries always run; the long tail
+    runs in priority order up to the town's ceiling, ending early when new
+    provider hosts dry up."""
+    from src.search_budget import YieldStopper, prioritized_queries, town_budget
+
+    town_list = towns if towns is not None else TOWNS
+    now = datetime.now(timezone.utc).isoformat()
+    rejected_rows: list[dict] = []
+    floor_cfg = int(SETTINGS.get("budget_floor_phase_a", 25))
+
+    for town in town_list:
+        b = town_budget(town)
+        ceiling = b["phase_a"]
+        must, tail = prioritized_queries(town, STATE)
+        est_cost = ceiling * SETTINGS["cost_per_query_usd"]
+        logging.info(
+            "Phase A %s: pop=%d institutions+=%d ceiling=%d (%d curated + %d tail) est $%.4f",
+            town, b["population"], b["institutions"], ceiling, len(must), len(tail), est_cost,
+        )
+        if dry_run:
+            print(f"\n=== DRY RUN — Phase A — {town} ===")
+            print(f"  population:  {b['population']}")
+            print(f"  institutions boost: +{b['institutions']}")
+            print(f"  ceiling:     {ceiling} searches ({len(must)} curated institution + tail)")
+            print(f"  est cost:    ${est_cost:.4f}\n")
+            continue
+
+        stopper = YieldStopper(floor=max(len(must), floor_cfg))
+        ran = 0
+        for q in must:  # curated institution queries always run
+            if _search_cap_reached(stats, search_limit):
+                break
+            stopper.record(_run_one_search(
+                q, town, q, "A", seen_url_set=seen_url_set, now=now,
+                rejected_rows=rejected_rows, stats=stats))
+            ran += 1
+        for q in tail:  # long tail, capped by ceiling + adaptive yield-stop
+            if ran >= ceiling or _search_cap_reached(stats, search_limit):
+                break
+            if stopper.should_stop():
+                logging.info("Phase A %s: yield-stop after %d searches (dry window)", town, ran)
+                break
+            stopper.record(_run_one_search(
+                q, town, q, "A", seen_url_set=seen_url_set, now=now,
+                rejected_rows=rejected_rows, stats=stats))
+            ran += 1
+        logging.info(
+            "Phase A %s: ran %d/%d searches (%d paid total)",
+            town, ran, ceiling, stats.searches_used,
+        )
+
+    if rejected_rows:
+        _append_rejected(rejected_rows)
+        logging.info("Phase A: rejected %d search results", len(rejected_rows))
+
+
 def _run_discovery_phase(
     phase: str,
     keywords: list[str],
@@ -303,6 +448,9 @@ def _run_discovery_phase(
     seen_url_set: set[str],
     towns: list[str] | None = None,
 ) -> None:
+    if phase == "A":
+        _run_phase_a_budgeted(stats, dry_run, search_limit, seen_url_set, towns)
+        return
     if not keywords:
         logging.info("Phase %s skipped: no keywords configured", phase)
         return

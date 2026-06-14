@@ -271,3 +271,65 @@ PHASE_C_KEYWORDS: list[str] = list(
         + _compose(_FUN_ACTIVITIES, ["kids {} summer camp"])
     )
 )
+
+
+# --------------------------------------------------------------------------- #
+# Phase A query POOL (discovery-expansion roadmap, Thread 1).
+#
+# Phase A used to run a flat 53 keywords for every town. To let big towns search
+# MORE (population-scaled budget), src/search_budget.py assembles a prioritized
+# pool per town, drawn in this order:
+#   1. curated institution queries (colleges + schools from the registries)
+#   2. PHASE_A_KEYWORDS (the proven 53 primary-source terms)
+#   3. TOWN_INSTITUTION_TEMPLATES (generic college/school discovery, any town)
+#   4. PHASE_A_ACTIVITY_TERMS composed with a camp template (long-tail breadth)
+# A small town uses the top slice; a big town spends down its larger budget.
+# --------------------------------------------------------------------------- #
+
+# High-yield, common activity subset for Phase A breadth (the full per-activity
+# long tail stays in Phase C). Ordered by rough demand.
+PHASE_A_ACTIVITY_TERMS: list[str] = [
+    "sports", "soccer", "basketball", "swim", "tennis", "baseball", "martial arts",
+    "gymnastics", "dance", "art", "theater", "music", "STEM", "science", "robotics",
+    "coding", "lego", "chess", "cooking", "nature", "outdoor adventure",
+    "engineering", "writing", "film", "video game design", "math",
+]
+
+# Per-institution templates (formatted with the institution name). High priority:
+# these are exactly the college/school camps the operator asked to surface.
+INSTITUTION_QUERY_TEMPLATES: dict[str, list[str]] = {
+    "college": [
+        "{name} summer youth camp",
+        "{name} pre-college summer program high school",
+        "{name} summer youth program kids",
+        "{name} summer sports camp",
+    ],
+    "private": [
+        "{name} summer camp",
+        "{name} summer program for kids",
+    ],
+    "public_high": [
+        "{name} summer camp",
+        "{name} summer sports camp",
+    ],
+    "public_district": [
+        "{name} summer programs",
+        "{name} summer camp registration",
+    ],
+    "trade": [
+        "{name} summer youth exploratory program",
+        "{name} summer program for high school students",
+    ],
+}
+
+# Generic institution-discovery queries (anchored by town/state). These catch
+# institutions NOT in the curated registries — the dynamic half of the hybrid.
+TOWN_INSTITUTION_TEMPLATES: list[str] = [
+    "colleges and universities summer camps {town}, {state}",
+    "university pre-college summer program {town} {state}",
+    "college youth sports camp {town} {state}",
+    "{town} {state} private school summer camp",
+    "{town} {state} high school summer camp",
+    "{town} {state} public schools summer programs",
+    "{town} {state} vocational technical high school summer program",
+]

@@ -63,7 +63,8 @@ async def _extract_one(provider, fetch):
     sessions = []
     for program in programs:
         result = gate_program(program, fetched_text=fetched_text,
-                              provider_id=provider.provider_id)
+                              provider_id=provider.provider_id,
+                              provider_name=provider.name)
         sessions.extend(result.published)
     return sessions, gap
 

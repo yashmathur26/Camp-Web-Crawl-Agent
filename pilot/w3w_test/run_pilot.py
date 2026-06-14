@@ -5,8 +5,8 @@ Runs Phase A → B → Engine v3 → Phase C gap-fill per town, then writes a
 combined FINAL_sessions.csv + FINAL_sessions.txt under this folder.
 
 Usage (from repo root):
-  ./venv/bin/python pilot/w3w_test/run_pilot.py
-  ./venv/bin/python pilot/w3w_test/run_pilot.py --gap-searches 40 --gap-rounds 1
+  ./venv/bin/python pilot/w3w_test/run_pilot.py        # auto population-scaled budgets
+  ./venv/bin/python pilot/w3w_test/run_pilot.py --gap-searches 40 --gap-rounds 1  # manual override
 
 All outputs live under pilot/w3w_test/ — nothing touches data/lexington etc.
 """
@@ -270,14 +270,20 @@ def _run_engine(town: str, *, fresh: bool = True) -> dict:
     return counts or {}
 
 
-def _run_phase_c(town: str, *, rounds: int, max_searches: int) -> dict:
+def _run_phase_c(town: str, *, rounds: int, max_searches: int | None) -> dict:
     from src.agentic_gap import run_agentic_gap
     from src.engine_bridge import engine_sessions_for_town
+    from src.search_budget import town_budget
 
     sessions = engine_sessions_for_town(town)
     if not sessions:
         logging.warning("Phase C skipped for %s — no engine sessions", town)
         return {"new_sessions": 0, "skipped": True}
+    # Auto (default): population-scaled per-town ceiling. An explicit
+    # --gap-searches N overrides it.
+    if max_searches is None or max_searches < 0:
+        max_searches = town_budget(town)["phase_c"]
+        logging.info("Phase C %s: auto budget = %d searches/round", town, max_searches)
     return run_agentic_gap(
         town, rounds=rounds, max_searches=max_searches, sessions=sessions,
     )
@@ -372,6 +378,30 @@ def _write_final(rows: list[dict], summary: dict) -> tuple[Path, Path]:
     return csv_path, txt_path
 
 
+def _write_town_camp_lists(merged: list[dict], towns: list[str]) -> None:
+    import importlib.util
+
+    path = PILOT_ROOT / "write_camp_list.py"
+    spec = importlib.util.spec_from_file_location("w3w_write_camp_list", path)
+    if not spec or not spec.loader:
+        logging.warning("Could not load write_camp_list.py — skipping readable lists")
+        return
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    from src.institution_output import write_institution_camps_txt
+
+    for town in towns:
+        town_rows = [r for r in merged if (r.get("town") or "").lower() == town.lower()]
+        out = mod.write_readable_camp_list(town, town_rows)
+        logging.info("Readable camp list → %s", out)
+        print(f"Camp list ({town}): {out}")
+        inst_out = PILOT_ROOT / "data" / town.lower() / f"{town.upper()}_INSTITUTION_CAMPS.txt"
+        inst_out.parent.mkdir(parents=True, exist_ok=True)
+        write_institution_camps_txt(town, town_rows, inst_out)
+        logging.info("Institution camps → %s", inst_out)
+        print(f"Institution camps ({town}): {inst_out}")
+
+
 def run_town_pipeline(
     town: str,
     *,
@@ -453,8 +483,9 @@ def _shutdown_browsers() -> None:
 def main() -> int:
     parser = argparse.ArgumentParser(description="W3W isolated 3-town pilot")
     parser.add_argument("--gap-rounds", type=int, default=1)
-    parser.add_argument("--gap-searches", type=int, default=40,
-                        help="Max searches per gap round per town (default 40)")
+    parser.add_argument("--gap-searches", type=int, default=-1,
+                        help="Max gap searches per round per town "
+                             "(default: auto, population-scaled per town; pass N to override)")
     parser.add_argument("--no-reset", action="store_true",
                         help="Keep existing pilot data (resume-ish)")
     parser.add_argument("--resume", action="store_true",
@@ -542,6 +573,8 @@ def main() -> int:
             per_town_summary[town] = {"error": str(exc)}
 
     merged, merge_stats = _merge_final(town_results)
+    csv_path = PILOT_ROOT / "FINAL_sessions.csv"
+    txt_path = PILOT_ROOT / "FINAL_sessions.txt"
     csv_path, txt_path = _write_final(merged, {
         "started": started,
         "finished": datetime.now(timezone.utc).isoformat(),
@@ -552,6 +585,8 @@ def main() -> int:
         "final_csv": str(csv_path),
         "final_txt": str(txt_path),
     })
+
+    _write_town_camp_lists(merged, town_list)
 
     logging.info("DONE — %d merged rows → %s", len(merged), csv_path)
     print(f"\n=== W3W PILOT COMPLETE ===")

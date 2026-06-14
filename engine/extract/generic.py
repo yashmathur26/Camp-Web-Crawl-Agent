@@ -35,6 +35,24 @@ _NONCAMP_SECTION_RE = re.compile(
     re.I,
 )
 _CAMP_PATH_RE = re.compile(r"camp|summer", re.I)
+# Locale mirrors (/es/, /pt-br/, ...) are the same camp in another language —
+# following them produces duplicate rows (ymcaboston Spanish-mirror finding).
+_LOCALE_PREFIX_RE = re.compile(
+    r"^/(?:es|fr|pt|de|zh|ru|ar|it|ja|ko|vi|ht|pl|hi)(?:-[a-z]{2})?/", re.I
+)
+# Register-link discovery. Intent uses \b so "/enroll" matches a real enroll
+# page but NOT "/enrollment/...change-of-address" (a school service page).
+_REG_INTENT_RE = re.compile(
+    r"/(?:register|enroll|signup|reg-flow)\b|/sign-up\b|register\.php", re.I
+)
+# Targets that look like registration but are account/portal/marketing dead-ends
+# (Waltham wrong-register-link findings): never point a camp at these.
+_BAD_REGISTER_RE = re.compile(
+    r"login|sign-?in|/account|my-?account|member-?portal|memberportal|/user/|"
+    r"change-of-address|welcome-services|belt-test|gift-?card|mailing-list|"
+    r"newsletter|donate|password|logout|destination=",
+    re.I,
+)
 _DATES_RE = re.compile(
     r"(?:june|july|august)\s*\d{1,2}(?:[a-z]{2})?(?:\s*[-–]\s*(?:[a-z]+\s*)?\d{1,2}(?:[a-z]{2})?)?"
     r"|\b[678]/\d{1,2}\s*[-–]\s*[678]?/?\d{1,2}\b", re.I)
@@ -75,6 +93,8 @@ def score_follow_links(seed_url: str, links: list[dict]) -> list[str]:
         path = urlparse(u).path
         # Score path+text only — the domain itself often contains "camp".
         blob = f"{path} {l.get('text', '')}"
+        if _LOCALE_PREFIX_RE.match(path):
+            continue  # non-English mirror of a page we already follow in English
         if _NONCAMP_SECTION_RE.search(path):
             continue  # fitness/afterschool/etc. — never camps (absolute)
         if _SKIP_RE.search(blob) and not _FOLLOW_RE.search(blob):
@@ -213,13 +233,20 @@ class GenericExtractor(Extractor):
         records = demote_activity_menus(records)
 
         # Register-link discovery (Playcare finding): if the site has a real
-        # /enroll|/register page, point register_url there instead of the info page.
+        # /enroll|/register page, point register_url there instead of the info
+        # page — but only a clean one. Account/login/portal/change-of-address/
+        # gift-card targets are rejected (Waltham wrong-link findings); the row
+        # then keeps its own info_url as the register fallback.
         register_url = ""
         for l in links:
-            lp = urlparse(l.get("url", "")).path.lower()
-            if re.search(r"/enroll|/register", lp) and not _NONCAMP_SECTION_RE.search(lp):
-                register_url = l["url"]
-                break
+            lu = l.get("url", "")
+            lp = urlparse(lu).path.lower()
+            if not _REG_INTENT_RE.search(lu):
+                continue
+            if _NONCAMP_SECTION_RE.search(lp) or _BAD_REGISTER_RE.search(lu):
+                continue
+            register_url = lu
+            break
 
         seen: set[str] = set()
         sessions = []

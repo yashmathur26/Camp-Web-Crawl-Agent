@@ -20,7 +20,15 @@ MIN_INPUT_CHARS = 400
 _SYSTEM = """You extract youth summer program records from one web page's text.
 Return ONLY JSON: {"programs":[{"name":"...","dates":"","ages":"","price":""}]}
 Rules: only programs actually described in the text (never invent); skip
-navigation/menu labels; empty list is valid."""
+navigation/menu labels; empty list is valid.
+Do NOT extract any of these (they are not youth summer camps): job/counselor
+postings or hiring pages; recurring lessons, clinics, open-gym/open-play or
+drop-in activities; year-round childcare / early-learning / preschool that runs
+all year; school-district service pages (ESL, farm-to-school, transition
+services, enrollment/change-of-address); resource/PDF/newsletter/blog pages.
+For ages, copy only a real range the text states (e.g. "5-12", "grades 1-3");
+never output a bare "0", "1", "2", or a zero-padded number — leave ages "" if
+unsure. For dates, copy a real session date range; leave "" if none is stated."""
 
 
 def _parse(content: str) -> list[dict] | None:

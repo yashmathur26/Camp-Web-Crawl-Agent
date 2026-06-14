@@ -167,7 +167,7 @@ async def run_town(
             for program in programs_raw:
                 result = gate_program(
                     program, fetched_text=fetched_text, provider_id=provider.provider_id,
-                    include_review=include_review,
+                    provider_name=provider.name, include_review=include_review,
                 )
                 if result.published:
                     kept = Program(

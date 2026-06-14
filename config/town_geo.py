@@ -67,6 +67,28 @@ TOWN_GEO: dict[str, tuple[float, float, int]] = {
     "Woburn": (42.4793, -71.1523, 40876),
 }
 
+# Population-only lookup for major MA cities OUTSIDE the curated Middlesex set.
+# Kept separate from TOWN_GEO on purpose: the discovery pipeline accepts any town
+# and needs these for population-scaled search budgets, but they must NOT enter
+# `towns_by_population()` / all-town runs (which iterate the 54 above). ~2020 census.
+EXTRA_TOWN_POP: dict[str, int] = {
+    "Boston": 675647,
+    "Worcester": 206518,
+    "Springfield": 155929,
+    "Quincy": 101636,
+    "Lynn": 101253,
+    "Brockton": 105643,
+}
+
+
+def population_lookup(town: str) -> int | None:
+    """Population for any town the budget cares about (Middlesex set + major
+    cities), or None if unknown."""
+    geo = TOWN_GEO.get(town)
+    if geo:
+        return geo[2]
+    return EXTRA_TOWN_POP.get(town)
+
 
 def haversine_miles(a: tuple[float, float], b: tuple[float, float]) -> float:
     lat1, lon1, lat2, lon2 = map(math.radians, (a[0], a[1], b[0], b[1]))

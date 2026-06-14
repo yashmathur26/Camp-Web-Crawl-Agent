@@ -19,6 +19,12 @@ from urllib.parse import urlparse
 
 from engine.fetch.urls import normalize_url
 from engine.model import Gap, Program, Session
+from engine.validate.noncamp import (
+    adult_min_age,
+    noncamp_reason,
+    prefixed_name,
+    sanitize_age,
+)
 from engine.validate.signals import ADULT_BLOCKER_RE, verify_registrable
 
 MIN_INFO_CHARS = 400  # R4.3
@@ -194,6 +200,7 @@ def gate_program(
     *,
     fetched_text: dict[str, str],
     provider_id: str = "",
+    provider_name: str = "",
     include_review: bool = False,
 ) -> GateResult:
     """Gate every session of a program. `fetched_text` maps url → rendered text
@@ -255,6 +262,33 @@ def gate_program(
             continue
         sess.content_chars = len(info_text)
 
+        # Sanitize garbage age artifacts ("age 02", "ages 1") before they can
+        # display or count as youth evidence (Waltham resource-page finding).
+        sess.ages = sanitize_age(sess.ages)
+
+        # 2b. Non-camp category gate (recruitment, lessons/open-play, resource
+        # pages, school-district services, year-round childcare). Domain-agnostic;
+        # fires even when the row carries an incidental summer date or youth grade
+        # (the failure mode the Waltham list exposed).
+        summer_now = bool((sess.dates or "").strip() and is_summer_window(sess.dates))
+        nc = noncamp_reason(
+            name, info_url=sess.info_url, register_url=sess.register_url,
+            text=info_text, dates=sess.dates, is_summer=summer_now,
+        )
+        if nc:
+            if include_review:
+                sess.verdict = "needs_review"
+                sess.evidence = {"review_reason": nc, "dates": sess.dates,
+                                 "ages": sess.ages, "price": sess.price}
+                result.published.append(sess)
+            else:
+                result.gaps.append(
+                    Gap(provider_id=pid, reason="needs_review",
+                        evidence=f"{name}: {nc}",
+                        suggested_action="not a youth summer camp; exclude")
+                )
+            continue
+
         # 3. Evidence on extracted fields + camp-scoped provenance
         evidence_blob = " ".join(filter(None, (sess.dates, sess.ages, sess.price)))
         field_evidence = bool(
@@ -275,10 +309,10 @@ def gate_program(
         page_adult_audience = re.search(
             r"\bfor\s+adults?\b|\badults?\s+only\b|\b(?:18|21)\s*\+", info_text[:4000], re.I
         ) and not _YOUTH_AGE_RE.search(evidence_blob + " " + info_text[:4000])
-        m_age = re.search(r"ages?\s*:?\s*(\d{1,2})(?!\s*(?:mo|month))", sess.ages or "", re.I)
-        adult_min_age = bool(m_age and int(m_age.group(1)) >= 18
-                             and "month" not in (sess.ages or "").lower())
-        if adult_min_age or _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
+        # Adult lower bound in the extracted age field — incl. a bare "19+"
+        # (Masters Swim finding) and "ages 18-99", excl. "18 months".
+        is_adult_min_age = adult_min_age(sess.ages)
+        if is_adult_min_age or _ADULT_EVIDENCE_RE.search(evidence_blob) or page_adult_audience or (
             page_adult and not field_evidence and not program.camp_scoped
         ) or (
             not program.camp_scoped
@@ -343,6 +377,9 @@ def gate_program(
         if sig.auto_verdict == "parent_ready":
             verdict = "parent_ready"
         sess.verdict = verdict
+        # Name accuracy: prefix generic names ("Summer Camp", "Older Boys Unit")
+        # with the provider so a parent knows the operator (Waltham finding).
+        sess.name = prefixed_name(sess.name, provider_name)
         sess.evidence = {
             "camp_scoped": program.camp_scoped,
             "dates": sess.dates, "ages": sess.ages, "price": sess.price,

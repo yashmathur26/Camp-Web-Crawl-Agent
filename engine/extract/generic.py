@@ -80,9 +80,40 @@ _NONDETAIL_LEAF_RE = re.compile(
     r"^(?:faqs?|register|registration|how-to-register|tuition|rates|dates-rates|"
     r"forms?|financial-aid|bus-program|extended-day|extended-day-program|"
     r"counselors?|join-our-team|contact|about|resources?|family-resources|"
-    r"campanion|directions|map|staff|employment|policy|policies|home|index)$",
+    r"campanion|directions|map|staff|employment|policy|policies|home|index|"
+    # Leadership / staff-pipeline tracks are not camps (operator: Running Brook
+    # Leadership Training / Young Leaders excluded).
+    r"leadership[a-z-]*|young-leaders?|leaders?-in-training|counselor-in-training)$",
     re.I,
 )
+# Age/grade band embedded in a detail-page slug, e.g. "trekkers-grades-5-6" or
+# "excursions-ages-4-12" — reliable evidence even when the page body doesn't
+# state it in a form the date/age regexes catch (Running Brook finding).
+_SLUG_AGE_RE = re.compile(r"\b(grades?|ages?)-((?:pre)?k?\d{1,2})(?:-(\d{1,2}))?\b", re.I)
+
+
+def slug_age(url: str) -> str:
+    leaf = urlparse(url).path.rstrip("/").split("/")[-1]
+    m = _SLUG_AGE_RE.search(leaf)
+    if not m:
+        return ""
+    kind = "Grades" if m.group(1).lower().startswith("grade") else "Ages"
+    rng = m.group(2) + (f"-{m.group(3)}" if m.group(3) else "")
+    return f"{kind} {rng}"
+
+
+def slug_name(url: str) -> str:
+    """Camp name from a detail-page slug (the reliable per-camp identifier):
+    "creative-arts-camp" -> "Creative Arts Camp", "trekkers-grades-5-6" ->
+    "Trekkers". Empty/poor (numeric/id) slugs return "" so the caller falls back
+    to the page heading."""
+    leaf = urlparse(url).path.rstrip("/").split("/")[-1]
+    leaf = _SLUG_AGE_RE.sub("", leaf).strip("-_ ")
+    name = re.sub(r"[-_]+", " ", leaf).strip()
+    # Reject id-like slugs (mostly digits / too short) — heading is better there.
+    if len(name) < 3 or not re.search(r"[a-z]{3}", name, re.I) or sum(c.isdigit() for c in name) > len(name) / 2:
+        return ""
+    return name.title()
 
 
 def page_title(html: str, url: str) -> str:
@@ -110,12 +141,16 @@ def _detail_record(url: str, text: str, html: str) -> dict | None:
     leaf = urlparse(url).path.rstrip("/").split("/")[-1].lower()
     if not leaf or _NONDETAIL_LEAF_RE.match(leaf):
         return None
+    sa = slug_age(url)
     has_date = bool(_DATES_RE.search(text))
-    has_age = bool(_AGES_RE.search(text))
+    has_age = bool(_AGES_RE.search(text)) or bool(sa)
     if not (has_date or has_age or "camp" in leaf):
         return None
-    return {"name": page_title(html, url), "info_url": url,
-            "dates": "", "ages": "", "price": ""}
+    # Slug is the reliable per-camp name; the page <h1> is often a site banner
+    # ("Running Brook Camps") repeated across pages, which collides on dedup.
+    name = slug_name(url) or page_title(html, url)
+    return {"name": name, "info_url": url,
+            "dates": "", "ages": sa, "price": "", "_detail": True}
 
 
 def _section_children(parent_url: str, links: list[dict]) -> list[str]:
@@ -201,10 +236,13 @@ def scope_to_camp_pages(records: list[dict]) -> list[dict]:
     campy = [r for r in records if _CAMP_PATH_RE.search(path_of(r))]
     if not campy:
         return records
-    # Keep non-camp-path rows only with STRONG own evidence (dates AND ages) —
-    # Camp Middlesex's real camps live at /about-us/program (round-3 finding).
+    # Keep non-camp-path rows with STRONG own evidence (dates AND ages), OR that
+    # are synthesized per-page detail records (a dedicated camp detail page IS the
+    # evidence — Running Brook /adventures/trekkers finding). Camp Middlesex's
+    # real camps live at /about-us/program (round-3 finding).
     strong = [r for r in records if r not in campy
-              and (r.get("dates") or "").strip() and (r.get("ages") or "").strip()]
+              and (r.get("_detail")
+                   or ((r.get("dates") or "").strip() and (r.get("ages") or "").strip()))]
     return campy + strong
 
 
@@ -281,6 +319,7 @@ class GenericExtractor(Extractor):
         queue: deque[tuple[str, int]] = deque(
             (u, 1) for u in score_follow_links(provider.seed_url, links)
         )
+        hubs: set[str] = set()  # section pages we descended FROM (not camps themselves)
         while queue and len(pages) < max_pages:
             u, depth = queue.popleft()
             nu = normalize_url(u)
@@ -297,36 +336,50 @@ class GenericExtractor(Extractor):
             pages.append((u, ptext, phtml))
             records.extend({**e, "info_url": u} for e in jsonld_events(phtml))
             if depth < 2:  # one more level: this section's detail pages
-                for cu in _section_children(u, pl):
-                    if normalize_url(cu) not in visited:
-                        queue.append((cu, depth + 1))
+                children = [
+                    cu for cu in _section_children(u, pl) if normalize_url(cu) not in visited
+                ]
+                if children:
+                    hubs.add(nu)  # this page is a section overview, not a camp
+                    queue.extend((cu, depth + 1) for cu in children)
 
         # Per-page deterministic detail records (catalog/multi-page sites): every
-        # followed camp-detail page becomes its own program, so a site with one
-        # page per camp is fully enumerated — not truncated to the first few. This
-        # SUPPLEMENTS (does not replace) the LLM listing-page pass below.
+        # followed camp-detail page (a non-hub leaf) becomes its own program with
+        # its OWN url — so a site with one page per camp is fully + accurately
+        # enumerated. Section/hub pages are excluded (they're overviews, not camps).
         had_jsonld = bool(records)
         have = {normalize_url(r["info_url"]) for r in records}
+        added_detail = 0
         for u, ptext, phtml in pages[1:]:  # skip the seed page itself
-            if normalize_url(u) in have:
+            nu = normalize_url(u)
+            if nu in have or nu in hubs:
                 continue
             rec = _detail_record(u, ptext, phtml)
             if rec:
                 records.append(rec)
-                have.add(normalize_url(u))
+                have.add(nu)
+                added_detail += 1
 
         # LLM extraction — runs when JSON-LD found nothing, to capture camps a
-        # site LISTS in prose on one page (these aren't separate detail pages, so
-        # detail extraction alone misses them). Union'd with detail records;
-        # name-dedup happens at session build. R3; fail OPEN on None.
+        # site LISTS in prose on one page. SUPPLEMENTS detail records (union;
+        # detail records were added first so they win name-dedup with correct
+        # per-camp urls). Skips hub/section pages so it can't relabel an overview
+        # as a camp. R3; fail OPEN on None.
         if not had_jsonld:
             from engine.extract.llm import extract_programs
 
             for u, ptext, _ in pages[:4]:
+                if normalize_url(u) in hubs:
+                    continue  # don't let the LLM relabel a section overview as a camp
                 got = extract_programs(ptext, u, provider.town)
                 if got is None:
                     continue  # model failure — deterministic results stand
                 records.extend({**r, "info_url": u} for r in got)
+
+        # Drop overview records harvested FROM a section/hub page (JSON-LD or LLM
+        # that named the section itself, e.g. "Running Brook Camps" on /day-camp);
+        # the section's individual camps are captured as their own detail records.
+        records = [r for r in records if normalize_url(r["info_url"]) not in hubs]
 
         # Deterministic enrichment: pull dates/ages evidence from page text.
         for r in records:

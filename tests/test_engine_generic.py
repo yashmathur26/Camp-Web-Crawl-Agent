@@ -164,6 +164,32 @@ def test_catalog_multipage_enumerates_all_camps(monkeypatch):
     assert "Adventures" not in names              # section page (no own evidence)
 
 
+def test_slug_name_and_age():
+    """Detail-page name/age come from the slug (reliable), not the banner <h1>."""
+    from engine.extract.generic import slug_age, slug_name
+
+    assert slug_name("https://x.org/creative-arts/creative-arts-camp") == "Creative Arts Camp"
+    assert slug_name("https://x.org/adventures/trekkers-grades-5-6") == "Trekkers"
+    assert slug_name("https://x.org/excursions-ages-4-12") == "Excursions"
+    assert slug_name("https://x.org/programs/1728207") == ""  # id-like -> heading
+    assert slug_age("https://x.org/a/trekkers-grades-5-6") == "Grades 5-6"
+    assert slug_age("https://x.org/a/explorers-ages-7-12") == "Ages 7-12"
+    assert slug_age("https://x.org/a/day-camp") == ""
+
+
+def test_detail_name_prefers_slug_over_banner_h1():
+    """Running Brook finding: the page <h1> is a repeated site banner; the camp's
+    real name is its slug."""
+    from engine.extract.generic import _detail_record
+
+    rec = _detail_record(
+        "https://runningbrook.org/creative-arts/creative-arts-camp",
+        "Creative Arts program for campers completed grades 3-8.",
+        "<html><h1>Running Brook Camps</h1></html>",   # banner, not the camp name
+    )
+    assert rec and rec["name"] == "Creative Arts Camp"
+
+
 def test_gate_adult_fitness_class_rejected():
     """'Active Agers' finding: adult fitness-class pages don't publish."""
     from engine.model import Program, Session

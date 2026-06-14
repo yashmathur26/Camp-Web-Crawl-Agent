@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 import re
+from collections import deque
 from urllib.parse import urlparse
 
 from config_engine import ENGINE
@@ -20,8 +21,16 @@ from engine.model import Gap, Program, Provider, Session
 
 _JSONLD_RE = re.compile(r'<script[^>]+ld\+json[^>]*>([\s\S]*?)</script>', re.I)
 _EVENT_TYPES = {"event", "childrensevent", "course", "educationevent", "camp"}
-# Ported crawl_link_score essence: follow-worthy paths on a camp site.
-_FOLLOW_RE = re.compile(r"camp|summer|program|clinic|register|enroll|class", re.I)
+# Ported crawl_link_score essence: follow-worthy paths on a camp site. Includes
+# common camp-SECTION words (adventure/leadership/creative/...) so keyword-less
+# section pages like /adventures or /creative-arts get followed — their sub-camp
+# detail pages live one level deeper (Running Brook finding).
+_FOLLOW_RE = re.compile(
+    r"camp|summer|program|clinic|register|enroll|class|"
+    r"adventure|explor|trek|voyage|leadership|specialty|junior|teen|youth|"
+    r"kids?|creative|\barts?\b|\bsports?\b|academy|workshop|intensive|session",
+    re.I,
+)
 _SKIP_RE = re.compile(r"about|contact|faq|donate|news|blog|gallery|privacy|login|account", re.I)
 # Sections that never lead to youth summer camps (ported junk-path knowledge +
 # the YMCA/JCC/LifeTime feedback round): fitness floors, weight loss, adult
@@ -31,7 +40,10 @@ _NONCAMP_SECTION_RE = re.compile(
     r"fitness|health-?wellness|weight-?loss|weightloss|wellness|after-?school|"
     r"enrichment|child-?care|child-?watch|membership|personal-?train|massage|"
     r"aquatics|group-?exercise|find-a?-?program|adult|education-care|"
-    r"research|innovation",
+    r"research|innovation|"
+    # Recruitment/staffing sections — never camps; following them wastes the
+    # page budget (Running Brook /join-our-team/*-counselors finding).
+    r"join-our-team|careers?|/jobs?|employment|hiring|work-(?:for|with)-us",
     re.I,
 )
 _CAMP_PATH_RE = re.compile(r"camp|summer", re.I)
@@ -57,6 +69,77 @@ _DATES_RE = re.compile(
     r"(?:june|july|august)\s*\d{1,2}(?:[a-z]{2})?(?:\s*[-–]\s*(?:[a-z]+\s*)?\d{1,2}(?:[a-z]{2})?)?"
     r"|\b[678]/\d{1,2}\s*[-–]\s*[678]?/?\d{1,2}\b", re.I)
 _AGES_RE = re.compile(r"ages?\s*:?\s*\d{1,2}\s*(?:[-–to&]+\s*\d{1,2})?|grades?\s*:?\s*(?:pre)?[k0-9][-–k0-9 ]{0,8}|preschool|pre-k", re.I)
+
+# Catalog/multi-page extraction (Running Brook / Middlesex finding): a site with
+# one page per camp must be fully enumerated, not just its first 4 pages.
+_H1_RE = re.compile(r"<h1[^>]*>(.*?)</h1>", re.I | re.S)
+_TITLE_TAG_RE = re.compile(r"<title[^>]*>(.*?)</title>", re.I | re.S)
+# Leaf slugs that are NOT a camp (info/admin pages that still pass the follow
+# filter). A detail page with one of these as its last path segment is skipped.
+_NONDETAIL_LEAF_RE = re.compile(
+    r"^(?:faqs?|register|registration|how-to-register|tuition|rates|dates-rates|"
+    r"forms?|financial-aid|bus-program|extended-day|extended-day-program|"
+    r"counselors?|join-our-team|contact|about|resources?|family-resources|"
+    r"campanion|directions|map|staff|employment|policy|policies|home|index)$",
+    re.I,
+)
+
+
+def page_title(html: str, url: str) -> str:
+    """Best human name for a detail page: <h1>, then <title> (site-name suffix
+    stripped), then a title-cased URL slug."""
+    for rx in (_H1_RE, _TITLE_TAG_RE):
+        m = rx.search(html or "")
+        if m:
+            t = re.sub(r"<[^>]+>", " ", m.group(1))
+            t = re.sub(r"\s+", " ", t).strip()
+            t = re.split(r"\s+[|–—]\s+|\s+-\s+", t)[0].strip()
+            # Drop a trailing "(Grades 5-6)" / "(Ages 7-12)" qualifier — that's age
+            # metadata, not the camp's name.
+            t = re.sub(r"\s*\((?:grades?|ages?)[^)]*\)\s*$", "", t, flags=re.I).strip()
+            if len(t) >= 3:
+                return t
+    slug = urlparse(url).path.rstrip("/").split("/")[-1]
+    return slug.replace("-", " ").replace("_", " ").strip().title()
+
+
+def _detail_record(url: str, text: str, html: str) -> dict | None:
+    """Synthesize one program record from a camp DETAIL page (no JSON-LD/LLM
+    needed): name from the page heading, evidence from the page text. Returns
+    None for non-detail (info/admin) pages."""
+    leaf = urlparse(url).path.rstrip("/").split("/")[-1].lower()
+    if not leaf or _NONDETAIL_LEAF_RE.match(leaf):
+        return None
+    has_date = bool(_DATES_RE.search(text))
+    has_age = bool(_AGES_RE.search(text))
+    if not (has_date or has_age or "camp" in leaf):
+        return None
+    return {"name": page_title(html, url), "info_url": url,
+            "dates": "", "ages": "", "price": ""}
+
+
+def _section_children(parent_url: str, links: list[dict]) -> list[str]:
+    """Same-host links whose path is strictly UNDER the parent's path (a section's
+    detail pages, e.g. /adventures -> /adventures/trekkers). Relaxed filter
+    (skip/non-camp/media only) so keyword-less sub-camp slugs are still followed."""
+    host = urlparse(parent_url).netloc.lower().replace("www.", "")
+    base = urlparse(parent_url).path.rstrip("/")
+    if not base:
+        return []
+    out: list[str] = []
+    for l in links:
+        u = normalize_url(l.get("url", ""))
+        if not u or is_media_url(u):
+            continue
+        if urlparse(u).netloc.lower().replace("www.", "") != host:
+            continue
+        path = urlparse(u).path
+        if not path.lower().startswith(base.lower() + "/"):
+            continue
+        if _NONCAMP_SECTION_RE.search(path) or _SKIP_RE.search(path):
+            continue
+        out.append(u)
+    return out[: int(ENGINE["generic_max_follows"])]
 
 
 def jsonld_events(html: str) -> list[dict]:
@@ -189,23 +272,57 @@ class GenericExtractor(Extractor):
         # Deterministic harvest first (R5.7): JSON-LD events.
         records: list[dict] = [{**e, "info_url": provider.seed_url} for e in jsonld_events(html)]
 
-        # Bounded follow: depth 1 (seed children); collect per-page candidates.
-        pages: list[tuple[str, str]] = [(provider.seed_url, text)]
-        for u in score_follow_links(provider.seed_url, links):
+        # Bounded follow: depth 1 (seed children) + depth 2 (a section's own
+        # detail pages). Total pages capped; each fetched page keeps its html so
+        # a detail page can be turned into a program even without JSON-LD/LLM.
+        max_pages = int(ENGINE["generic_max_follows"]) * 3
+        pages: list[tuple[str, str, str]] = [(provider.seed_url, text, html)]
+        visited: set[str] = {normalize_url(provider.seed_url)}
+        queue: deque[tuple[str, int]] = deque(
+            (u, 1) for u in score_follow_links(provider.seed_url, links)
+        )
+        while queue and len(pages) < max_pages:
+            u, depth = queue.popleft()
+            nu = normalize_url(u)
+            if nu in visited:
+                continue
+            visited.add(nu)
             try:
                 budget.check()
             except BudgetExceeded:
                 break
-            ptext, _pl, phtml = fetch.fetch_text(u, budget=budget)
-            if len(ptext.strip()) >= 400:
-                pages.append((u, ptext))
-                records.extend({**e, "info_url": u} for e in jsonld_events(phtml))
+            ptext, pl, phtml = fetch.fetch_text(u, budget=budget)
+            if len(ptext.strip()) < 400:
+                continue
+            pages.append((u, ptext, phtml))
+            records.extend({**e, "info_url": u} for e in jsonld_events(phtml))
+            if depth < 2:  # one more level: this section's detail pages
+                for cu in _section_children(u, pl):
+                    if normalize_url(cu) not in visited:
+                        queue.append((cu, depth + 1))
 
-        # LLM extraction on substantive pages (R3; fail OPEN on None).
-        if not records:
+        # Per-page deterministic detail records (catalog/multi-page sites): every
+        # followed camp-detail page becomes its own program, so a site with one
+        # page per camp is fully enumerated — not truncated to the first few. This
+        # SUPPLEMENTS (does not replace) the LLM listing-page pass below.
+        had_jsonld = bool(records)
+        have = {normalize_url(r["info_url"]) for r in records}
+        for u, ptext, phtml in pages[1:]:  # skip the seed page itself
+            if normalize_url(u) in have:
+                continue
+            rec = _detail_record(u, ptext, phtml)
+            if rec:
+                records.append(rec)
+                have.add(normalize_url(u))
+
+        # LLM extraction — runs when JSON-LD found nothing, to capture camps a
+        # site LISTS in prose on one page (these aren't separate detail pages, so
+        # detail extraction alone misses them). Union'd with detail records;
+        # name-dedup happens at session build. R3; fail OPEN on None.
+        if not had_jsonld:
             from engine.extract.llm import extract_programs
 
-            for u, ptext in pages[:4]:
+            for u, ptext, _ in pages[:4]:
                 got = extract_programs(ptext, u, provider.town)
                 if got is None:
                     continue  # model failure — deterministic results stand
@@ -213,7 +330,7 @@ class GenericExtractor(Extractor):
 
         # Deterministic enrichment: pull dates/ages evidence from page text.
         for r in records:
-            page_text = next((t for u, t in pages if u == r["info_url"]), "")
+            page_text = next((t for u, t, _ in pages if u == r["info_url"]), "")
             if not r.get("dates"):
                 m = _DATES_RE.search(page_text)
                 r["dates"] = m.group(0) if m else ""

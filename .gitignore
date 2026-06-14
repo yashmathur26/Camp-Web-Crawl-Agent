@@ -30,3 +30,6 @@ pilot/w3w_test/logs/
 pilot/w3w_test/FINAL_sessions.csv
 pilot/w3w_test/FINAL_sessions.txt
 pilot/w3w_test/RUN_SUMMARY.json
+
+# Fresh/re-extract run output (generated)
+pilot/w3w_test/waltham_run/

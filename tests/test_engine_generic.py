@@ -113,6 +113,57 @@ def test_activity_menu_demoted():
     assert "Archery" not in names and "Gaga" not in names
 
 
+def test_catalog_multipage_enumerates_all_camps(monkeypatch):
+    """Running Brook finding: a site with one page per camp (incl. keyword-less
+    sub-camp slugs under a section) must enumerate ALL of them, not just the
+    first few — and with ZERO LLM calls (deterministic per-page extraction)."""
+    pad = " Summer camp fun for kids in Waltham. " * 20
+    seed = "https://camp.org/"
+    pages = {
+        seed: (
+            "Welcome to Running Brook." + pad,
+            [{"url": "https://camp.org/adventures", "text": "Adventures"},
+             {"url": "https://camp.org/day-camp/day-camp", "text": "Day Camp"}],
+            "<html><h1>Running Brook</h1></html>",
+        ),
+        # Section page: no own age/date -> not itself a camp record; links to subs.
+        "https://camp.org/adventures": (
+            "Our Adventures programs for older campers." + pad,
+            [{"url": "https://camp.org/adventures/trekkers-grades-5-6", "text": "Trekkers"},
+             {"url": "https://camp.org/adventures/voyagers-grades-7-8", "text": "Voyagers"},
+             {"url": "https://camp.org/adventures/adventures-faqs", "text": "FAQs"}],
+            "<html><h1>Adventures</h1></html>",
+        ),
+        "https://camp.org/adventures/trekkers-grades-5-6": (
+            "Trekkers is for ages 10-12 exploring the outdoors. June 23 - June 27." + pad,
+            [], "<html><h1>Trekkers (Grades 5-6) - Running Brook</h1></html>",
+        ),
+        "https://camp.org/adventures/voyagers-grades-7-8": (
+            "Voyagers is for ages 13-14 on extended trips. July 7 - July 11." + pad,
+            [], "<html><h1>Voyagers (Grades 7-8) - Running Brook</h1></html>",
+        ),
+        "https://camp.org/adventures/adventures-faqs": (
+            "Frequently asked questions about adventures." + pad, [],
+            "<html><h1>Adventures FAQs</h1></html>",
+        ),
+        "https://camp.org/day-camp/day-camp": (
+            "Day Camp for ages 4-12 all summer. June 23 - August 21." + pad,
+            [], "<html><h1>Day Camp - Running Brook</h1></html>",
+        ),
+    }
+
+    # LLM listing-pass returns nothing here; the camps must come from the
+    # deterministic per-page detail extraction (incl. depth-2 sub-camps).
+    monkeypatch.setattr("engine.extract.llm.extract_programs", lambda *a, **k: [])
+    res = asyncio.run(GenericExtractor().extract(_prov(seed), _Stub(pages)))
+    names = {p.name for p in res.programs}
+    assert "Trekkers" in names                    # keyword-less sub-camp, depth-2
+    assert "Voyagers" in names
+    assert "Day Camp" in names
+    assert "Adventures FAQs" not in names         # non-detail leaf skipped
+    assert "Adventures" not in names              # section page (no own evidence)
+
+
 def test_gate_adult_fitness_class_rejected():
     """'Active Agers' finding: adult fitness-class pages don't publish."""
     from engine.model import Program, Session

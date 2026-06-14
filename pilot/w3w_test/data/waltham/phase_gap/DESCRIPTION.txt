@@ -1,4 +1,0 @@
-Phase C — Agentic gap fill
-==========================
-
-Audits catalog holes and runs targeted searches to find missing camps.

@@ -1,4 +1,0 @@
-Phase B — Crawl and harvest
-===========================
-
-Visits provider websites and saves camp-related registration URLs. Outputs: camp_links.csv and harvest activity logs.

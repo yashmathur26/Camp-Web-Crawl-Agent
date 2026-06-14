@@ -1,8 +1,0 @@
-town: Waltham
-state: MA
-providers:
-- name: Jewishcamp
-  host: jewishcamp.org
-  seed: https://jewishcamp.org/camp/ramah-day-camp-of-greater-boston
-  vendor: unknown
-  org_id: ''

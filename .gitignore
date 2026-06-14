@@ -21,3 +21,12 @@ build/
 .DS_Store
 engine_v3_docs.zip
 trash/
+
+# Pilot generated data / outputs (regenerable; kept out of git to stop churn)
+pilot/w3w_test/data/
+pilot/w3w_test/registry/
+pilot/w3w_test/cache/
+pilot/w3w_test/logs/
+pilot/w3w_test/FINAL_sessions.csv
+pilot/w3w_test/FINAL_sessions.txt
+pilot/w3w_test/RUN_SUMMARY.json

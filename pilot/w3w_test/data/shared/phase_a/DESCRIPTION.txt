@@ -1,4 +1,0 @@
-Phase A — Search discovery
-==========================
-
-Google searches find recreation centers, community ed, YMCAs, and parent guides. Outputs: candidates.csv (keep) and rejected_candidates.csv (dropped at ingest).

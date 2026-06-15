@@ -10,6 +10,9 @@ data/*
 !data/_baseline_v2/
 !data/_baseline_v2/**
 !data/junk_audit.csv
+# HUB ADAPTER ROADMAP golden fixtures — committed so hub tests run with no network.
+!data/_fixtures/
+!data/_fixtures/**
 logs/
 cache/
 *.egg-info/

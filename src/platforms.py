@@ -126,6 +126,14 @@ WORDPRESS = "wordpress"
 CATALOG_GRID = "catalog_grid"
 CUSTOM = "custom"
 
+# HUB ADAPTER ROADMAP H0.3 — ZIP-seeded national hubs. These bypass the B.5
+# navigator: a town ZIP/city is injected into a templated search (config/hubs.py).
+# HUB_SEED is the class marker carried on every hub-origin row.
+CONFIGIO = "configio"
+CAMP_INVENTION = "camp_invention"
+IDTECH = "idtech"
+HUB_SEED = "hub_seed"
+
 # Multi-course catalog grids (iD Tech, STEM hosts, camp marketplaces): many same-host
 # detail URLs under /courses|programs|camps|classes|activities|.../{slug}.
 _CATALOG_GRID_SEGMENTS = (

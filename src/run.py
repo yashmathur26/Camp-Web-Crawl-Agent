@@ -1150,9 +1150,10 @@ def main() -> None:
     )
     parser.add_argument(
         "--phase",
-        choices=["A", "B", "B5", "Q", "verify", "P", "trail", "gap", "C", "all"],
+        choices=["A", "B", "B5", "Q", "verify", "P", "trail", "gap", "C", "D", "all"],
         default="all",
-        help="Which phase(s) to run (verify/P = parent enrollment check)",
+        help="Which phase(s) to run (verify/P = parent enrollment check; "
+             "D = Part D unified MA-only hubs + US Sports Camps)",
     )
     parser.add_argument(
         "--all-towns", action="store_true",
@@ -1393,6 +1394,22 @@ def main() -> None:
                 verify_all=args.verify_all,
                 max_llm=args.verify_max_llm,
             )
+
+        if run_phase == "D" and not dry_run:
+            from src.part_d import run_part_d
+
+            d_towns = [t.strip() for t in args.towns.split(",") if t.strip()]
+            if args.all_towns:
+                d_towns = None
+            elif town_filter:
+                d_towns = town_filter
+            res = run_part_d(towns=d_towns or None, ts=datetime.now(timezone.utc).date().isoformat())
+            print("\nPart D reconciliation:")
+            for k, v in res["reconciliation"].items():
+                print(f"  {k}: {v}")
+            print(f"  -> {res['csv_path']}")
+            for a in res["alarms"]:
+                print(f"  ALARM: {a}")
 
         if run_phase in ("gap", "C") and not dry_run and (args.all_towns or args.towns):
             from src.part_c import run_part_c

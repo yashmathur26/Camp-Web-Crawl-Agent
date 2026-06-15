@@ -129,6 +129,14 @@ PLATFORM_SIGNATURES: dict[str, dict] = {
         "host_substrings": ("campminder.com",),
         "html_patterns": (r"campminder",),
     },
+    "configio": {
+        "label": "Configio (Skyhawks register.skyhawks.com & *.configio.com)",
+        "tier": "structured",
+        # The Configio engine backs register.skyhawks.com and many *.configio.com
+        # storefronts; the parser is reusable beyond Skyhawks (HUB_ADAPTER H0.3).
+        "host_substrings": ("register.skyhawks.com", "configio.com"),
+        "html_patterns": (r"register\.skyhawks\.com", r"configio\.com", r"/pd/\d+"),
+    },
     "squarespace": {
         "label": "Squarespace",
         "tier": "builder",
@@ -174,6 +182,7 @@ EXTERNAL_PLATFORM_ORDER: tuple[str, ...] = (
     "jackrabbit",
     "campdoc",
     "campminder",
+    "configio",
 )
 
 BUILDER_PLATFORM_ORDER: tuple[str, ...] = ("squarespace", "wix", "weebly")

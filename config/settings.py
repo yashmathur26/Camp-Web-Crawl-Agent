@@ -175,6 +175,11 @@ SETTINGS = {
     "publish_require_verify": True,
     "publish_allowed_verdicts": ["parent_ready", "brochure_only"],
     "season_year": 2026,
+    # HUB ADAPTER ROADMAP H0.6 — summer window for hub rows (inclusive, MM-DD).
+    # Hub searches return year-round programs; anything whose parsed start_date
+    # falls outside this window is dropped from the summer-scoped run.
+    "hub_season_start": "06-01",
+    "hub_season_end": "08-31",
     # Phase C agentic gap fill
     "gap_rounds_default": 2,
     "gap_max_searches_per_round": 100,

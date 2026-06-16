@@ -36,7 +36,11 @@ _AFFORDANCE_RE = re.compile(
     re.I,
 )
 
-SNAPSHOT_DIR = Path("data/_snapshots")
+from src.data_layout import DATA_ROOT as _DATA_ROOT
+
+# Per-run when FIREFLY_DATA_ROOT is redirected; the unified runner symlinks this
+# back to the shared repo dir so snapshot diffing persists across runs.
+SNAPSHOT_DIR = _DATA_ROOT / "_snapshots"
 
 # Single-provider explosion ceiling (non-hub). Hubs override this (H0.7.2).
 DEFAULT_HOST_CEILING = 60

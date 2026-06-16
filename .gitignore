@@ -15,6 +15,9 @@ data/*
 !data/_fixtures/**
 logs/
 cache/
+# Unified-runner per-run workspaces and archived clutter (generated; regenerable).
+runs/
+archive/
 *.egg-info/
 dist/
 build/

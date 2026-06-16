@@ -27,8 +27,12 @@ from src.parent_verify import load_sessions_for_verify
 
 logger = logging.getLogger(__name__)
 
+from src.data_layout import DATA_ROOT as _DATA_ROOT
+
+# Resume checkpoint stays in the shared cache/ (cross-run resume); the cost
+# ledger follows DATA_ROOT so a per-run workspace keeps its own ledger.
 PROGRESS_PATH = Path("cache/part_c_progress.json")
-LEDGER_PATH = Path("data/shared/part_c_cost_ledger.csv")
+LEDGER_PATH = _DATA_ROOT / "shared" / "part_c_cost_ledger.csv"
 
 
 def _load_progress() -> dict:

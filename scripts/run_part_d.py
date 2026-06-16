@@ -44,7 +44,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--no-ussc", action="store_true", help="skip US Sports Camps")
     ap.add_argument("--no-gate", action="store_true", help="skip the register_url verification gate")
     ap.add_argument("--per-sport", type=int, default=10, help="US Sports Camps camps per sport")
-    ap.add_argument("--out", default="data/part_d", help="output directory")
+    ap.add_argument("--out", default=None,
+                    help="output directory (default: <FIREFLY_DATA_ROOT>/part_d)")
     args = ap.parse_args(argv)
 
     towns = None if args.all else [t.strip() for t in args.town.split(",") if t.strip()]

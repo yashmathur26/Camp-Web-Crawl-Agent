@@ -697,9 +697,22 @@ async def _harvest_candidates(
             title=candidate.get("title", ""),
         )
 
+        crawl_budget = float(SETTINGS.get("phase_b_crawl_budget_s", 300))
         if is_guide:
             try:
-                outbound = await harvest_guide_outbound(url)
+                outbound = await asyncio.wait_for(
+                    harvest_guide_outbound(url), timeout=crawl_budget
+                )
+            except asyncio.TimeoutError:
+                logging.warning(
+                    "Phase B: guide crawl budget (%ss) exceeded for %s; skipping",
+                    crawl_budget, url,
+                )
+                harvest_log.guide_failed(url, "crawl budget exceeded", town=candidate.get("town", ""))
+                stats.skipped_sources += 1
+                candidates[i]["crawled"] = "true"  # don't re-stall on this source
+                _save_candidates(candidates)
+                continue
             except Exception as exc:
                 logging.warning("Guide harvest failed for %s: %s", url, exc)
                 harvest_log.guide_failed(url, str(exc), town=candidate.get("town", ""))
@@ -740,19 +753,35 @@ async def _harvest_candidates(
 
             try:
                 if use_focused:
-                    walk = await walk_site(
-                        url,
-                        max_depth,
-                        max_pages,
-                        focused=True,
-                        delay_seconds=delay,
-                        stop_on_catalog=profile.get("stop_on_catalog", SETTINGS["focused_stop_on_catalog"]),
-                        link_gate=make_link_follow_gate() if link_follow else None,
+                    walk = await asyncio.wait_for(
+                        walk_site(
+                            url,
+                            max_depth,
+                            max_pages,
+                            focused=True,
+                            delay_seconds=delay,
+                            stop_on_catalog=profile.get("stop_on_catalog", SETTINGS["focused_stop_on_catalog"]),
+                            link_gate=make_link_follow_gate() if link_follow else None,
+                        ),
+                        timeout=crawl_budget,
                     )
                 else:
-                    walk = await walk_site(url, max_depth, max_pages, delay_seconds=delay)
+                    walk = await asyncio.wait_for(
+                        walk_site(url, max_depth, max_pages, delay_seconds=delay),
+                        timeout=crawl_budget,
+                    )
                 links = walk.links
                 page_text_by_url = walk.page_text_by_url
+            except asyncio.TimeoutError:
+                logging.warning(
+                    "Phase B: crawl budget (%ss) exceeded for %s; skipping source",
+                    crawl_budget, url,
+                )
+                harvest_log.crawl_failed(url, "crawl budget exceeded")
+                stats.skipped_sources += 1
+                candidates[i]["crawled"] = "true"  # don't re-stall on this source
+                _save_candidates(candidates)
+                continue
             except Exception as exc:
                 logging.warning("Crawl failed for %s: %s", url, exc)
                 harvest_log.crawl_failed(url, str(exc))
@@ -825,11 +854,24 @@ async def _harvest_candidates(
                 pre_cap - len(rows_to_store),
                 url,
             )
-        rows_to_store, llm_rejected = await filter_rows_with_llm(
-            rows_to_store,
-            page_text_by_url,
-            fetch_page_text=fetch_page_text,
-        )
+        try:
+            rows_to_store, llm_rejected = await asyncio.wait_for(
+                filter_rows_with_llm(
+                    rows_to_store,
+                    page_text_by_url,
+                    fetch_page_text=fetch_page_text,
+                ),
+                timeout=float(SETTINGS.get("phase_b_llm_budget_s", 180)),
+            )
+        except asyncio.TimeoutError:
+            # LLM classification too slow for this source — keep the heuristic
+            # (rule-kept) rows rather than stalling. Recall preserved; the engine
+            # publish gate still filters these downstream.
+            logging.warning(
+                "Phase B: LLM classification budget exceeded for %s; keeping %d heuristic row(s)",
+                url, len(rows_to_store),
+            )
+            llm_rejected = 0
         for row in rows_to_store:
             harvest_log.link_saved(
                 row["url"],

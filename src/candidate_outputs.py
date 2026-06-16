@@ -52,13 +52,13 @@ def write_candidates_txt(
         f"{'Town':<20} {'Count':>6}",
         "-" * 28,
     ]
-    for town, n in sorted(by_town.items()):
+    for town, n in sorted(by_town.items(), key=lambda kv: str(kv[0])):
         lines.append(f"{town:<20} {n:>6}")
     lines.extend(
         [
             "",
-            f"Phases: {', '.join(f'{p} ({n})' for p, n in sorted(by_phase.items()))}",
-            f"Types:  {', '.join(f'{t} ({n})' for t, n in sorted(by_type.items()))}",
+            f"Phases: {', '.join(f'{p} ({n})' for p, n in sorted(by_phase.items(), key=lambda kv: str(kv[0])))}",
+            f"Types:  {', '.join(f'{t} ({n})' for t, n in sorted(by_type.items(), key=lambda kv: str(kv[0])))}",
             "",
             "## BY TYPE (crawled / pending)",
             f"{'Type':<14} {'Crawled':>8} {'Pending':>8} {'Total':>8}",

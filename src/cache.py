@@ -24,8 +24,13 @@ def _read_json(path: Path, default):
 
 def _write_json(path: Path, data) -> None:
     _ensure_cache_dir()
-    with open(path, "w", encoding="utf-8") as f:
+    # Atomic write (temp + replace): a crash or a concurrent writer (parallel
+    # town pipelines share this cache) can never leave a half-written, unparseable
+    # JSON file. os.replace is atomic on the same filesystem.
+    tmp = path.with_suffix(path.suffix + f".tmp.{os.getpid()}")
+    with open(tmp, "w", encoding="utf-8") as f:
         json.dump(data, f, indent=2)
+    os.replace(tmp, path)
 
 
 def load_seen_searches() -> dict[str, str | dict]:

@@ -10,9 +10,20 @@ SETTINGS = {
     "dataforseo_language_code": "en",
     "dataforseo_poll_timeout_s": 180,
     "max_searches_per_run": 1000,
-    "max_pages_per_source": 300,
+    # Bounded so a single source can't accumulate hours of work. The Ollama
+    # client uses *synchronous* requests.post (blocks the event loop), so the
+    # asyncio per-source budget below can't interrupt mid-call — the real guard
+    # is capping the COUNT of pages/LLM calls. 300 pages was pathological.
+    "max_pages_per_source": 50,
     "max_links_per_domain_per_harvest": 80,
     "max_crawl_depth": 2,
+    # Phase B per-source wall-clock budgets — no single source may stall the
+    # whole stage. A heavy site (300-page crawl) is abandoned after the crawl
+    # budget; LLM link-classification falls back to heuristic rows after its
+    # budget. Both are deadlines, not row caps, so recall on normal sources is
+    # unchanged; only pathological sources are bounded.
+    "phase_b_crawl_budget_s": 300,
+    "phase_b_llm_budget_s": 180,
     "stay_on_domain": True,
     "delay_seconds": 8.0,
     "crawl_concurrency": 3,
@@ -37,9 +48,9 @@ SETTINGS = {
     "ollama_validate_unknown": False,
     "ollama_validate_links": True,
     "ollama_validate_max_chars": 3000,
-    "ollama_validate_max_fetches_per_source": 25,
-    "ollama_validate_max_calls_per_source": 30,
-    "ollama_validate_timeout_s": 45,
+    "ollama_validate_max_fetches_per_source": 12,
+    "ollama_validate_max_calls_per_source": 12,
+    "ollama_validate_timeout_s": 20,
     "ollama_validate_fetch_delay_seconds": 1.5,
     "geo_filter_crawl": True,
     "ollama_keep_alive": "30m",
@@ -144,7 +155,7 @@ SETTINGS = {
     "b5_agent_nav_link_cap": 60,
     "b5_agent_nav_max_catalog_fetches": 3,
     "b5_agent_nav_max_register_fetches": 2,
-    "b5_agent_nav_timeout_s": 90,
+    "b5_agent_nav_timeout_s": 25,
     "b5_trail_before_llm": False,
     "b5_trail_pages": 12,
     "b5_trail_min_sessions": 3,

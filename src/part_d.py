@@ -118,7 +118,7 @@ def run_part_d(
     gate_fetch=None,
     run_gate: bool = True,
     ussc_fetch=None,
-    out_dir: str | Path = "data/part_d",
+    out_dir: str | Path | None = None,
     ts: str = "",
 ) -> dict:
     """Run all hubs + US Sports Camps, geo-tag to MA only, dedup, and write outputs.
@@ -160,6 +160,10 @@ def run_part_d(
         "cross_hub_duplicates_collapsed": hub_res["reconciliation"]["cross_hub_duplicates_collapsed"],
     }
 
+    if out_dir is None:
+        from src.data_layout import DATA_ROOT
+
+        out_dir = DATA_ROOT / "part_d"
     out_dir = Path(out_dir)
     csv_path = out_dir / "part_d_ma_camps.csv"
     write_outputs(final, csv_path)

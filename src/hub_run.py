@@ -21,6 +21,7 @@ from pathlib import Path
 
 from config.hubs import HUBS
 from config.towns import TOWN_ZIPS
+from src.data_layout import DATA_ROOT
 from src.hub_dedup import dedupe_sessions
 from src.hub_safeguards import (
     apply_host_bounds,
@@ -43,7 +44,7 @@ HUB_ADAPTERS = {
     "idtech": _idtech,
 }
 
-KPI_LEDGER = Path("data/shared/hub_eval_history.csv")
+KPI_LEDGER = DATA_ROOT / "shared" / "hub_eval_history.csv"
 
 
 def town_seeds(towns: list[str] | None = None) -> list[dict]:

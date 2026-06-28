@@ -27,7 +27,7 @@ def patch_offline_fetch():
     async def _fetch(u, *a, **k):
         return await fixture_fetch(u)
 
-    with patch("src.platforms._fetch", side_effect=_fetch):
+    with patch("phase_b.platforms._fetch", side_effect=_fetch):
         from config import settings
 
         original = dict(settings.SETTINGS)

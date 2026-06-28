@@ -1,6 +1,6 @@
 """Tests for session quality tier classification."""
 
-from src.session_quality import classify_session_tier
+from phase_b.session_quality import classify_session_tier
 
 
 def test_myrec_registrable():

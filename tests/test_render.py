@@ -5,9 +5,9 @@ from __future__ import annotations
 import shutil
 
 from config import settings
-from src import capture
-from src.crawl import fetch_wait_until, is_thin_render
-from src.data_layout import DATA_ROOT, town_slug
+from phase_b import capture
+from phase_b.crawl import fetch_wait_until, is_thin_render
+from shared.data_layout import DATA_ROOT, town_slug
 
 
 def test_wait_policy_networkidle_for_js_hosts():

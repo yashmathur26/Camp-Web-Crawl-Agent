@@ -1,6 +1,6 @@
 """Tests for WooCommerce product URL validation."""
 
-from src.platforms import _is_valid_woo_product
+from phase_b.platforms import _is_valid_woo_product
 
 
 def test_program_teens_rejected():

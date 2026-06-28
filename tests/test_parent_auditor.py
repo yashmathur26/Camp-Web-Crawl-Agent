@@ -1,6 +1,6 @@
 """Tests for parent auditor hole detection."""
 
-from src.parent_auditor import _rule_based_holes
+from phase_b.parent_auditor import _rule_based_holes
 
 
 def test_missing_category_hole():

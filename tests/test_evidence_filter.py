@@ -4,9 +4,9 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from src import llm
-from src.platforms import _apply_focus_llm_tiebreaker
-from src.relevance import classify_session
+from shared import llm
+from phase_b.platforms import _apply_focus_llm_tiebreaker
+from phase_a.relevance import classify_session
 
 
 def test_registrable_evidence_keeps_keywordless_program():

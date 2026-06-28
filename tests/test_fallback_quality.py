@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
-from src.parent_verify import _floor_program_verdict
-from src.session_quality import classify_session_tier
-from src.sessions import _fallback_program_row
+from phase_b.parent_verify import _floor_program_verdict
+from phase_b.session_quality import classify_session_tier
+from phase_b.sessions import _fallback_program_row
 
 
 def _program_row(register_url: str) -> dict:

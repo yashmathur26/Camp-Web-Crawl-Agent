@@ -1,6 +1,6 @@
 """Tests for enrollment signal extraction."""
 
-from src.enrollment_signals import extract_enrollment_signals, verify_registrable
+from phase_b.enrollment_signals import extract_enrollment_signals, verify_registrable
 
 
 WEBTRAC_HTML = """

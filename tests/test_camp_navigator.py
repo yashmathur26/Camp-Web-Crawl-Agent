@@ -1,4 +1,4 @@
-from src.camp_navigator import _rank_links_for_agent
+from phase_b.camp_navigator import _rank_links_for_agent
 
 
 def test_rank_links_prefers_camp_urls():

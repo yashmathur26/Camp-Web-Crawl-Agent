@@ -177,7 +177,7 @@ def main() -> int:
 
     # Institution (college/school) camps file in the same folder.
     try:
-        from src.institution_output import write_institution_camps_txt
+        from phase_c.institution_output import write_institution_camps_txt
         inst_rows = [{**r, "town": TOWN} for r in (eng + gap)]
         write_institution_camps_txt(TOWN, inst_rows, OUT_DIR / "waltham_institution_camps.txt")
     except Exception as exc:  # noqa: BLE001

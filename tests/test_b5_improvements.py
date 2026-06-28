@@ -6,9 +6,9 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.platforms import _extract_daxko_sessions, _is_catalog_grid_item  # noqa: E402
-from src.relevance import classify_session  # noqa: E402
-from src.sessions import _filter_b5_providers  # noqa: E402
+from phase_b.platforms import _extract_daxko_sessions, _is_catalog_grid_item  # noqa: E402
+from phase_a.relevance import classify_session  # noqa: E402
+from phase_b.sessions import _filter_b5_providers  # noqa: E402
 
 
 def test_filter_b5_providers_blocks_gmail_share():

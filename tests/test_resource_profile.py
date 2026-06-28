@@ -45,11 +45,11 @@ def test_settings_single_model_collapse():
 
 
 def test_memory_gate():
-    from src.resource_guard import MemoryBudgetError, require_memory
+    from phase_b.resource_guard import MemoryBudgetError, require_memory
 
-    with patch("src.resource_guard.available_memory_mb", return_value=5000):
+    with patch("phase_b.resource_guard.available_memory_mb", return_value=5000):
         require_memory(3000, "phase_c")            # ok, no raise
-    with patch("src.resource_guard.available_memory_mb", return_value=800):
+    with patch("phase_b.resource_guard.available_memory_mb", return_value=800):
         try:
             require_memory(3000, "phase_c")
             assert False, "expected MemoryBudgetError"
@@ -58,7 +58,7 @@ def test_memory_gate():
 
 
 def test_gap_url_cap(monkeypatch, tmp_path):
-    import src.agentic_gap as ag
+    import phase_c.agentic_gap as ag
 
     captured = {}
 
@@ -67,7 +67,7 @@ def test_gap_url_cap(monkeypatch, tmp_path):
         return []
 
     monkeypatch.setattr(ag, "enumerate_hosts_via_engine", fake_enum, raising=False)
-    monkeypatch.setattr("src.engine_bridge.enumerate_hosts_via_engine", fake_enum)
+    monkeypatch.setattr("phase_c.engine_bridge.enumerate_hosts_via_engine", fake_enum)
     monkeypatch.setattr(ag, "_seed_urls_for_hosts", lambda h, t: [])
     monkeypatch.setitem(ag.SETTINGS, "gap_max_urls_per_round", 5)
     # 20 urls across 20 hosts -> capped to 5
@@ -77,10 +77,10 @@ def test_gap_url_cap(monkeypatch, tmp_path):
 
 
 def test_gap_url_cap_one_per_host_first(monkeypatch):
-    import src.agentic_gap as ag
+    import phase_c.agentic_gap as ag
 
     captured = {}
-    monkeypatch.setattr("src.engine_bridge.enumerate_hosts_via_engine",
+    monkeypatch.setattr("phase_c.engine_bridge.enumerate_hosts_via_engine",
                         lambda town, urls: captured.update(urls=urls) or [])
     monkeypatch.setattr(ag, "_seed_urls_for_hosts", lambda h, t: [])
     monkeypatch.setitem(ag.SETTINGS, "gap_max_urls_per_round", 3)

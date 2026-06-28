@@ -6,7 +6,7 @@ recursive navigator entirely — they are *seeds*, not crawl targets.
 
 No logic lives here. Each entry declares only:
   - host:            canonical hostname (for detection / logging)
-  - adapter:         the parser module key (src.hubs.<adapter>)
+  - adapter:         the parser module key (phase_d.hubs.<adapter>)
   - render:          how to fetch the search page
                        "raw"        -> plain GET is enough (server-rendered)
                        "rendered"   -> needs JS settle (AJAX result list)

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from datetime import date
 
-from src.deliverables import apply_publish_gates, parse_date_range
+from phase_c.deliverables import apply_publish_gates, parse_date_range
 
 
 def _row(**kw) -> dict:

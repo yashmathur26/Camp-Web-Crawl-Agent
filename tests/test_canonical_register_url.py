@@ -7,10 +7,10 @@ import shutil
 from urllib.parse import parse_qs, urlparse
 
 from config import settings
-from src.data_layout import DATA_ROOT, town_slug
-from src.platforms import make_session
-from src.sessions import _dedupe_published_rows, write_session_outputs
-from src.urls import canonical_register_url, register_platform_id
+from shared.data_layout import DATA_ROOT, town_slug
+from phase_b.platforms import make_session
+from phase_b.sessions import _dedupe_published_rows, write_session_outputs
+from shared.urls import canonical_register_url, register_platform_id
 
 TOWN = "Zz_canon_test"
 

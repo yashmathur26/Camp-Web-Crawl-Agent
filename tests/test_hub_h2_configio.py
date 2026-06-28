@@ -5,10 +5,10 @@ from __future__ import annotations
 from pathlib import Path
 from urllib.parse import urlparse
 
-from src.geo_resolve import geo_tag, keep_if_ma
-from src.hub_dedup import dedupe_sessions
-from src.hubs.configio import parse
-from src.season import filter_summer
+from phase_a.geo_resolve import geo_tag, keep_if_ma
+from phase_b.hub_dedup import dedupe_sessions
+from phase_d.hubs.configio import parse
+from phase_a.season import filter_summer
 
 FIXTURE = Path("data/_fixtures/configio/skyhawks_02421_10mi.html")
 EXPECTED_CARDS = 22  # hand-verified against the saved fixture

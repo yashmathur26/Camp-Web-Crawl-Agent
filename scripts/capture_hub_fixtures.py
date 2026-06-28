@@ -14,7 +14,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
 from config.hubs import hub_search_url  # noqa: E402
-from src.crawl import fetch_rendered  # noqa: E402
+from phase_b.crawl import fetch_rendered  # noqa: E402
 
 FIX = ROOT / "data" / "_fixtures"
 

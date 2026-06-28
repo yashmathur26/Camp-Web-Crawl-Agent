@@ -2,7 +2,7 @@
 
 from unittest.mock import patch
 
-from src.categorizer import _rule_categories, categorize_sessions, coverage_by_category
+from phase_c.categorizer import _rule_categories, categorize_sessions, coverage_by_category
 
 
 def test_rules_catch_majority():
@@ -20,7 +20,7 @@ def test_specific_beats_generic():
 
 
 def test_categorize_offline_no_llm(tmp_path, monkeypatch):
-    import src.categorizer as cz
+    import phase_c.categorizer as cz
 
     monkeypatch.setattr(cz, "_CACHE_PATH", tmp_path / "c.json")
     sessions = [
@@ -35,7 +35,7 @@ def test_categorize_offline_no_llm(tmp_path, monkeypatch):
 
 
 def test_cache_prevents_rework(tmp_path, monkeypatch):
-    import src.categorizer as cz
+    import phase_c.categorizer as cz
 
     monkeypatch.setattr(cz, "_CACHE_PATH", tmp_path / "c.json")
     s = [{"name": "Chess Summer Clinic", "register_url": "https://x.org/9"}]

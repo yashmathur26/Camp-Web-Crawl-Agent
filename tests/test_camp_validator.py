@@ -8,7 +8,7 @@ from unittest.mock import AsyncMock, patch
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.camp_validator import (  # noqa: E402
+from phase_b.camp_validator import (  # noqa: E402
     filter_rows_with_llm,
     should_require_llm,
     should_skip_llm,
@@ -35,7 +35,7 @@ class CampValidatorTests(unittest.IsolatedAsyncioTestCase):
 
     async def test_filter_disabled_returns_all(self):
         rows = [{"url": "https://example.com/camp", "link_text": "Camp", "town_hint": "Lexington"}]
-        with patch("src.camp_validator.SETTINGS", {"ollama_validate_links": False}):
+        with patch("phase_b.camp_validator.SETTINGS", {"ollama_validate_links": False}):
             kept, rejected = await filter_rows_with_llm(rows, {}, fetch_page_text=AsyncMock())
         self.assertEqual(kept, rows)
         self.assertEqual(rejected, 0)
@@ -50,7 +50,7 @@ class CampValidatorTests(unittest.IsolatedAsyncioTestCase):
         ]
         with (
             patch(
-                "src.camp_validator.SETTINGS",
+                "phase_b.camp_validator.SETTINGS",
                 {
                     "ollama_validate_links": True,
                     "ollama_validate_max_fetches_per_source": 5,
@@ -61,11 +61,11 @@ class CampValidatorTests(unittest.IsolatedAsyncioTestCase):
                     "ollama_filter_model": "llama3.2:1b",
                 },
             ),
-            patch("src.camp_validator.is_available", return_value=True),
-            patch("src.camp_validator._load_verdict_cache", return_value={}),
-            patch("src.camp_validator._save_verdict_cache"),
+            patch("phase_b.camp_validator.is_available", return_value=True),
+            patch("phase_b.camp_validator._load_verdict_cache", return_value={}),
+            patch("phase_b.camp_validator._save_verdict_cache"),
             patch(
-                "src.camp_validator.classify_camp_page",
+                "phase_b.camp_validator.classify_camp_page",
                 return_value=(False, "Senior parking is not a youth camp"),
             ),
         ):
@@ -88,7 +88,7 @@ class CampValidatorTests(unittest.IsolatedAsyncioTestCase):
         ]
         with (
             patch(
-                "src.camp_validator.SETTINGS",
+                "phase_b.camp_validator.SETTINGS",
                 {
                     "ollama_validate_links": True,
                     "ollama_validate_max_fetches_per_source": 5,
@@ -99,11 +99,11 @@ class CampValidatorTests(unittest.IsolatedAsyncioTestCase):
                     "ollama_filter_model": "llama3.2:1b",
                 },
             ),
-            patch("src.camp_validator.is_available", return_value=True),
-            patch("src.camp_validator._load_verdict_cache", return_value={}),
-            patch("src.camp_validator._save_verdict_cache"),
+            patch("phase_b.camp_validator.is_available", return_value=True),
+            patch("phase_b.camp_validator._load_verdict_cache", return_value={}),
+            patch("phase_b.camp_validator._save_verdict_cache"),
             patch(
-                "src.camp_validator.classify_camp_page",
+                "phase_b.camp_validator.classify_camp_page",
                 return_value=(True, "youth camp"),
             ),
         ):

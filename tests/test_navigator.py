@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 from unittest.mock import AsyncMock, patch
 
-from src.navigator import (
+from phase_b.navigator import (
     PageRole,
     classify_role,
     extract_camp_links,
@@ -110,9 +110,9 @@ def _role_for_url(url: str, html: str, links: list[dict], **kw) -> PageRole:
 
 def test_navigate_provider_flat_multicamp_yields_all_camps():
     async def _run():
-        with patch("src.platforms._fetch", side_effect=_mock_fetch):
-            with patch("src.platforms.detect_platform", return_value="custom"):
-                with patch("src.navigator.classify_role", side_effect=_role_for_url):
+        with patch("phase_b.platforms._fetch", side_effect=_mock_fetch):
+            with patch("phase_b.platforms.detect_platform", return_value="custom"):
+                with patch("phase_b.navigator.classify_role", side_effect=_role_for_url):
                     return await navigate_provider(
                         SEED,
                         town_hint="Burlington",
@@ -134,12 +134,12 @@ def test_navigate_provider_flat_multicamp_yields_all_camps():
 
 def test_enumerate_provider_v2_flag_uses_navigator():
     from config import settings
-    from src.platforms import enumerate_provider
+    from phase_b.platforms import enumerate_provider
 
     async def _run():
-        with patch("src.platforms._fetch", side_effect=_mock_fetch):
-            with patch("src.platforms.detect_platform", return_value="custom"):
-                with patch("src.navigator.classify_role", side_effect=_role_for_url):
+        with patch("phase_b.platforms._fetch", side_effect=_mock_fetch):
+            with patch("phase_b.platforms.detect_platform", return_value="custom"):
+                with patch("phase_b.navigator.classify_role", side_effect=_role_for_url):
                     original = dict(settings.SETTINGS)
                     settings.SETTINGS.update(
                         {
@@ -166,7 +166,7 @@ def test_enumerate_provider_v2_flag_uses_navigator():
 def test_p41_rank_links_keeps_cross_host_register_form():
     """P4.1: an external Jotform/Google-Form register link is down-weighted,
     not dropped, so it still reaches the navigator model."""
-    from src.camp_navigator import _rank_links_for_agent
+    from phase_b.camp_navigator import _rank_links_for_agent
 
     seed = "https://lakeside-camp.org/summer"
     links = [
@@ -183,7 +183,7 @@ def test_p41_rank_links_keeps_cross_host_register_form():
 def test_p42_adapter_llm_keeps_info_page_with_cta():
     """P4.2: an info page whose only register link is itself is kept (with a
     verdict) when it carries an on-page register CTA."""
-    from src import platforms
+    from phase_b import platforms
 
     url = "https://maplewood-arts.org/summer-art-camp"
     page_text = (
@@ -201,7 +201,7 @@ def test_p42_adapter_llm_keeps_info_page_with_cta():
 
     async def _run():
         with patch(
-            "src.camp_validator.extract_camp_sessions", return_value=[fake_camp]
+            "phase_b.camp_validator.extract_camp_sessions", return_value=[fake_camp]
         ):
             return await platforms.adapter_llm(url, [], page_text, town_hint="Burlington")
 
@@ -216,7 +216,7 @@ def test_p42_adapter_llm_keeps_info_page_with_cta():
 
 def test_p42_adapter_llm_still_rejects_brochure_only():
     """P4.2: a same-page link with no register CTA is still rejected."""
-    from src import platforms
+    from phase_b import platforms
 
     url = "https://townrec.org/camp-info"
     page_text = (
@@ -228,7 +228,7 @@ def test_p42_adapter_llm_still_rejects_brochure_only():
 
     async def _run():
         with patch(
-            "src.camp_validator.extract_camp_sessions", return_value=[fake_camp]
+            "phase_b.camp_validator.extract_camp_sessions", return_value=[fake_camp]
         ):
             return await platforms.adapter_llm(url, [], page_text)
 
@@ -237,8 +237,8 @@ def test_p42_adapter_llm_still_rejects_brochure_only():
 
 def test_p43_chat_with_repair_retries_on_bad_json():
     """P4.3: chat_with_repair retries once when the first call can't parse JSON."""
-    from src import llm
-    from src.llm import OllamaError, chat_with_repair
+    from shared import llm
+    from shared.llm import OllamaError, chat_with_repair
 
     calls: list[dict] = []
 
@@ -257,8 +257,8 @@ def test_p43_chat_with_repair_retries_on_bad_json():
 
 def test_p43_chat_with_repair_does_not_retry_other_errors():
     """P4.3: non-parse errors (e.g. Ollama down) are not retried."""
-    from src import llm
-    from src.llm import OllamaError, chat_with_repair
+    from shared import llm
+    from shared.llm import OllamaError, chat_with_repair
 
     calls: list[int] = []
 
@@ -278,7 +278,7 @@ def test_p43_chat_with_repair_does_not_retry_other_errors():
 def test_p44_agent_nav_no_double_fetch_catalog():
     """P4.4: the same catalog URL is fetched at most once, even if it appears
     twice in the model's picks (catalog/register sets no longer conflated)."""
-    from src import camp_navigator
+    from phase_b import camp_navigator
 
     seed = "https://townrec.org/camps"
     catalog_url = "https://townrec.org/programs/summer"
@@ -300,11 +300,11 @@ def test_p44_agent_nav_no_double_fetch_catalog():
         return []
 
     async def _run():
-        with patch("src.camp_navigator._pick_agent_urls", return_value=picks):
-            with patch("src.platforms._fetch", side_effect=_fake_fetch):
-                with patch("src.platforms.detect_platform", return_value="custom"):
+        with patch("phase_b.camp_navigator._pick_agent_urls", return_value=picks):
+            with patch("phase_b.platforms._fetch", side_effect=_fake_fetch):
+                with patch("phase_b.platforms.detect_platform", return_value="custom"):
                     with patch(
-                        "src.platforms.adapter_llm", side_effect=_empty_adapter_llm
+                        "phase_b.platforms.adapter_llm", side_effect=_empty_adapter_llm
                     ):
                         return await camp_navigator.agent_navigate_provider(
                             seed, "", [], town_hint="Burlington"

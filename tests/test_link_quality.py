@@ -4,8 +4,8 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.filter_links import is_likely_camp_link  # noqa: E402
-from src.link_quality import drop_reason, is_quality_camp_link  # noqa: E402
+from phase_a.filter_links import is_likely_camp_link  # noqa: E402
+from phase_a.link_quality import drop_reason, is_quality_camp_link  # noqa: E402
 
 
 def test_class_category_is_not_likely_camp_link():

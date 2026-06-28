@@ -7,12 +7,12 @@ from pathlib import Path
 
 import pytest
 
-import src.hub_run as hub_run
-import src.hub_safeguards as safeguards
-from src.hub_dedup import session_uid
-from src.hubs.camp_invention import parse as parse_ci
-from src.hubs.configio import parse as parse_cfg
-from src.hubs.idtech import parse_locations, parse_reg_flow
+import phase_d.hub_run as hub_run
+import phase_b.hub_safeguards as safeguards
+from phase_b.hub_dedup import session_uid
+from phase_d.hubs.camp_invention import parse as parse_ci
+from phase_d.hubs.configio import parse as parse_cfg
+from phase_d.hubs.idtech import parse_locations, parse_reg_flow
 
 CI = Path("data/_fixtures/camp_invention/02421_25mi.html")
 CFG = Path("data/_fixtures/configio/skyhawks_02421_10mi.html")
@@ -60,7 +60,7 @@ def test_run_all_hubs_offline():
     assert len(uids) == len(set(uids)), "duplicate session_uid in final catalog"
 
     # Zero sessions outside MA.
-    from src.geo_resolve import geo_tag
+    from phase_a.geo_resolve import geo_tag
     assert all(geo_tag(r)["geo_state"] == "MA" for r in rows)
 
     # Zero sessions outside the summer window (all carry a season reason).

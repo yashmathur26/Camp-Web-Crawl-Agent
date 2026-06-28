@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.camp_discovery import (  # noqa: E402
+from phase_a.camp_discovery import (  # noqa: E402
     collect_camp_candidate_links,
     score_camp_candidate,
 )

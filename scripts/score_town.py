@@ -34,8 +34,8 @@ if str(ROOT) not in sys.path:
 
 from rapidfuzz import fuzz  # noqa: E402
 
-from src.textnorm import host_of_url, norm_name  # noqa: E402
-from src.urls import normalize_url  # noqa: E402
+from shared.textnorm import host_of_url, norm_name  # noqa: E402
+from shared.urls import normalize_url  # noqa: E402
 
 FUZZY_THRESHOLD = 75
 

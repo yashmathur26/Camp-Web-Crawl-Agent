@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.platforms import (  # noqa: E402
+from phase_b.platforms import (  # noqa: E402
     CATALOG_GRID,
     adapter_catalog_grid,
     detect_platform,
@@ -64,7 +64,7 @@ async def _run_adapter():
 
 def test_catalog_grid_rejects_nested_program_paths():
     """UNH /health/programs/foo must not match — only top-level /programs/slug."""
-    from src.platforms import _is_catalog_grid_item
+    from phase_b.platforms import _is_catalog_grid_item
 
     seed = "https://mail.google.com/"
     assert not _is_catalog_grid_item(

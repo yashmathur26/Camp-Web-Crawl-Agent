@@ -6,9 +6,9 @@ import csv
 import shutil
 
 from config import settings
-from src.data_layout import DATA_ROOT, town_slug
-from src.platforms import make_session
-from src.sessions import SESSION_CSV_COLUMNS, write_session_outputs
+from shared.data_layout import DATA_ROOT, town_slug
+from phase_b.platforms import make_session
+from phase_b.sessions import SESSION_CSV_COLUMNS, write_session_outputs
 
 TOWN = "Zz_granularity_test"
 

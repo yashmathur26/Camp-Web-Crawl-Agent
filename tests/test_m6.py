@@ -9,8 +9,8 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
-from src.store import save_new_links, count_camp_links  # noqa: E402
-from src.cache import add_seen_urls, load_seen_urls  # noqa: E402
+from shared.store import save_new_links, count_camp_links  # noqa: E402
+from shared.cache import add_seen_urls, load_seen_urls  # noqa: E402
 
 
 def test_store_idempotent():
@@ -41,7 +41,7 @@ def test_store_idempotent():
 
 
 def test_filter_denylist():
-    from src.filter_links import is_likely_camp_link
+    from phase_a.filter_links import is_likely_camp_link
 
     assert is_likely_camp_link("https://facebook.com/camp", "camp") is False
     assert is_likely_camp_link("mailto:x@y.com", "") is False

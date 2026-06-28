@@ -3,8 +3,8 @@
 import asyncio
 from unittest.mock import AsyncMock, patch
 
-from src.camp_navigator import agent_navigate_provider
-from src.enrollment_signals import (
+from phase_b.camp_navigator import agent_navigate_provider
+from phase_b.enrollment_signals import (
     attach_inline_verification,
     verify_registrable,
     verdict_from_signals,
@@ -50,7 +50,7 @@ def test_agent_navigator_verifies_register_fetch():
 
     async def _run():
         with patch(
-            "src.camp_navigator._pick_agent_urls",
+            "phase_b.camp_navigator._pick_agent_urls",
             return_value={
                 "catalog_urls": [],
                 "register_urls": [{"url": url, "label": "Camp", "why": "register"}],
@@ -58,16 +58,16 @@ def test_agent_navigator_verifies_register_fetch():
             },
         ):
             with patch(
-                "src.platforms._fetch",
+                "phase_b.platforms._fetch",
                 new_callable=AsyncMock,
                 return_value=(html, []),
             ):
                 with patch(
-                    "src.platforms.detect_platform",
+                    "phase_b.platforms.detect_platform",
                     return_value="custom",
                 ):
                     with patch(
-                        "src.platforms.adapter_llm",
+                        "phase_b.platforms.adapter_llm",
                         new_callable=AsyncMock,
                         return_value=[
                             {
@@ -92,7 +92,7 @@ def test_agent_navigator_verifies_register_fetch():
 
 
 def test_parent_verify_skips_inline_verified():
-    from src.parent_verify import verify_sessions
+    from phase_b.parent_verify import verify_sessions
 
     url = "https://majwhaydenweb.myvscloud.com/webtrac/web/iteminfo.html?FMID=1"
     sessions = [
@@ -111,8 +111,8 @@ def test_parent_verify_skips_inline_verified():
     async def mock_fetch(u):
         raise AssertionError("should not re-fetch inline-verified session")
 
-    with patch("src.parent_verify._fetch_verify_page", side_effect=mock_fetch):
-        with patch("src.parent_verify.is_available", return_value=True):
+    with patch("phase_b.parent_verify._fetch_verify_page", side_effect=mock_fetch):
+        with patch("phase_b.parent_verify.is_available", return_value=True):
             out = asyncio.run(verify_sessions(sessions))
 
     assert out[0]["parent_verdict"] == "parent_ready"

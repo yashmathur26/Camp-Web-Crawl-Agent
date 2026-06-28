@@ -7,8 +7,8 @@ import csv
 import json
 from pathlib import Path
 
-import src.adapter_llm_extract as ax
-from src.adapter_llm_extract import extract_programs_llm
+import phase_b.adapter_llm_extract as ax
+from phase_b.adapter_llm_extract import extract_programs_llm
 
 SEED = "https://customcamp.org/summer"
 PAGE_TEXT = (
@@ -50,7 +50,7 @@ def _setup(monkeypatch, tmp_path, chat_calls):
     monkeypatch.setattr(ax, "CACHE_PATH", tmp_path / "llm_extract.json")
     monkeypatch.setattr(ax, "FIRECRAWL_QUEUE_PATH", tmp_path / "firecrawl_queue.csv")
 
-    import src.llm as llm
+    import shared.llm as llm
 
     monkeypatch.setattr(llm, "is_available", lambda: True)
 
@@ -60,7 +60,7 @@ def _setup(monkeypatch, tmp_path, chat_calls):
 
     monkeypatch.setattr(llm, "chat", fake_chat)
 
-    import src.platforms as platforms
+    import phase_b.platforms as platforms
 
     async def fake_fetch(url, tries=3, *, caller="", wait_until=None, kind=""):
         if url == SEED:
@@ -100,7 +100,7 @@ def test_zero_yield_host_queued_for_firecrawl(monkeypatch, tmp_path):
     chat_calls: list[str] = []
     _setup(monkeypatch, tmp_path, chat_calls)
 
-    import src.llm as llm
+    import shared.llm as llm
 
     monkeypatch.setattr(llm, "chat", lambda *a, **k: {"programs": []})
     sessions = asyncio.run(extract_programs_llm(SEED, town="Lexington"))
@@ -122,7 +122,7 @@ def test_ollama_down_returns_empty_and_queues(monkeypatch, tmp_path):
     monkeypatch.setattr(ax, "CACHE_PATH", tmp_path / "llm_extract.json")
     monkeypatch.setattr(ax, "FIRECRAWL_QUEUE_PATH", tmp_path / "q.csv")
 
-    import src.llm as llm
+    import shared.llm as llm
 
     monkeypatch.setattr(llm, "is_available", lambda: False)
     sessions = asyncio.run(extract_programs_llm(SEED, town="Lexington"))
@@ -136,7 +136,7 @@ def test_program_without_dates_gets_program_granularity(monkeypatch, tmp_path):
     chat_calls: list[str] = []
     _setup(monkeypatch, tmp_path, chat_calls)
 
-    import src.llm as llm
+    import shared.llm as llm
 
     monkeypatch.setattr(
         llm,

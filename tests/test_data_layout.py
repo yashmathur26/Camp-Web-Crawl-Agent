@@ -1,6 +1,6 @@
 """Tests for data/log folder layout."""
 
-from src.data_layout import (
+from shared.data_layout import (
     camp_links_csv,
     camp_sessions_csv,
     candidates_csv,

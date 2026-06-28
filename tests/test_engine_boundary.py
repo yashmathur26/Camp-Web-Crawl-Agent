@@ -17,7 +17,7 @@ def test_engine_has_no_src_imports():
 
 def test_checker_catches_a_violation(tmp_path):
     bad = tmp_path / "bad.py"
-    bad.write_text("import src.platforms\nfrom src.urls import normalize_url\n")
+    bad.write_text("import phase_b.platforms\nfrom shared.urls import normalize_url\n")
     violations = find_violations(tmp_path)
     assert len(violations) == 2
-    assert "import src.platforms" in violations[0]
+    assert "import phase_b.platforms" in violations[0]

@@ -6,7 +6,7 @@ import asyncio
 import json
 from pathlib import Path
 
-from src.platforms import enumerate_provider
+from phase_b.platforms import enumerate_provider
 from tests.conftest_characterization import patch_offline_fetch
 from tests.fixture_helpers import load_platform_fixture
 

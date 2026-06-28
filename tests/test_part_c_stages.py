@@ -3,8 +3,8 @@
 from unittest.mock import patch
 
 from config.town_geo import distance_between, towns_by_population, towns_within
-from src.agentic_gap import _hole_recently_searched, _record_attempt, exhausted_categories
-from src.coverage_matrix import build_matrix, coverage_summary
+from phase_c.agentic_gap import _hole_recently_searched, _record_attempt, exhausted_categories
+from phase_c.coverage_matrix import build_matrix, coverage_summary
 
 
 def test_geo_radius_and_population_order():
@@ -36,7 +36,7 @@ def test_v1_cache_entries_migrate():
 
 
 def test_coverage_matrix_statuses(tmp_path, monkeypatch):
-    import src.categorizer as cz
+    import phase_c.categorizer as cz
 
     monkeypatch.setattr(cz, "_CACHE_PATH", tmp_path / "c.json")
     sessions = [
@@ -61,8 +61,8 @@ def test_coverage_matrix_statuses(tmp_path, monkeypatch):
 
 
 def test_registry_share_and_skip(tmp_path, monkeypatch):
-    import src.categorizer as cz
-    import src.provider_registry as pr
+    import phase_c.categorizer as cz
+    import phase_c.provider_registry as pr
 
     monkeypatch.setattr(cz, "_CACHE_PATH", tmp_path / "c.json")
     monkeypatch.setattr(pr, "REGISTRY_PATH", tmp_path / "reg.json")
@@ -79,7 +79,7 @@ def test_registry_share_and_skip(tmp_path, monkeypatch):
 
 
 def test_part_c_resume_skips_done(tmp_path, monkeypatch):
-    import src.part_c as pc
+    import phase_c.part_c as pc
 
     monkeypatch.setattr(pc, "PROGRESS_PATH", tmp_path / "p.json")
     monkeypatch.setattr(pc, "LEDGER_PATH", tmp_path / "l.csv")
@@ -97,9 +97,9 @@ def test_part_c_resume_skips_done(tmp_path, monkeypatch):
 
 
 def test_manifest_dedup_and_tags(tmp_path, monkeypatch):
-    import src.categorizer as cz
-    import src.handoff as ho
-    import src.provider_registry as pr
+    import phase_c.categorizer as cz
+    import shared.handoff as ho
+    import phase_c.provider_registry as pr
 
     monkeypatch.setattr(cz, "_CACHE_PATH", tmp_path / "c.json")
     monkeypatch.setattr(pr, "REGISTRY_PATH", tmp_path / "reg.json")
@@ -121,7 +121,7 @@ def test_manifest_dedup_and_tags(tmp_path, monkeypatch):
 
 def test_demand_ranker_orders_holes(tmp_path, monkeypatch):
     """Operator request: searches attack high-demand holes first."""
-    import src.demand_ranker as dr
+    import phase_a.demand_ranker as dr
 
     monkeypatch.setattr(dr, "_CACHE_PATH", tmp_path / "d.json")
     holes = [

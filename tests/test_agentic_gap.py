@@ -2,7 +2,7 @@
 
 from datetime import datetime, timezone
 
-from src.agentic_gap import _hole_recently_searched, plan_round_searches
+from phase_c.agentic_gap import _hole_recently_searched, plan_round_searches
 
 
 def test_hole_cache_recent():

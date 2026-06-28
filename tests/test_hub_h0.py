@@ -8,9 +8,9 @@ import pytest
 
 from config.hubs import HUBS, hub_search_url, template_fields
 from config.towns import TOWN_ZIPS, validate_town_zips
-from src.hub_dedup import dedupe_sessions, rows_match
-from src.hub_safeguards import apply_host_bounds, register_url_gate, zero_floor_alarm
-from src.season import filter_summer, in_summer_window
+from phase_b.hub_dedup import dedupe_sessions, rows_match
+from phase_b.hub_safeguards import apply_host_bounds, register_url_gate, zero_floor_alarm
+from phase_a.season import filter_summer, in_summer_window
 
 
 # --- H0.1 -------------------------------------------------------------------

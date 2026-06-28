@@ -6,9 +6,9 @@ import csv
 import shutil
 
 from config import settings
-from src.data_layout import DATA_ROOT, town_slug
-from src.platforms import make_session
-from src.sessions import (
+from shared.data_layout import DATA_ROOT, town_slug
+from phase_b.platforms import make_session
+from phase_b.sessions import (
     _best_register_url,
     _fallback_program_row,
     _provider_display_name,

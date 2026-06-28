@@ -1,6 +1,6 @@
 """Tests for networkidle fetch selection."""
 
-from src.crawl import fetch_wait_until
+from phase_b.crawl import fetch_wait_until
 
 
 def test_register_kind_uses_networkidle():

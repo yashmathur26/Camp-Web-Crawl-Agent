@@ -11,7 +11,7 @@ ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 os.chdir(ROOT)
 
-from src.urls import normalize_url, to_absolute  # noqa: E402
+from shared.urls import normalize_url, to_absolute  # noqa: E402
 
 
 def test_normalize_url():

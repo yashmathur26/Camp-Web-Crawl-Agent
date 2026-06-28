@@ -5,8 +5,8 @@ from __future__ import annotations
 import asyncio
 from unittest.mock import patch
 
-from src.camp_validator import should_llm_extract
-from src.navigator import _OFF_TOPIC_RE, extract_camp_links, extract_one_camp, find_register_link
+from phase_b.camp_validator import should_llm_extract
+from phase_b.navigator import _OFF_TOPIC_RE, extract_camp_links, extract_one_camp, find_register_link
 
 
 # --- anti-fabrication: extraction guard -----------------------------------
@@ -39,7 +39,7 @@ def test_extract_one_camp_does_not_fabricate_from_login_page():
     async def _run():
         # extract_camp_sessions must NOT be called for a thin login page.
         with patch(
-            "src.camp_validator.extract_camp_sessions",
+            "phase_b.camp_validator.extract_camp_sessions",
             side_effect=AssertionError("LLM extraction ran on a login page"),
         ):
             return await extract_one_camp(

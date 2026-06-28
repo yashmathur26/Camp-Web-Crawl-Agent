@@ -19,7 +19,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.part_d import run_part_d  # noqa: E402
+from phase_d.part_d import run_part_d  # noqa: E402
 
 
 def _default_gate_fetch():

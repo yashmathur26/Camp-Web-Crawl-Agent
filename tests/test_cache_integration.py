@@ -8,7 +8,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.cache import (  # noqa: E402
+from shared.cache import (  # noqa: E402
     add_seen_urls,
     get_cached_search_results,
     is_search_seen,
@@ -39,7 +39,7 @@ def test_cache_integration():
         [sys.executable, "-c", f"""
 import sys
 sys.path.insert(0, "{ROOT}")
-from src.cache import is_search_seen, load_seen_urls
+from shared.cache import is_search_seen, load_seen_urls
 assert is_search_seen("test query integration")
 assert "https://test.example/camp" in load_seen_urls()
 print("OK")

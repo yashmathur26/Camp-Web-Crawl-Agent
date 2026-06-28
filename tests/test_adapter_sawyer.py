@@ -10,7 +10,7 @@ from __future__ import annotations
 import asyncio
 from pathlib import Path
 
-from src.platforms import (
+from phase_b.platforms import (
     _parse_sawyer_schedules,
     _sawyer_slug_candidates,
     adapter_sawyer,
@@ -75,7 +75,7 @@ def test_adapter_sawyer_with_mocked_fetch(monkeypatch):
             return SCHEDULES_HTML
         return None
 
-    import src.crawl as crawl
+    import phase_b.crawl as crawl
 
     monkeypatch.setattr(crawl, "fetch_rendered", fake_fetch_rendered)
     sessions = asyncio.run(
@@ -94,7 +94,7 @@ def test_adapter_sawyer_no_slug_returns_empty(monkeypatch):
     async def fake_fetch_rendered(url, *, wait="networkidle", timeout_s=20):
         return "<html><body>plain marketing page</body></html>"
 
-    import src.crawl as crawl
+    import phase_b.crawl as crawl
 
     monkeypatch.setattr(crawl, "fetch_rendered", fake_fetch_rendered)
     sessions = asyncio.run(adapter_sawyer("https://example.com/", [], ""))

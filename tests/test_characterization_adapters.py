@@ -26,7 +26,7 @@ import asyncio
 import json
 from pathlib import Path
 
-from src.platforms import adapter_community_ed, adapter_myrec, adapter_webtrac
+from phase_b.platforms import adapter_community_ed, adapter_myrec, adapter_webtrac
 from tests.conftest_characterization import patch_offline_fetch
 from tests.fixture_helpers import load_platform_fixture
 

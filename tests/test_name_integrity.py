@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 
 from config import settings
-from src.platforms import make_session
+from phase_b.platforms import make_session
 
 
 @pytest.mark.parametrize(

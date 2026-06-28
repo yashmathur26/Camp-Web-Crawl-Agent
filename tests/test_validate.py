@@ -6,7 +6,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
-from src.validate_search_result import validate_search_result  # noqa: E402
+from phase_a.validate_search_result import validate_search_result  # noqa: E402
 
 
 def test_rejects_aggregator():

@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from src.junk_audit import (
+from phase_c.junk_audit import (
     audit_row,
     has_evidence,
     is_chrome_name,

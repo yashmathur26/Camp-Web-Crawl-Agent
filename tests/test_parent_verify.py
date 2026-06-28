@@ -3,7 +3,7 @@
 import asyncio
 from unittest.mock import patch
 
-from src.parent_verify import verify_sessions
+from phase_b.parent_verify import verify_sessions
 
 
 def test_auto_pass_skips_llm():
@@ -31,9 +31,9 @@ def test_auto_pass_skips_llm():
     async def mock_fetch(url):
         return html
 
-    with patch("src.parent_verify._fetch_verify_page", side_effect=mock_fetch):
-        with patch("src.parent_verify.is_available", return_value=True):
-            with patch("src.parent_verify.chat") as mock_chat:
+    with patch("phase_b.parent_verify._fetch_verify_page", side_effect=mock_fetch):
+        with patch("phase_b.parent_verify.is_available", return_value=True):
+            with patch("phase_b.parent_verify.chat") as mock_chat:
                 out = asyncio.run(verify_sessions(sessions))
                 mock_chat.assert_not_called()
 
@@ -55,8 +55,8 @@ def test_fetch_failed():
     async def mock_fetch(url):
         return ""
 
-    with patch("src.parent_verify._fetch_verify_page", side_effect=mock_fetch):
-        with patch("src.parent_verify.is_available", return_value=False):
+    with patch("phase_b.parent_verify._fetch_verify_page", side_effect=mock_fetch):
+        with patch("phase_b.parent_verify.is_available", return_value=False):
             out = asyncio.run(verify_sessions(sessions))
 
     assert out[0]["parent_verdict"] == "fetch_failed"

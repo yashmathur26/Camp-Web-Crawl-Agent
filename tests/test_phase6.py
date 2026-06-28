@@ -3,9 +3,9 @@
 from __future__ import annotations
 
 from config import settings
-from src import fetch_cache
-from src.sessions import _dedupe_across_providers
-from src.verdict_policy import apply_verdict_policy
+from shared import fetch_cache
+from phase_b.sessions import _dedupe_across_providers
+from phase_b.verdict_policy import apply_verdict_policy
 
 
 def test_fetch_cache_put_get_and_reset():

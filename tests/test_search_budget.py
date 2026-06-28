@@ -3,8 +3,8 @@ prioritized query pool, and institution-camps output."""
 
 from __future__ import annotations
 
-from src.institution_output import institution_kind, write_institution_camps_txt
-from src.search_budget import (
+from phase_c.institution_output import institution_kind, write_institution_camps_txt
+from phase_a.search_budget import (
     YieldStopper,
     institution_queries,
     prioritized_queries,

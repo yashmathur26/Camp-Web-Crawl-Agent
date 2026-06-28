@@ -5,7 +5,7 @@ from __future__ import annotations
 import csv
 from pathlib import Path
 
-from src.unified_run import (
+from orchestrator.unified_run import (
     UNIFIED_FIELDS,
     archive_clutter,
     build_registry_from_discovery,
@@ -149,7 +149,7 @@ def test_ensure_registry_uses_committed_else_builds(tmp_path):
 def test_parallel_orchestration_plumbing(tmp_path):
     # Skip every stage so no subprocess/network runs; this exercises the
     # town_parallelism threadpool branch and the town-ordered result aggregation.
-    from src.unified_run import run_unified
+    from orchestrator.unified_run import run_unified
 
     res = run_unified(
         ["Lexington", "Burlington", "Waltham", "Watertown"],
@@ -170,7 +170,7 @@ def test_parallel_orchestration_plumbing(tmp_path):
 
 
 def test_resume_reuses_run_dir_without_wiping(tmp_path):
-    from src.unified_run import create_workspace
+    from orchestrator.unified_run import create_workspace
 
     runs = tmp_path / "runs"
     ctx1 = create_workspace(["Lexington"], runs_root=runs, ts="2026-06-16_100000")
@@ -187,7 +187,7 @@ def test_resume_reuses_run_dir_without_wiping(tmp_path):
 def test_b_stage_is_harvest_only():
     # The B stage must skip B5 enumeration (the slow agent-nav path) — the engine
     # does enumeration and the merge doesn't read phase_b5.
-    from src.unified_run import _town_stage_specs, create_workspace
+    from orchestrator.unified_run import _town_stage_specs, create_workspace
 
     ctx = create_workspace(["Lexington"], runs_root=Path("/tmp/x_unused_ts"), ts="zz")
     b = next(s for s in _town_stage_specs(ctx, "Lexington") if s["stage"] == "B")

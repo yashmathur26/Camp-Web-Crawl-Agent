@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from src.enrollment_signals import extract_enrollment_signals
+from phase_b.enrollment_signals import extract_enrollment_signals
 from tests.fixture_helpers import load_fixture
 
 LOCKS = json.loads((Path(__file__).parent / "characterization_locks.json").read_text(encoding="utf-8"))

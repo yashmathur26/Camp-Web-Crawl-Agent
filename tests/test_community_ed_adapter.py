@@ -1,6 +1,6 @@
 """Tests for community ed adapter scoping."""
 
-from src.platforms import _is_valid_woo_product, detect_platform
+from phase_b.platforms import _is_valid_woo_product, detect_platform
 
 
 def test_bostonjcc_teens_hub_rejected():

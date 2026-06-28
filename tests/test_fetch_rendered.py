@@ -6,8 +6,8 @@ import asyncio
 from pathlib import Path
 
 from config import settings
-from src import platforms
-from src.platforms import (
+from phase_b import platforms
+from phase_b.platforms import (
     _links_from_html,
     rendered_rescue,
     reset_render_budget,
@@ -34,7 +34,7 @@ def _patch_fetch(monkeypatch, pages: dict[str, str], calls: list[str]):
                 return html
         return None
 
-    import src.crawl as crawl
+    import phase_b.crawl as crawl
 
     monkeypatch.setattr(crawl, "fetch_rendered", fake_fetch_rendered)
 

@@ -1,18 +1,25 @@
-"""R2 import-boundary check: engine/ must never import from src/.
+"""R2 import-boundary check: engine/ must never import the discovery pipeline.
 
-Wanted old code is PORTED into engine/, never imported. Run standalone
-(`python tools/check_imports.py`) or via the pytest wrapper in
-tests/test_engine_boundary.py so every test run enforces the boundary.
-Exit code 1 + offending file:line list on violation.
+The engine stays self-contained — wanted old code is PORTED into engine/, never
+imported. After the phase-based reorg the pipeline lives in phase_a..d / shared /
+orchestrator (the legacy `src` name stays forbidden for safety). Run standalone
+(`python tools/check_imports.py`) or via tests/test_engine_boundary.py so every
+test run enforces the boundary. Exit 1 + offending file:line list on violation.
 """
 
 from __future__ import annotations
 
 import ast
-import sys
 from pathlib import Path
 
 ENGINE_ROOT = Path(__file__).resolve().parent.parent / "engine"
+
+# Top-level packages the engine must never import (the discovery pipeline).
+FORBIDDEN = ("src", "orchestrator", "shared", "phase_a", "phase_b", "phase_c", "phase_d")
+
+
+def _forbidden(mod: str) -> bool:
+    return any(mod == p or mod.startswith(p + ".") for p in FORBIDDEN)
 
 
 def find_violations(root: Path = ENGINE_ROOT) -> list[str]:
@@ -28,12 +35,12 @@ def find_violations(root: Path = ENGINE_ROOT) -> list[str]:
         for node in ast.walk(tree):
             if isinstance(node, ast.Import):
                 for alias in node.names:
-                    if alias.name == "src" or alias.name.startswith("src."):
+                    if _forbidden(alias.name):
                         violations.append(f"{py}:{node.lineno}: import {alias.name}")
             elif isinstance(node, ast.ImportFrom):
                 mod = node.module or ""
-                # level>0 relative imports can't reach src/ from engine/.
-                if node.level == 0 and (mod == "src" or mod.startswith("src.")):
+                # level>0 relative imports can't reach the pipeline from engine/.
+                if node.level == 0 and _forbidden(mod):
                     violations.append(f"{py}:{node.lineno}: from {mod} import ...")
     return violations
 
@@ -41,11 +48,11 @@ def find_violations(root: Path = ENGINE_ROOT) -> list[str]:
 def main() -> int:
     violations = find_violations()
     if violations:
-        print("R2 violation: engine/ imports from src/ (port the code instead):")
+        print("R2 violation: engine/ imports the discovery pipeline (port the code instead):")
         for v in violations:
             print(f"  {v}")
         return 1
-    print("import boundary OK: engine/ does not import src/")
+    print("import boundary OK: engine/ does not import the discovery pipeline")
     return 0
 
 

@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.geo_resolve import geo_tag, keep_if_ma
-from src.hub_dedup import dedupe_sessions
-from src.hubs.camp_invention import parse
-from src.season import filter_summer
+from phase_a.geo_resolve import geo_tag, keep_if_ma
+from phase_b.hub_dedup import dedupe_sessions
+from phase_d.hubs.camp_invention import parse
+from phase_a.season import filter_summer
 
 FIXTURE = Path("data/_fixtures/camp_invention/02421_25mi.html")
 EXPECTED_CARDS = 24  # hand-verified against the saved fixture

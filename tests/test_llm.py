@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-from src import llm
+from shared import llm
 
 
 def _with_installed(models):

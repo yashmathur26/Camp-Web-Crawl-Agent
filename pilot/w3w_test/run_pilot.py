@@ -70,7 +70,7 @@ _setup_env()
 
 def town_is_complete(town: str) -> bool:
     """A town is done when its Phase C gap output exists (P0.5 resume)."""
-    from src.data_layout import gap_new_sessions_csv
+    from shared.data_layout import gap_new_sessions_csv
 
     try:
         return gap_new_sessions_csv(town).exists()
@@ -109,8 +109,8 @@ def _reset_pilot_state() -> None:
         p.mkdir(parents=True)
     (PILOT_ROOT / "registry").mkdir(parents=True, exist_ok=True)
     # candidates + camp_links headers
-    from src import data_layout
-    from src.store import CAMP_LINKS_COLUMNS
+    from shared import data_layout
+    from shared.store import CAMP_LINKS_COLUMNS
 
     data_layout.candidates_csv().parent.mkdir(parents=True, exist_ok=True)
     with open(data_layout.candidates_csv(), "w", encoding="utf-8", newline="") as f:
@@ -141,7 +141,7 @@ def bootstrap_registry(
     """Build engine registry YAML from Phase A/B camp_links for one town."""
     import yaml
     from engine.registry.proposer import _DENY_HOST_RE, fingerprint_vendor
-    from src.data_layout import camp_links_csv
+    from shared.data_layout import camp_links_csv
 
     links_path = camp_links_csv()
     by_host: dict[str, str] = {}
@@ -162,7 +162,7 @@ def bootstrap_registry(
                 by_host.setdefault(host, url)
 
     if not by_host:
-        from src.data_layout import candidates_csv
+        from shared.data_layout import candidates_csv
 
         cand_path = candidates_csv()
         if cand_path.exists():
@@ -235,7 +235,7 @@ def bootstrap_registry(
 
 
 def _run_harvest(town: str, stats) -> int:
-    from src.run import _harvest_candidates
+    from orchestrator.run import _harvest_candidates
 
     added = asyncio.run(
         _harvest_candidates("A", stats, dry_run=False, town_filter=town, host_filters=None)
@@ -246,8 +246,8 @@ def _run_harvest(town: str, stats) -> int:
 
 def _run_discovery_and_harvest(town: str, stats, *, skip_phase_a: bool = False) -> None:
     from config.keywords import PHASE_A_KEYWORDS
-    from src.cache import load_seen_urls
-    from src.run import _run_discovery_phase
+    from shared.cache import load_seen_urls
+    from orchestrator.run import _run_discovery_phase
 
     town_filter = [town]
     if not skip_phase_a:
@@ -261,7 +261,7 @@ def _run_discovery_and_harvest(town: str, stats, *, skip_phase_a: bool = False) 
 
 def _run_engine(town: str, *, fresh: bool = True) -> dict:
     from engine.run.runner import run_town
-    from src.data_layout import DATA_ROOT
+    from shared.data_layout import DATA_ROOT
 
     counts = asyncio.run(
         run_town(town, out_root=DATA_ROOT, fresh=fresh, include_review=False)
@@ -271,9 +271,9 @@ def _run_engine(town: str, *, fresh: bool = True) -> dict:
 
 
 def _run_phase_c(town: str, *, rounds: int, max_searches: int | None) -> dict:
-    from src.agentic_gap import run_agentic_gap
-    from src.engine_bridge import engine_sessions_for_town
-    from src.search_budget import town_budget
+    from phase_c.agentic_gap import run_agentic_gap
+    from phase_c.engine_bridge import engine_sessions_for_town
+    from phase_a.search_budget import town_budget
 
     sessions = engine_sessions_for_town(town)
     if not sessions:
@@ -290,7 +290,7 @@ def _run_phase_c(town: str, *, rounds: int, max_searches: int | None) -> dict:
 
 
 def _read_engine_sessions(town: str) -> list[dict]:
-    from src.data_layout import DATA_ROOT, town_slug
+    from shared.data_layout import DATA_ROOT, town_slug
 
     path = DATA_ROOT / town_slug(town) / "engine" / "sessions.csv"
     if not path.exists():
@@ -316,7 +316,7 @@ def _read_engine_sessions(town: str) -> list[dict]:
 
 
 def _read_gap_sessions(town: str) -> list[dict]:
-    from src.data_layout import gap_new_sessions_csv
+    from shared.data_layout import gap_new_sessions_csv
 
     path = gap_new_sessions_csv(town)
     if not path.exists():
@@ -359,7 +359,7 @@ def _merge_final(town_results: list[dict]) -> tuple[list[dict], dict]:
 
 
 def _write_final(rows: list[dict], summary: dict) -> tuple[Path, Path]:
-    from src.csv_mirror import write_csv_bundle
+    from shared.csv_mirror import write_csv_bundle
 
     csv_path = PILOT_ROOT / "FINAL_sessions.csv"
     txt_path = PILOT_ROOT / "FINAL_sessions.txt"
@@ -388,7 +388,7 @@ def _write_town_camp_lists(merged: list[dict], towns: list[str]) -> None:
         return
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
-    from src.institution_output import write_institution_camps_txt
+    from phase_c.institution_output import write_institution_camps_txt
 
     for town in towns:
         town_rows = [r for r in merged if (r.get("town") or "").lower() == town.lower()]
@@ -413,9 +413,9 @@ def run_town_pipeline(
 ) -> dict:
     from dotenv import load_dotenv
     from config.settings import SETTINGS
-    from src.llm import unload_all_models
-    from src.resource_guard import log_memory
-    from src.run import RunStats
+    from shared.llm import unload_all_models
+    from phase_b.resource_guard import log_memory
+    from orchestrator.run import RunStats
 
     load_dotenv(REPO / ".env")
     # P2.3: Phase B's LLM camp-page filter is the biggest crawl-time model load;
@@ -537,7 +537,7 @@ def main() -> int:
     per_town_summary: dict = {}
     t0 = time.monotonic()
 
-    from src.resource_guard import MemoryBudgetError
+    from phase_b.resource_guard import MemoryBudgetError
 
     for town in town_list:
         if args.resume and town_is_complete(town) and not args.skip_phase_c:

@@ -6,10 +6,10 @@ import csv
 import shutil
 
 from config import settings
-from src.data_layout import DATA_ROOT, camp_sessions_csv, town_slug
-from src.junk_audit import validate_session
-from src.platforms import make_session
-from src.sessions import write_session_outputs
+from shared.data_layout import DATA_ROOT, camp_sessions_csv, town_slug
+from phase_c.junk_audit import validate_session
+from phase_b.platforms import make_session
+from phase_b.sessions import write_session_outputs
 
 
 def test_validate_session_passes_clean_row():

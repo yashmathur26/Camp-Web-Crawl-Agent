@@ -4,6 +4,25 @@ Discovers **summer camp primary-source URLs** for Middlesex County, MA (~53 town
 
 **Not** aggregators (ActivityHero, Macaroni Kid, Kidvoyage, Yelp) or after-school program guides.
 
+## Repository layout
+
+The code is organized by **pipeline stage** — the unified runner executes them in
+order `A → B → engine → D → C` (`python -m orchestrator.unified_run`):
+
+| Folder | Stage | What it does |
+|--------|-------|--------------|
+| `orchestrator/` | — | the CLI entrypoints: `run.py` (drives phases A/B/C) + `unified_run.py` (one command, all stages, one CSV) |
+| `phase_a/` | **A** | search / discovery → candidate URLs |
+| `phase_b/` | **B** | crawl + harvest validated candidates → sessions |
+| `engine/` | **engine** | self-contained v3 extraction engine (vendor adapters + generic extractor + the one publish gate); `python -m engine.run` |
+| `phase_d/` | **D** | hub adapters (camp-invention, configio, idtech) + US Sports Camps |
+| `phase_c/` | **C** | registry, categorization, agentic gap-fill, deliverables (+ `engine_bridge`) |
+| `shared/` | — | cross-stage utilities (urls, cache, store, data_layout, llm, geo) |
+| `config/`, `config_engine.py` | — | settings, towns, keywords, sources, hub registry |
+| `tests/` | — | the full test suite | `tools/`, `scripts/`, `docs/`, `pilot/` |
+
+The engine never imports the discovery pipeline (enforced by `tools/check_imports.py`); shared old code is *ported* into `engine/`, not imported.
+
 ## Setup
 
 ```bash
@@ -66,16 +85,16 @@ Free providers run searches from your computer. They are slower and may rate-lim
 
 ```bash
 # Plan only — no API calls, no cost (default)
-python -m src.run --dry-run
+python -m orchestrator.run --dry-run
 
 # Live Phase A search (summer directory keywords)
-python -m src.run --no-dry-run --phase A --limit 5
+python -m orchestrator.run --no-dry-run --phase A --limit 5
 
 # Crawl validated directory candidates → camp_links.csv
-python -m src.run --no-dry-run --phase B
+python -m orchestrator.run --no-dry-run --phase B
 
 # Full run (Phase C disabled — summer-only scope)
-python -m src.run --no-dry-run --limit 50
+python -m orchestrator.run --no-dry-run --limit 50
 ```
 
 ### Agent mode (Ollama)
@@ -83,9 +102,9 @@ python -m src.run --no-dry-run --limit 50
 Autonomous loop: **observe → plan → act → reflect → remember**. Memory persists in `cache/agent_memory.json`.
 
 ```bash
-python -m src.run --agent --dry-run
-python -m src.run --agent --no-dry-run
-python -m src.run --agent --no-dry-run --limit 30
+python -m orchestrator.run --agent --dry-run
+python -m orchestrator.run --agent --no-dry-run
+python -m orchestrator.run --agent --no-dry-run --limit 30
 ```
 
 The agent prefers crawling high-yield primary sources (communityed.org, myrec.com, .gov/recreation) before new searches, and learns from outcomes across runs.
@@ -165,13 +184,13 @@ crontab -e
 Add (Sundays at 2 AM):
 
 ```
-0 2 * * 0 cd "/Users/yashmathur/Desktop/firefly web scraper" && ./venv/bin/python -m src.run --no-dry-run >> logs/cron.log 2>&1
+0 2 * * 0 cd "/Users/yashmathur/Desktop/firefly web scraper" && ./venv/bin/python -m orchestrator.run --no-dry-run >> logs/cron.log 2>&1
 ```
 
 Agent mode cron example:
 
 ```
-0 3 * * 0 cd "/Users/yashmathur/Desktop/firefly web scraper" && ./venv/bin/python -m src.run --agent --no-dry-run --limit 100 >> logs/cron.log 2>&1
+0 3 * * 0 cd "/Users/yashmathur/Desktop/firefly web scraper" && ./venv/bin/python -m orchestrator.run --agent --no-dry-run --limit 100 >> logs/cron.log 2>&1
 ```
 
 ### macOS (launchd)
@@ -187,7 +206,7 @@ Save as `~/Library/LaunchAgents/com.firefly.camp-link-engine.plist`:
   <key>ProgramArguments</key>
   <array>
     <string>/Users/yashmathur/Desktop/firefly web scraper/venv/bin/python</string>
-    <string>-m</string><string>src.run</string>
+    <string>-m</string><string>orchestrator.run</string>
     <string>--no-dry-run</string>
   </array>
   <key>WorkingDirectory</key>

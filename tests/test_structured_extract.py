@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from src.structured_extract import extract_jsonld_events, structured_summary
+from phase_b.structured_extract import extract_jsonld_events, structured_summary
 
 # A Sawyer-style page: visible DOM is "See Details" chrome, real data is JSON-LD.
 SAWYER_HTML = """

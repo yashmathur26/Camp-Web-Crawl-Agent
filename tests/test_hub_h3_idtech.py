@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from src.geo_resolve import geo_tag
-from src.hubs.idtech import parse_locations, parse_reg_flow
+from phase_a.geo_resolve import geo_tag
+from phase_d.hubs.idtech import parse_locations, parse_reg_flow
 
 LOC_FIXTURE = Path("data/_fixtures/idtech/location-search_lexington.html")
 CAMPUS_FIXTURE = Path("data/_fixtures/idtech/bentley_campus.html")

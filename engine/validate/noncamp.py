@@ -288,3 +288,17 @@ def prefixed_name(name: str, provider_name: str) -> str:
     if _tokens(provider_name) & _tokens(name):
         return name
     return f"{provider_name} — {name}"
+
+
+def display_prefixed_name(name: str, provider_name: str) -> str:
+    """Phase 5 display_name: prefix EVERY name with the provider so a parent knows
+    the operator ("Lexington Recreation — Badminton Camp"), not just generic ones.
+    Skips when the provider tokens already appear in the name (no "YMCA — YMCA
+    Summer Camp"). Returns the bare name when there is no provider to add."""
+    name = (name or "").strip()
+    provider_name = (provider_name or "").strip()
+    if not provider_name or not name:
+        return name
+    if _tokens(provider_name) & _tokens(name):
+        return name
+    return f"{provider_name} — {name}"

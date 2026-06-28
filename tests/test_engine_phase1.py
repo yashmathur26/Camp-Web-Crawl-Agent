@@ -30,7 +30,8 @@ def test_model_roundtrip(tmp_path):
     gap = Gap(provider_id=prov.provider_id, reason="blocked", evidence="queue-it")
 
     counts = write_output(tmp_path, [prov], [prog], [gap])
-    assert counts == {"providers.csv": 1, "programs.csv": 1, "sessions.csv": 1, "gaps.csv": 1}
+    assert counts == {"providers.csv": 1, "programs.csv": 1, "sessions.csv": 1,
+                      "review.csv": 0, "gaps.csv": 1}
 
     loaded = read_output(tmp_path)
     assert loaded["providers"][0].host == "jwhayden.org"
@@ -119,10 +120,11 @@ def _program(name, info_url, *, sessions=None, camp_scoped=False):
     return p
 
 
-def test_gate_chrome_name_gaps():
+def test_gate_chrome_name_routes_to_review():
+    # Phase 1: chrome-named slop moves to the review tier (not gap, not confirmed).
     res = gate_program(_program("Back to Top", "https://x/i"), fetched_text={"https://x/i": RICH})
-    assert not res.published and res.gaps[0].reason == "needs_review"
-    assert "chrome name" in res.gaps[0].evidence
+    assert not res.published and res.review
+    assert "chrome name" in res.review[0].evidence["review_reason"]
 
 
 def test_gate_empty_info_page_gaps():
@@ -141,7 +143,7 @@ def test_gate_unfetched_info_url_gaps():
 
 def test_gate_pdf_name_never_publishes():
     res = gate_program(_program("schedule.pdf", "https://x/i"), fetched_text={"https://x/i": RICH})
-    assert not res.published and "filename" in res.gaps[0].evidence
+    assert not res.published and "filename" in res.review[0].evidence["review_reason"]
 
 
 def test_gate_adult_program_gaps():
@@ -153,7 +155,7 @@ def test_gate_adult_program_gaps():
         fetched_text={"https://x/p": text},
     )
     assert not res.published
-    assert "adult" in res.gaps[0].evidence.lower()
+    assert "adult" in res.review[0].evidence["review_reason"].lower()
 
 
 def test_gate_real_webtrac_row_parent_ready():

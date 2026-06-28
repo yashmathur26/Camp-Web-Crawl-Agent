@@ -69,3 +69,59 @@ def to_absolute(base_url: str, href: str) -> str:
 
 def is_media_url(url: str) -> bool:
     return bool(MEDIA_URL_RE.search((url or "").lower()))
+
+
+# --- platform-canonical link identity (v3 §2.3, PORTED from src/urls.py) ------
+# normalize_url gives string identity; on a KNOWN platform the identity is the
+# platform key (WebTrac FMID+Module, MyRec ProgramID) so reordered/tracked URLs
+# for the same item collapse to one. Used for register dedupe + "same link".
+_REGISTER_DROP_PARAM_RE = re.compile(
+    r"^(?:_csrf|csrf|utm_|fbclid|gclid|mc_|session|sid|jsessionid|phpsessid)", re.I
+)
+
+
+def canonical_register_url(url: str, platform: str = "") -> str:
+    """Identity key for a register URL (NOT a fetchable URL): normalize_url plus
+    platform rules — WebTrac iteminfo collapses to FMID+Module, MyRec
+    program_details to ProgramID, tracking/session params dropped."""
+    norm = normalize_url(url)
+    if not norm:
+        return ""
+    parsed = urlparse(norm)
+    host = parsed.netloc.lower()
+    path_low = parsed.path.lower()
+    pairs = [
+        (k, v)
+        for k, vs in parse_qs(parsed.query, keep_blank_values=True).items()
+        for v in vs
+    ]
+    is_webtrac = "myvscloud" in host or platform == "webtrac"
+    if is_webtrac and "iteminfo.html" in path_low:
+        pairs = [(k, v) for k, v in pairs if k.lower() in ("fmid", "module")]
+    elif is_webtrac and "search.html" in path_low:
+        pairs = [
+            (k, v) for k, v in pairs
+            if k.lower() != "_csrf_token" and not k.lower().startswith("arwebsearch")
+        ]
+    elif platform == "myrec" or "program_details.aspx" in path_low:
+        pairs = [(k, v) for k, v in pairs if k.lower() == "programid"]
+    pairs = [(k, v) for k, v in pairs if not _REGISTER_DROP_PARAM_RE.match(k)]
+    pairs.sort()
+    return urlunparse(
+        (parsed.scheme, parsed.netloc, parsed.path, parsed.params, urlencode(pairs), "")
+    )
+
+
+def register_platform_id(url: str) -> str:
+    """Stable per-host platform identity (`host|fmid|<id>` / `host|programid|<id>`)
+    from a register URL; "" when the URL carries no item id."""
+    if not url:
+        return ""
+    parsed = urlparse(url)
+    host = parsed.netloc.lower()
+    qs = {k.lower(): vs for k, vs in parse_qs(parsed.query).items()}
+    if "iteminfo.html" in parsed.path.lower() and qs.get("fmid"):
+        return f"{host}|fmid|{qs['fmid'][0]}"
+    if "program_details.aspx" in parsed.path.lower() and qs.get("programid"):
+        return f"{host}|programid|{qs['programid'][0]}"
+    return ""

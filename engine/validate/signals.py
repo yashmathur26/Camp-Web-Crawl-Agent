@@ -66,6 +66,26 @@ JUNK_URL_RE = re.compile(
 )
 
 
+# Known registration-platform hosts (plan core reframe: a host IS a reliable
+# fingerprint — match these, classify everything else from content). Kept here as
+# the ONE place the gate/extractors ask "is this a known platform?". Mirrors the
+# proposer's VENDOR_SIGNATURES plus the handoff platforms (capturepoint, pinwheel)
+# the register-url resolver follows.
+PLATFORM_HOST_RE = re.compile(
+    r"myvscloud\.com|webtrac|myrec\.com|campscui\.active\.com|activecommunities\.com|"
+    r"hisawyer\.com|campbrain(?:registration)?\.com|enrollsy\.com|daxko\.com|"
+    r"recdesk\.com|civicrec|communitypass\.net|ultracamp\.com|capturepoint\.com|"
+    r"pinwheel\.us|communityed\.(?:org|com)",
+    re.I,
+)
+
+
+def is_platform_host(url: str) -> bool:
+    """True when the URL's host is a known registration platform (a fingerprint,
+    not a guess). Reserved for host matching; page role comes from content."""
+    return bool(PLATFORM_HOST_RE.search(urlparse(url or "").netloc.lower()))
+
+
 @dataclass
 class EnrollmentSignals:
     has_cart_cta: bool = False
@@ -96,6 +116,12 @@ def _platform_type(url: str) -> str:
     if "woocommerce" in low or "/class/" in low or "/product/" in low:
         return "woocommerce"
     return "generic"
+
+
+def is_registration_platform_url(url: str) -> bool:
+    """Public: does this URL point at a known platform's item/registration page
+    (WebTrac iteminfo, MyRec program_details, CommunityEd /class/, /product/)?"""
+    return _is_platform_session_url(url)
 
 
 def _is_platform_session_url(url: str) -> bool:

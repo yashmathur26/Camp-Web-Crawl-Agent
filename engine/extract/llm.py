@@ -85,3 +85,86 @@ def extract_programs(page_text: str, url: str, town: str) -> list[dict] | None:
             logger.warning("llm extract failed (%s): %s", url, exc)
             return None
     return None
+
+
+# --------------------------------------------------------------------------- #
+# Phase 4 — page-role verifier + weak-name normalizer (same ONE call site, R3).
+# Perception only: classify/format from CONTENT, never the URL. Fail open (None).
+# --------------------------------------------------------------------------- #
+
+def _chat(system: str, user: str, *, purpose: str) -> str | None:
+    """One Ollama chat round, JSON-forced, temp 0. Returns content or None
+    (fail open) on any transport error."""
+    base = ENGINE["ollama_base_url"].rstrip("/")
+    try:
+        resp = requests.post(
+            f"{base}/api/chat",
+            json={"model": ENGINE["ollama_model"],
+                  "messages": [{"role": "system", "content": system},
+                               {"role": "user", "content": user}],
+                  "stream": False, "format": "json", "options": {"temperature": 0}},
+            timeout=90,
+        )
+        resp.raise_for_status()
+        return resp.json().get("message", {}).get("content", "")
+    except requests.RequestException as exc:
+        logger.warning("llm %s failed: %s", purpose, exc)
+        return None
+
+
+_ROLE_SYSTEM = """You classify ONE web page's role for a youth summer camp directory.
+Read the page text and reply with ONLY JSON: {"role":"registration"|"info"|"peripheral"}.
+registration = the page to sign up / enroll / book / add to cart for a specific camp.
+info = describes a specific camp (dates, ages, activities) but is not the signup page.
+peripheral = about/history/staff/alumni/news/policies/directions — not a specific camp.
+Decide from the page CONTENT only; you are never given the URL."""
+
+_ROLES = {"registration", "info", "peripheral"}
+
+
+def verify_page_role(page_text: str, *, title: str = "", h1: str = "") -> str | None:
+    """Content-based role for the RESIDUE Phase 2/3 couldn't resolve. Returns one
+    of registration|info|peripheral, or None when the text is too thin to answer
+    (no call) or the model fails (fail open → caller routes to review)."""
+    text = (page_text or "").strip()
+    if len(text) < MIN_INPUT_CHARS:
+        return None  # not answerable — no call; caller flags thin → review
+    user = json.dumps({"title": title, "h1": h1, "page_text": text[:6000]})
+    content = _chat(_ROLE_SYSTEM, user, purpose="role")
+    if content is None:
+        return None
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        m = re.search(r"\{[\s\S]*\}", content)
+        data = json.loads(m.group()) if m else {}
+    role = str((data or {}).get("role") or "").strip().lower()
+    logger.info("llm role in=%d chars -> %s", len(text), role or "unparseable")
+    return role if role in _ROLES else None
+
+
+_NAME_SYSTEM = """You clean ONE messy program/camp NAME into a short human title.
+Reply with ONLY JSON: {"name":"..."}. Keep it faithful — do NOT invent words and
+do NOT add an organization/provider. Strip file extensions, slugs and stray
+punctuation. If the input is not a real program name (navigation/file/boilerplate),
+return {"name":""}."""
+
+
+def normalize_name_llm(raw_name: str) -> str | None:
+    """Format a weak-source (slug/link/llm) name into a clean one. Returns the
+    cleaned name, "" when the model judges it not a real name, or None on failure
+    (fail open → caller keeps the original). Never call on clean adapter rows."""
+    name = (raw_name or "").strip()
+    if not name:
+        return None
+    content = _chat(_NAME_SYSTEM, json.dumps({"raw_name": name}), purpose="name")
+    if content is None:
+        return None
+    try:
+        data = json.loads(content)
+    except json.JSONDecodeError:
+        m = re.search(r"\{[\s\S]*\}", content)
+        data = json.loads(m.group()) if m else {}
+    cleaned = str((data or {}).get("name") or "").strip()
+    logger.info("llm name %r -> %r", name, cleaned)
+    return cleaned

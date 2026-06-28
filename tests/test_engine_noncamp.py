@@ -157,7 +157,10 @@ def test_gate_prefixes_generic_name_and_keeps_real_camp():
     res = _gate_one("Younger Kids Unit", text, dates="June 29 - July 2", ages="8-10",
                     info="https://wsymca.org/camp-chickami", provider_name="West Suburban YMCA")
     assert res.published
-    assert res.published[0].name == "West Suburban YMCA — Younger Kids Unit"
+    # Phase 5: identity name stays bare (dedupe/eval key); the provider prefix
+    # lives in display_name for the parent-facing CSV.
+    assert res.published[0].name == "Younger Kids Unit"
+    assert res.published[0].display_name == "West Suburban YMCA — Younger Kids Unit"
 
 
 def test_higher_ed_adult_dropped_but_youth_precollege_kept():

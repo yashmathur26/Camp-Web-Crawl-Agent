@@ -18,6 +18,7 @@ from engine.extract.base import ExtractResult, Extractor, group_sessions_into_pr
 from engine.fetch.client import Budget, BudgetExceeded, FetchClient
 from engine.fetch.urls import is_media_url, normalize_url
 from engine.model import Gap, Program, Provider, Session
+from engine.validate.gate import is_hub_slug
 
 _JSONLD_RE = re.compile(r'<script[^>]+ld\+json[^>]*>([\s\S]*?)</script>', re.I)
 _EVENT_TYPES = {"event", "childrensevent", "course", "educationevent", "camp"}
@@ -47,6 +48,36 @@ _NONCAMP_SECTION_RE = re.compile(
     re.I,
 )
 _CAMP_PATH_RE = re.compile(r"camp|summer", re.I)
+# Catalog/search roots that are hubs regardless of the crawl tree (platform search
+# pages, rec-dept activity listings). Used by Phase 2a's is_hub.
+# Catalog/search ROOTS only (a hub) — NOT platform item pages (iteminfo.html under
+# /webtrac/ is the camp's own page, not a catalog). Match the search endpoint, not
+# every webtrac URL.
+_CATALOG_URL_RE = re.compile(
+    r"search\.html|activities/default\.aspx|/catalog\b|/program-search",
+    re.I,
+)
+
+
+def is_camp_catalog_url(url: str) -> bool:
+    return bool(_CATALOG_URL_RE.search(url or ""))
+
+
+# Weak name provenance (Phase 4/5): slug/link/llm names are the ones worth running
+# the LLM normalizer over; jsonld/title are already clean.
+_WEAK_SOURCES = {"slug", "link_text", "link", "llm"}
+
+
+def _looks_messy(name: str) -> bool:
+    n = (name or "").strip()
+    if not n:
+        return False
+    return bool(
+        "." in n                              # "Homeschool.Html"
+        or re.search(r"\d", n)                # ids/slugs with digits
+        or ("_" in n)                          # raw_slug_form
+        or (" " not in n and len(n) < 6)      # cramped single token
+    )
 # Locale mirrors (/es/, /pt-br/, ...) are the same camp in another language —
 # following them produces duplicate rows (ymcaboston Spanish-mirror finding).
 _LOCALE_PREFIX_RE = re.compile(
@@ -148,9 +179,14 @@ def _detail_record(url: str, text: str, html: str) -> dict | None:
         return None
     # Slug is the reliable per-camp name; the page <h1> is often a site banner
     # ("Running Brook Camps") repeated across pages, which collides on dedup.
-    name = slug_name(url) or page_title(html, url)
+    slug = slug_name(url)
+    name = slug or page_title(html, url)
+    # name_source feeds the gate's Phase-5 trust check: a slug is weak, a page
+    # heading/<title> is reliable.
+    name_source = "slug" if slug else "title"
     return {"name": name, "info_url": url,
-            "dates": "", "ages": sa, "price": "", "_detail": True}
+            "dates": "", "ages": sa, "price": "", "_detail": True,
+            "name_source": name_source}
 
 
 def _section_children(parent_url: str, links: list[dict]) -> list[str]:
@@ -195,7 +231,7 @@ def jsonld_events(html: str) -> list[dict]:
                 if types & _EVENT_TYPES and name:
                     out.append({"name": name,
                                 "dates": str(n.get("startDate") or "").split("T")[0],
-                                "ages": "", "price": ""})
+                                "ages": "", "price": "", "name_source": "jsonld"})
     return out
 
 
@@ -316,9 +352,16 @@ class GenericExtractor(Extractor):
         max_pages = int(ENGINE["generic_max_follows"]) * 3
         pages: list[tuple[str, str, str]] = [(provider.seed_url, text, html)]
         visited: set[str] = {normalize_url(provider.seed_url)}
-        queue: deque[tuple[str, int]] = deque(
-            (u, 1) for u in score_follow_links(provider.seed_url, links)
-        )
+        # Phase 2a crawl-tree ancestry: normalized(child url) -> the page it was
+        # found on. Seed children point at the seed; section children at the section.
+        parent_of: dict[str, str] = {}
+        # Phase 2 register scan needs every fetched page's outbound links + html.
+        page_links: dict[str, list[dict]] = {normalize_url(provider.seed_url): links}
+        page_html: dict[str, str] = {normalize_url(provider.seed_url): html}
+        seed_children = score_follow_links(provider.seed_url, links)
+        for cu in seed_children:
+            parent_of.setdefault(normalize_url(cu), provider.seed_url)
+        queue: deque[tuple[str, int]] = deque((u, 1) for u in seed_children)
         hubs: set[str] = set()  # section pages we descended FROM (not camps themselves)
         while queue and len(pages) < max_pages:
             u, depth = queue.popleft()
@@ -334,6 +377,8 @@ class GenericExtractor(Extractor):
             if len(ptext.strip()) < 400:
                 continue
             pages.append((u, ptext, phtml))
+            page_links[nu] = pl
+            page_html[nu] = phtml
             records.extend({**e, "info_url": u} for e in jsonld_events(phtml))
             if depth < 2:  # one more level: this section's detail pages
                 children = [
@@ -341,7 +386,38 @@ class GenericExtractor(Extractor):
                 ]
                 if children:
                     hubs.add(nu)  # this page is a section overview, not a camp
+                    for cu in children:
+                        parent_of.setdefault(normalize_url(cu), u)
                     queue.extend((cu, depth + 1) for cu in children)
+
+        # Phase 2a — nearest_hub resolver. A camp's nearest hub is the FIRST hub
+        # ancestor up the crawl tree (not the site root); when ancestry is missing
+        # (JSON-LD-harvested rows) fall back to trimming the path one segment at a
+        # time to the first fetched hub. Hubs are retained as fetched pages (Phase 2
+        # scan + Firecrawl content) but never publish as camp rows.
+        fetched_norm = {normalize_url(pu) for pu, _, _ in pages}
+
+        def _is_hub(candidate: str) -> bool:
+            return (normalize_url(candidate) in hubs
+                    or is_hub_slug(candidate) or is_camp_catalog_url(candidate))
+
+        def _nearest_hub(camp_url: str) -> str:
+            seen: set[str] = set()
+            cur = parent_of.get(normalize_url(camp_url), "")
+            while cur and cur not in seen:
+                seen.add(cur)
+                if _is_hub(cur):
+                    return cur
+                cur = parent_of.get(normalize_url(cur), "")
+            # Path-trim fallback over fetched pages.
+            p = urlparse(camp_url)
+            segs = p.path.rstrip("/").split("/")
+            while len(segs) > 1:
+                segs = segs[:-1]
+                trimmed = f"{p.scheme}://{p.netloc}{'/'.join(segs)}/"
+                if normalize_url(trimmed) in fetched_norm and _is_hub(trimmed):
+                    return trimmed
+            return ""
 
         # Per-page deterministic detail records (catalog/multi-page sites): every
         # followed camp-detail page (a non-hub leaf) becomes its own program with
@@ -374,7 +450,7 @@ class GenericExtractor(Extractor):
                 got = extract_programs(ptext, u, provider.town)
                 if got is None:
                     continue  # model failure — deterministic results stand
-                records.extend({**r, "info_url": u} for r in got)
+                records.extend({**r, "info_url": u, "name_source": "llm"} for r in got)
 
         # Drop overview records harvested FROM a section/hub page (JSON-LD or LLM
         # that named the section itself, e.g. "Running Brook Camps" on /day-camp);
@@ -402,21 +478,33 @@ class GenericExtractor(Extractor):
         records = scope_to_camp_pages(records)
         records = demote_activity_menus(records)
 
-        # Register-link discovery (Playcare finding): if the site has a real
-        # /enroll|/register page, point register_url there instead of the info
-        # page — but only a clean one. Account/login/portal/change-of-address/
-        # gift-card targets are rejected (Waltham wrong-link findings); the row
-        # then keeps its own info_url as the register fallback.
-        register_url = ""
-        for l in links:
-            lu = l.get("url", "")
-            lp = urlparse(lu).path.lower()
-            if not _REG_INTENT_RE.search(lu):
-                continue
-            if _NONCAMP_SECTION_RE.search(lp) or _BAD_REGISTER_RE.search(lu):
-                continue
-            register_url = lu
-            break
+        # Phase 2 register resolution (per camp, confidence-tiered, never aliased).
+        from engine.extract.register import resolve_register
+
+        def _budgeted_fetch(u: str):
+            budget.check()
+            return fetch.fetch_text(u, budget=budget)
+
+        def _resolve(camp_url: str, nh: str):
+            cu = normalize_url(camp_url)
+            others = [(pu, ln) for pu, ln in page_links.items()
+                      if pu != cu and pu != normalize_url(nh)]
+            try:
+                return resolve_register(
+                    camp_url,
+                    own_links=page_links.get(cu, []),
+                    own_html=page_html.get(cu, ""),
+                    nearest_hub=nh,
+                    hub_links=page_links.get(normalize_url(nh), []) if nh else [],
+                    other_page_links=others,
+                    context="",
+                    fetch=_budgeted_fetch,
+                )
+            except BudgetExceeded:
+                from engine.extract.register import RegisterResolution
+                return RegisterResolution()
+
+        from engine.extract.features import role_of_page
 
         seen: set[str] = set()
         sessions = []
@@ -425,11 +513,42 @@ class GenericExtractor(Extractor):
             if key in seen:
                 continue
             seen.add(key)
+            nh = _nearest_hub(r["info_url"])
+            rr = _resolve(r["info_url"], nh)
+            cu = normalize_url(r["info_url"])
+            page_text = next((t for u, t, _ in pages if normalize_url(u) == cu), "")
+            role, _feat = role_of_page(
+                r["info_url"], page_html.get(cu, ""), page_text,
+                name=r["name"], links=page_links.get(cu, []),
+                is_hub=cu in hubs,
+            )
+            name, name_source = r["name"], r.get("name_source", "")
+            # Phase 4 (residue only): when Phase 2/3 are silent — deterministic role
+            # is peripheral AND no platform/register link found — ask the 1B model
+            # for a content-based role. Fail open: None keeps peripheral (→ review).
+            if role == "peripheral" and not rr.confidence:
+                from engine.extract.llm import verify_page_role
+
+                llm_role = verify_page_role(page_text, h1=name)
+                if llm_role:
+                    role = llm_role
+            # Phase 4 (folded Phase 5): normalize a weak-source name only when it
+            # looks messy; clean → use it, "" → leave for the gate's weak-name
+            # review, None (model down) → keep original.
+            if name_source in _WEAK_SOURCES and _looks_messy(name):
+                from engine.extract.llm import normalize_name_llm
+
+                cleaned = normalize_name_llm(name)
+                if cleaned:
+                    name, name_source = cleaned, "llm_normalized"
             sessions.append(
-                Session(name=r["name"], info_url=r["info_url"],
-                        register_url=register_url or r["info_url"], dates=r.get("dates", ""),
+                Session(name=name, info_url=r["info_url"],
+                        register_url=rr.register_url, dates=r.get("dates", ""),
                         ages=r.get("ages", ""), price=r.get("price", ""),
-                        extractor="generic")
+                        extractor="generic", name_source=name_source,
+                        raw_name=r["name"], nearest_hub=nh,
+                        register_is_info=rr.register_is_info,
+                        register_confidence=rr.confidence, page_role=role)
             )
         programs = group_sessions_into_programs(provider, sessions, camp_scoped=False)
         return ExtractResult(programs=programs, fetch_log=fetch.log)

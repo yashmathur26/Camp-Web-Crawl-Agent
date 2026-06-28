@@ -20,7 +20,9 @@ PROGRAMS_COLUMNS = [
     "description_snippet",
 ]
 SESSIONS_COLUMNS = [
-    "session_id", "program_id", "name", "info_url", "register_url", "dates",
+    "session_id", "program_id", "name", "display_name", "raw_name",
+    "name_source", "info_url", "register_url", "parent_url", "homepage_url",
+    "nearest_hub", "register_is_info", "register_confidence", "dates",
     "ages", "price", "verdict", "evidence_json", "extractor", "fetched_at",
     "content_chars",
 ]
@@ -74,7 +76,7 @@ class Provider:
 
 @dataclass
 class Session:
-    name: str
+    name: str                        # bare IDENTITY name — dedupe + eval match on this
     info_url: str
     register_url: str = ""
     dates: str = ""
@@ -87,6 +89,25 @@ class Session:
     content_chars: int = 0
     program_id: str = ""
     session_id: str = ""
+    # Phase 5 name accuracy: a provider-prefixed human label (the CSV's parent-
+    # facing name), the original extracted string for audit, and where the name
+    # came from (h1/title/jsonld = reliable; slug/link_text/llm = weak).
+    display_name: str = ""
+    raw_name: str = ""
+    name_source: str = ""
+    # v3 link model (§3): the resolved link bundle. parent_url is the ONE link a
+    # human sees (always populated by the 6L ladder); register_url is nullable and
+    # never aliased from info_url (register_is_info marks a genuine combined page);
+    # nearest_hub is the closest catalog/section page above this camp.
+    parent_url: str = ""
+    homepage_url: str = ""
+    nearest_hub: str = ""
+    register_is_info: bool = False
+    register_confidence: str = ""    # "" | high | medium | low
+    # Phase 3 page role (registration | info | peripheral). Transient: computed by
+    # the extractor where html/links exist, consumed by the gate in the same run;
+    # not a CSV column (gate has already run before serialization).
+    page_role: str = ""
 
     def __post_init__(self) -> None:
         if not self.session_id:
@@ -95,8 +116,13 @@ class Session:
     def to_row(self) -> dict:
         return {
             "session_id": self.session_id, "program_id": self.program_id,
-            "name": self.name, "info_url": self.info_url,
-            "register_url": self.register_url, "dates": self.dates,
+            "name": self.name, "display_name": self.display_name or self.name,
+            "raw_name": self.raw_name, "name_source": self.name_source,
+            "info_url": self.info_url,
+            "register_url": self.register_url, "parent_url": self.parent_url,
+            "homepage_url": self.homepage_url, "nearest_hub": self.nearest_hub,
+            "register_is_info": self.register_is_info,
+            "register_confidence": self.register_confidence, "dates": self.dates,
             "ages": self.ages, "price": self.price, "verdict": self.verdict,
             "evidence_json": json.dumps(self.evidence, sort_keys=True),
             "extractor": self.extractor, "fetched_at": self.fetched_at,
@@ -114,6 +140,12 @@ class Session:
             extractor=row.get("extractor", ""), fetched_at=row.get("fetched_at", ""),
             content_chars=int(row.get("content_chars") or 0),
             program_id=row.get("program_id", ""), session_id=row.get("session_id", ""),
+            display_name=row.get("display_name", ""), raw_name=row.get("raw_name", ""),
+            name_source=row.get("name_source", ""),
+            parent_url=row.get("parent_url", ""), homepage_url=row.get("homepage_url", ""),
+            nearest_hub=row.get("nearest_hub", ""),
+            register_is_info=str(row.get("register_is_info", "")).lower() in ("true", "1"),
+            register_confidence=row.get("register_confidence", ""),
         )
 
 
@@ -196,10 +228,15 @@ class FetchRecord:
 # Four-file (de)serialization — ONE writer shape (R6.1 consumes this).
 # --------------------------------------------------------------------------- #
 
+# sessions.csv is the CONFIRMED tier (the deliverable); review.csv is the
+# separate human-markup tier (thin-evidence / off-domain / unresolved rows);
+# gaps.csv is diagnosed-not-published. One writer, three published tiers (plan
+# Phase 1). review.csv shares the session schema.
 _FILES = {
     "providers.csv": PROVIDERS_COLUMNS,
     "programs.csv": PROGRAMS_COLUMNS,
     "sessions.csv": SESSIONS_COLUMNS,
+    "review.csv": SESSIONS_COLUMNS,
     "gaps.csv": GAPS_COLUMNS,
 }
 
@@ -209,15 +246,20 @@ def write_output(
     providers: list[Provider],
     programs: list[Program],
     gaps: list[Gap],
+    review: list[Program] | None = None,
 ) -> dict[str, int]:
-    """Write the four CSVs. Sessions are flattened from programs (one nesting,
-    one writer). Returns row counts per file — the same counts logs must print."""
+    """Write the CSVs. Sessions are flattened from programs (one nesting, one
+    writer). `programs` is the confirmed tier → sessions.csv; `review` is the
+    review tier → review.csv. Returns row counts per file — the same counts logs
+    must print."""
     out_dir.mkdir(parents=True, exist_ok=True)
     sessions = [s for p in programs for s in p.sessions]
+    review_sessions = [s for p in (review or []) for s in p.sessions]
     rows = {
         "providers.csv": [p.to_row() for p in providers],
         "programs.csv": [p.to_row() for p in programs],
         "sessions.csv": [s.to_row() for s in sessions],
+        "review.csv": [s.to_row() for s in review_sessions],
         "gaps.csv": [g.to_row() for g in gaps],
     }
     for fname, columns in _FILES.items():
@@ -240,5 +282,6 @@ def read_output(out_dir: Path) -> dict:
         "providers": _read("providers.csv", Provider),
         "programs": _read("programs.csv", Program),
         "sessions": _read("sessions.csv", Session),
+        "review": _read("review.csv", Session),
         "gaps": _read("gaps.csv", Gap),
     }

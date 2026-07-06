@@ -87,6 +87,14 @@ Configured in `config/settings.py`. Free defaults: `local_google`, `duckduckgo`.
 
 Phase B harvest uses a local LLM camp filter by default. Disable with `--no-llm-validate` if Ollama is not running. Models configured in `config/settings.py`.
 
+## Document sharing (Google Drive)
+
+FRAIM artifacts live under `docs/` and sync to Google Drive for review.
+
+- **Sync scope:** `docs/` only (not source code or `.git`)
+- **Setup script:** `scripts/setup-google-drive-docs-sync.sh`
+- **Review workflow:** Open `.docx` files in Google Docs from [drive.google.com](https://drive.google.com) → add comments → save; changes sync back to the repo automatically
+
 ## Repository
 
 - GitHub: `yashmathur26/Camp-Web-Crawl-Agent`

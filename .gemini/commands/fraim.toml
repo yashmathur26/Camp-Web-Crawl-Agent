@@ -1,0 +1,25 @@
+description = "Discover and execute FRAIM jobs and skills"
+prompt = """
+# FRAIM
+
+Follow this process:
+
+0. **Preload deferred FRAIM tools when needed**:
+   - If FRAIM MCP tools are unavailable because this host lazily loads deferred tool schemas, use the host's tool discovery surface once to load `fraim_connect`, `list_fraim_jobs`, `get_fraim_job`, `get_fraim_file`, `seekMentoring`.
+   - Do the preload as one batched discovery step, not one search per tool.
+
+1. **If the user did not specify a FRAIM job or topic**:
+   If local FRAIM job stubs are present in the workspace, inspect those first and match the request locally. Also inspect `fraim/personalized-employee/jobs/` for local overrides or repo-specific jobs. If local files are missing or you cannot inspect workspace files, call `list_fraim_jobs()` to view the full catalog, including any proxy-discoverable personalized jobs.
+
+2. **Find the match**:
+   Match the user's request to a FRAIM job from the local stub catalog, `fraim/personalized-employee/jobs/`, or the full `list_fraim_jobs()` response. If no job matches, try a likely FRAIM skill with `get_fraim_file({ path: "skills/<likely-category>/<argument>.md" })` and confirm the match with the user.
+
+3. **Load the full content**:
+   - For jobs, call `get_fraim_job({ job: "<matched-job-name>" })`.
+   - For skills, use the content returned by `get_fraim_file(...)`.
+
+4. **Execute**:
+   - For jobs, follow the phased instructions and use `seekMentoring` when the job requires phase transitions.
+   - For skills, apply the skill steps directly to the user's current context.
+
+"""

@@ -1,0 +1,20 @@
+{
+  "project": {
+    "name": "Camp Link Discovery Engine",
+    "industry": "Education / youth programs data"
+  },
+  "repository": {
+    "provider": "github",
+    "owner": "yashmathur26",
+    "name": "Camp-Web-Crawl-Agent",
+    "url": "https://github.com/yashmathur26/Camp-Web-Crawl-Agent.git",
+    "defaultBranch": "main"
+  },
+  "mode": "conversational",
+  "customizations": {
+    "architectureDoc": "docs/engine_v3_docs/implementation_plan.md",
+    "validation": {
+      "testSuiteCommand": "./venv/bin/python -m pytest -x -q"
+    }
+  }
+}
